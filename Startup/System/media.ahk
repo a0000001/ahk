@@ -2,8 +2,10 @@
 
 #If borgWhichMachine = EPIC_DESKTOP
 
-	; Make keyboard volume up/down buttons be change tracks.
-	Media_Play_Pause::Send, {Media_Next}
+	; Make keyboard mute/pause buttons be change tracks.
+	Media_Play_Pause::return
+	Media_Play_Pause Up::Send, {Media_Next}
+	
 	Volume_Mute::Send, {Media_Prev}
 
 	; For ergonomic keyboard.
