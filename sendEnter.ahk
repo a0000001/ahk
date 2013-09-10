@@ -1,0 +1,1 @@
+﻿ControlSend, , {Enter}, Windows Security
