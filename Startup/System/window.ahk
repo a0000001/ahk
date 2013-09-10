@@ -1,20 +1,5 @@
 ﻿; Minimizing shortcut.
-$!q::
-	if(WinActive("ahk_class TfrmMain")) ; SyncBack
-		; OR WinActive("ahk_class TfcForm")) ; FreeCommander
-	{
-		PostMessage, 0x112, 0xF020
-	} else if(WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}")) { ; Foobar.
-		; WinTraymin()
-		PostMessage, 0x112, 0xF020
-	; } else if(WinActive("ahk_class TfcForm")) { ; FreeCommander
-		; Send, +{Esc}
-		; PostMessage, 0x112, 0xF020
-		; Send, !{F4}
-	} else {
-		WinMinimize, A
-	}
-return
+$!q::minimizeWindowSpecial()
 
 ; Sets current window to stay on top
 #SPACE::Winset, Alwaysontop, , A

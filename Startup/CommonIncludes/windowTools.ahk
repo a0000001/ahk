@@ -88,23 +88,28 @@ closeWindowSpecial(case = 0) {
 
 
 minimizeWindowSpecial(case = 0) {
-if(WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}")) { ; Foobar.
-		; WinTraymin()
+	if(WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}")) { ; Foobar.
 		PostMessage, 0x112, 0xF020
+
+	} else if(WinActive("ahk_class TfrmMain")) { ; SyncBack
+		PostMessage, 0x112, 0xF020
+
 	} else if(WinActive("ahk_class EVERYTHING")) {
 		if(case = 1) {
 			Send, {Esc}
 		} else {
 			WinMinimize, A
 		}
+
 	} else if(WinActive("ahk_class PROCEXPL")) {
 		WinClose
+
 	} else if(WinActive("Buddy List")) { ; Pidgin
 		WinClose
-	; } else if(WinActive("ahk_class TfcForm")) { ; FreeCommander
-		; Send, +{Esc}
-		; PostMessage, 0x112, 0xF020
-		; Send, !{F4}
+
+	} else if(WinActive("ahk_class ahk_class CabinetWClass")) { ; Windows Explorer/QTTabbar.
+		Send, ^m
+
 	} else {
 		WinMinimize, A
 	}
