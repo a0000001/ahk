@@ -1,51 +1,5 @@
 #ifWinActive, ahk_class WindowsForms10.Window.8.app.0.2bf8098_r13_ad1
 
-^t::
-	Send, 14457
-return
-
-^+i::
-	ControlSend, , ^+v
-return
-
-; Duplicate Line.
-^d::
-	Send, {End}{Shift Down}{Home}{Shift Up}
-	Send, ^c
-	Sleep, 100
-	Send, {End}{Enter}
-	SendRaw, %clipboard%
-return
-	
-; Toggle comment. 
-^+c::
-	Send, {End}{Shift Down}{Home}{Shift Up}
-	Send, ^c
-	Sleep, 100
-	line := clipboard
-	; MsgBox, % line
-	
-	; Determine if the line is currenly commented.
-	commented = false
-	firstChar := SubStr(line,1,1)
-	
-	if(firstChar = ";") {
-		; MsgBox, commented!
-		line := SubStr(line,2)
-		if(SubStr(line,1,1) = " ") {
-			line := SubStr(line,2)
-		}
-	} else {
-		; MsgBox, not commented!
-		line := "; "line
-	}
-	
-	SendRaw, %line%
-	Send, {Home}
-return
-
-^q::Send, % commentStartString
-
 ; GUI input for Chronicles Data Operation GENERATE code.
 :*:`;cdo::
 	Gui, Add, Text, , Type: 

@@ -28,7 +28,10 @@ return
 ; TLG Hotkey.
 ^t::Send, 14457
 
-^+l::Send, !el
+^l::
+^+l::
+	Send, !el{Enter}
+return
 
 #ifWinActive
 
