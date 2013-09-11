@@ -12,10 +12,10 @@ vimUsed := 0
 vimKeysOn := 0
 spaceDown := 0
 
-~+!x::
-	Suspend, Permit
-	ExitApp				; Shift+Alt+X = Emergency Exit
-return
+; ~+!x::
+	; Suspend, Permit
+	; ExitApp				; Shift+Alt+X = Emergency Exit
+; return
 ; ~!+r::
 	; Suspend, Permit
 	; Reload				; Shift+Alt+R = Reload
