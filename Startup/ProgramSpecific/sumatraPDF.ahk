@@ -3,9 +3,23 @@
 ; Bookmarks panel.
 ^b::Send {F12}
 
-; Surfkeys-like navigation.
-`;::Send {PgDn}
-p::Send {PgUp}
+; Vim-like navigation.
+$`;::
+	ControlGetFocus, currControl
+	if(currControl != "Edit2") {
+		Send {PgDn}
+	} else {
+		Send, % stripHotkeyString(A_ThisHotkey)
+	}
+return
+$p::
+	ControlGetFocus, currControl
+	if(currControl != "Edit2") {
+		Send {PgUp}
+	} else {
+		Send, % stripHotkeyString(A_ThisHotkey)
+	}
+return
 
 ; Show/hide toolbar.
 ^/::
