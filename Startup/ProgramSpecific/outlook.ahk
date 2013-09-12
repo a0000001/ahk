@@ -1,7 +1,10 @@
 ; Outlook Hotkeys.
 #ifWinActive, ahk_class rctrl_renwnd32
 
-	; Shortcut to go to today on the calendar. (In desired, 2-day view.)
+	; Make Control+1 go to the inbox, rather than just to mail.
+	^1::Send, ^+i
+
+	; Shortcut to go to today on the calendar. (In desired, 3-day view.)
 	^t::
 		Send, ^2
 		Send, {Up}{Down}
