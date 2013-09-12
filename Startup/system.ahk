@@ -1,6 +1,7 @@
 ; === General system-related scripts. === ;
 
 
+#Include System\input.ahk
 #Include System\KDE Mover-Sizer.ahk
 #Include System\media.ahk
 
