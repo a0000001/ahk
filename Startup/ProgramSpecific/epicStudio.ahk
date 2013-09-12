@@ -1,11 +1,18 @@
 #ifWinActive, ahk_class WindowsForms10.Window.8.app.0.2bf8098_r13_ad1
 
+; TLG Hotkey.
 ^t::
 	Send, 14457
 return
 
+; Better access to INTermediate code.
 ^+i::
 	ControlSend, , ^+v
+return
+
+; Reopen recently closed file.
+^+t::
+	Send, !ffr{Enter}
 return
 
 ; Duplicate Line.
@@ -15,6 +22,7 @@ return
 	Sleep, 100
 	Send, {End}{Enter}
 	SendRaw, %clipboard%
+	Send, {Up}{End}
 return
 	
 ; Toggle comment. 
