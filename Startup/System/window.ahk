@@ -8,7 +8,7 @@ $!q::minimizeWindowSpecial()
 ^!q::WinTraymin()
 
 ; Enable any window mouse is currently over.
-#!c::
+#c::
 	MouseGetPos,,, WinHndl, CtlHndl, 2
 	
 	WinGet, Style, Style, ahk_id %WinHndl%
