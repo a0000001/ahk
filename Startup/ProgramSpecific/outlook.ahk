@@ -4,6 +4,9 @@
 	; Make Control+1 go to the inbox, rather than just to mail.
 	^1::Send, ^+i
 
+	; Make Control+F be search, not forward.
+	^f::Send, ^e
+	
 	; Shortcut to go to today on the calendar. (In desired, 3-day view.)
 	^t::
 		Send, ^2
@@ -18,7 +21,7 @@
 	return
 	
 	; Archive the current message.
-	^e::
+	$^e::
 		Send, ^q
 		Send, !4
 		; Send, ^+2
