@@ -23,6 +23,109 @@ spaceDown := 0
 ~!#x::Suspend
 
 #ifWinActive, ahk_class Chrome_WidgetWin_1
+	
+	sendVimCommand(keys) {
+		global vimUsed := 1
+		
+		if(!suspended) {
+			Send, %keys%
+		}
+	}
+	
+	$Space::
+		if(!suspended) {
+			vimKeysOn := 1
+		}
+		
+		spaceDown := 1
+	return
+	
+	; Emergency Exit.
+	^Space::
+		vimKeysOn := 0
+	return
+
+#ifWinActive
+	
+#If vimKeysOn = 1 && !suspended && WinActive("ahk_class Chrome_WidgetWin_1")
+
+	; Up/Down/Left/Right.
+	j::sendVimCommand("{Down}")
+	k::sendVimCommand("{Up}")
+	h::sendVimCommand("{Left}")
+	l::sendVimCommand("{Right}")
+	
+	; Page Up/Down/Top/Bottom.
+	`;::sendVimCommand("{PgDn}")
+	p::sendVimCommand("{PgUp}")
+	[::sendVimCommand("{Home}")
+	]::sendVimCommand("{End}")
+	
+	; Next/Previous Tab.
+	o::sendVimCommand("^{Tab}")
+	u::sendVimCommand("^+{Tab}")
+	
+	; Close Tab.
+	y::sendVimCommand("^w")
+	
+	; Reload.
+	r::sendVimCommand("^r")
+	
+	; Next/Previous page link.
+	m::
+		sendVimCommand("^l")
+		Sleep, 100
+		Send, n{Enter}
+		spaceDownNow := false
+	return
+	n::
+		sendVimCommand("^l")
+		Sleep, 100
+		Send, p{Enter}
+		spaceDownNow := false
+	return
+	
+	; Find
+	/::sendVimCommand("^f")
+
+	; Manual suspend.
+	,::
+		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+		suspended := 1
+		vimKeysOn := 0
+		vimUsed := 1
+	return
+	
+#If suspended && WinActive("ahk_class Chrome_WidgetWin_1")
+		
+	; Manual unsuspend.
+	,::
+		if(spaceDown){
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+			suspended := 0
+			vimKeysOn := 1
+			vimUsed := 1
+		} else {
+			Send, %A_ThisHotkey%
+		}
+	return
+		
+#If
+
+
+$Space up::
+	if(!vimUsed) {
+		Send, {Space}
+	}
+	
+	vimKeysOn := 0
+	vimUsed := 0
+	spaceDown := 0
+return
+
+
+
+; #ifWinActive, ahk_class Chrome_WidgetWin_1
 
 	; ; Function to tell if the URL bar is active.
 	; chromeTextFieldActive() {
@@ -300,101 +403,5 @@ spaceDown := 0
 			; Send, n
 		; }
 	; return
-	
-	sendVimCommand(keys) {
-		global vimUsed := 1
-		
-		if(!suspended) {
-			Send, %keys%
-		}
-	}
-	
-	$Space::
-		if(!suspended) {
-			vimKeysOn := 1
-		}
-		
-		spaceDown := 1
-	return
-	
-	; Emergency Exit.
-	^Space::
-		vimKeysOn := 0
-	return
-	
-	#If vimKeysOn = 1 && !suspended
-	
-		; Up/Down/Left/Right.
-		j::sendVimCommand("{Down}")
-		k::sendVimCommand("{Up}")
-		h::sendVimCommand("{Left}")
-		l::sendVimCommand("{Right}")
-		
-		; Page Up/Down/Top/Bottom.
-		`;::sendVimCommand("{PgDn}")
-		p::sendVimCommand("{PgUp}")
-		[::sendVimCommand("{Home}")
-		]::sendVimCommand("{End}")
-		
-		; Next/Previous Tab.
-		o::sendVimCommand("^{Tab}")
-		u::sendVimCommand("^+{Tab}")
-		
-		; Close Tab.
-		y::sendVimCommand("^w")
-		
-		; Reload.
-		r::sendVimCommand("^r")
-		
-		; Next/Previous page link.
-		m::
-			sendVimCommand("^l")
-			Sleep, 100
-			Send, n{Enter}
-			spaceDownNow := false
-		return
-		n::
-			sendVimCommand("^l")
-			Sleep, 100
-			Send, p{Enter}
-			spaceDownNow := false
-		return
-		
-		; Find
-		/::sendVimCommand("^f")
-	
-		; Manual suspend.
-		,::
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
-			suspended := 1
-			vimKeysOn := 0
-			vimUsed := 1
-		return
-		
-	#If suspended
-		
-		; Manual unsuspend.
-		,::
-			if(spaceDown){
-				Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
-				suspended := 0
-				vimKeysOn := 1
-				vimUsed := 1
-			} else {
-				Send, %A_ThisHotkey%
-			}
-		return
-		
-	#If
-	
-#ifWinActive
-	
-	$Space up::
-		if(!vimUsed) {
-			Send, {Space}
-		}
-		
-		vimKeysOn := 0
-		vimUsed := 0
-		spaceDown := 0
-	return
+
+;#IfWinActive

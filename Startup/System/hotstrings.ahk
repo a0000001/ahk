@@ -3,6 +3,9 @@
 :*:emaila::
 	Send, % emailAddress
 return
+:*:gemaila::
+	Send, % emailAddressGDB
+return
 :*:uname::
 	Send, % userName
 return
