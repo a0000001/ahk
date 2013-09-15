@@ -26,6 +26,14 @@
 		Send, !e
 		Send, s
 	return
+	
+	; Extensions hotkey.
+	^+e::
+		Send, !e
+		Send, l
+		Send, e
+		Send, {Enter}
+	return
 
 #ifWinActive
 
