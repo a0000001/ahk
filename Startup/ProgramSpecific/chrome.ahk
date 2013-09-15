@@ -1,153 +1,31 @@
-﻿; ; Activation hotkey.
-; !1::
-	; if(WinExist("ahk_class Chrome_WidgetWin_1")) {
-		; WinActivate, ahk_class Chrome_WidgetWin_1
-	; } else {
-		; Run "C:\Program Files\Google\Chrome\Application\chrome.exe"
-	; }
-; return
+﻿#ifWinActive, ahk_class Chrome_WidgetWin_1
 
+	; For easier middle-clicking on bookmarks.
+	^MButton::^LButton
 
-#ifWinActive, ahk_class Chrome_WidgetWin_1
+	; Darken bookmarklet hotkey.
+	!`;::
+		Send, ^l
+		Sleep, 100
+		Send, d
+		Sleep, 100
+		Send, {Enter}
+	return
 
-; For easier middle-clicking on bookmarks.
-^MButton::^LButton
+	; Increment bookmarklet hotkey.
+	^Down::
+		Send, ^l
+		Sleep, 100
+		SendRaw, +
+		Sleep, 100
+		Send, {Enter}
+	return
 
-; Quick bookmarking hotkeys.
-F8::^+1
-F9::^+2
-F10::^+3
-F11::^+4
-
-; Mapping Win+n to ctrl+shift+m for OneTab command.
-; #o::^+m
-
-; Allow fullscreening.
-!Enter::Send, {F11}
-
-; Options hotkey.
-; !o::
-	; Send, !f
-	; Sleep, 100
-	; Send, s
-; return
-
-; Extensions hotkey.
-; ^+e::
-	; Send, !f
-	; Sleep, 100
-	; Send, l
-	; Sleep, 100
-	; Send, e
-; return
-
-; Site open helpers.
-; ^+!a::
-	; Send, ^+a
-; return
-; ^+!m::
-	; Send, ^+m
-; return
-; ^+!c::
-	; Send, ^+c
-; return
-; ^+!r::
-	; Send, ^+p
-; return
-
-; ~^+!a::closeIfEmptyTab(1) ; Facebook, Gmail, Google Calendar, and Google Reader.
-; ~+!f::closeIfEmptyTab() ; Facebook.
-; ~^+!m::closeIfEmptyTab() ; Gmail.
-; ~^+!c::closeIfEmptyTab() ; Google Calendar.
-; ~^+!r::closeIfEmptyTab() ; Google Reader.
-; ^+!w::
-	; Send, !y
-	; closeIfEmptyTab() ; Weather.
-; return
-
-; Darken bookmarklet hotkey.
-!`;::
-	Send, ^l
-	Sleep, 100
-	Send, d
-	Sleep, 100
-	Send, {Enter}
-return
-
-; ^i::
-	; Send, !{Home}
-	; ; Sleep, 100
-	; ; Send, ^l
-; return
-
-; Increment bookmarklet hotkey.
-^Down::
-	Send, ^l
-	Sleep, 100
-	SendRaw, +
-	Sleep, 100
-	Send, {Enter}
-return
-
-; ; Developer tools hotkey change.
-; ^+c::
-	; ControlSend, , ^+i
-; return
-
-; getChromeTabURL() {
-	; ControlGetText, myURL, Chrome_OmniboxView1, A
-	; return myURL
-; }
-
-; isChromeTabEmpty() {
-	; DetectHiddenWindows, Off ; This breaks it if on...
-	
-	; WinGetText, wintext, ahk_class Chrome_WidgetWin_1
-	
-	; DetectHiddenWindows, On
-	
-	; ; MsgBox, z%wintext%z
-	
-	; return InStr(wintext, "New Tab")
-; }
-
-; closeIfEmptyTab(all = 0){
-	; closeFirstTab = 0
-	; if(isChromeTabEmpty()) {
-		; ; closeFirstTab = 1
-	; }
-	
-	; Sleep, 500
-	
-	; if(all) {
-		; Send, ^+{Tab}
-		; Send, ^+{Tab}
-		
-		; if(!isOtherChromeProfile()) {
-			; Send, ^+{Tab}
-		; }
-	; }
-	
-	; if(closeFirstTab) {
-		; ; Quick check to make sure we're not overshooting here.
-		; if(isChromeTabEmpty()) {
-			; ; MsgBox, Chrome not ready yet. Chill.
-		; } else {
-			; ; Send, ^+{Tab}
-			; ; Send, ^w
-			; closeFirstTab = 0
-		; }
-	; }
-; }
-
-; isOtherChromeProfile() {
-	; PixelGetColor, color, 4, 50
-	; if(color == "0x000000") {
-		; return 1
-	; } else {
-		; return 0
-	; }
-; }
+	; Options hotkey.
+	!o::
+		Send, !e
+		Send, s
+	return
 
 #ifWinActive
 
@@ -160,38 +38,14 @@ return
 		Click, Right
 		Sleep, 500
 		Send, {Down 5}
-		; Sleep, 100
+		
 		Send, {Enter}
 		Sleep, 100
-		; Send, #r
-		; Sleep, 500
-		; SendRaw, %clipboard%
-		; Send, {Enter}
+		
 		Run, %clipboard%
 	return
 
-	$!i::
-		if(borgWhichMachine = EPIC_DESKTOP) {
-			Send, ^+u
-		} else {
-			Send, !i
-		}
-
+	$!i::Send, ^+u
+	
 #If
 
-
-; ; Chrome extension popups
-; #ifWinActive, ahk_class Chrome_WidgetWin_0
-
-; ; For VerticalTabs - use Shift+j/k/d instead of Ctrl+j/k/d.
-; +j::
-	; Send, {Control Down}j{Control Up}
-; return
-; +k::
-	; Send, {Control Down}k{Control Up}
-; return
-; +d::
-	; Send, {Control Down}d{Control Up}
-; return
-
-; #ifWinActive
