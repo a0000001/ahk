@@ -33,3 +33,4 @@ RAlt & ?::Send ¿
 
 ~+!x::ExitApp			;Shift+Alt+X = Emergency Exit
 ~!+r::Reload			;Shift+Alt+R = Reload
+
