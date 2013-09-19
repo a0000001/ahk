@@ -23,12 +23,25 @@ spaceDown := 0
 ~!#x::Suspend
 
 #ifWinActive, ahk_class Chrome_WidgetWin_1
+
+	; Function to tell if the URL bar is active.
+	chromeTextFieldActive() {
+		ControlGetFocus, controlName, A
+		; MsgBox, % controlName
+		if(controlName = "" || controlName = "Chrome_WidgetWin_11") {
+			return true
+		} else {
+			return false
+		}
+	}
 	
 	sendVimCommand(keys) {
-		global vimUsed := 1
-		
-		if(!suspended) {
-			Send, %keys%
+		if(!chromeTextFieldActive()) {
+			global vimUsed := 1
+			
+			if(!suspended) {
+				Send, %keys%
+			}
 		}
 	}
 	
@@ -126,17 +139,6 @@ return
 
 
 ; #ifWinActive, ahk_class Chrome_WidgetWin_1
-
-	; ; Function to tell if the URL bar is active.
-	; chromeTextFieldActive() {
-		; ControlGetFocus, controlName, A
-		; ; MsgBox, % controlName
-		; if(controlName = "Chrome_OmniboxView1" || controlName = "ViewsTextfieldEdit1") {
-			; return true
-		; } else {
-			; return false
-		; }
-	; }
 	
 	; setSuspend(value) {
 		; if(value) {
