@@ -4,6 +4,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force ; Force just one instance, we don't want muliple of this running around.
 ; #NoTrayIcon
 
+#Include %A_ScriptDir%\iniReadStandalone.ahk
+
 Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
 Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
 
@@ -23,7 +25,6 @@ spaceDown := 0
 ~!#x::Suspend
 
 #ifWinActive, ahk_class Chrome_WidgetWin_1
-
 	; Function to tell if the URL bar is active.
 	chromeTextFieldActive() {
 		ControlGetFocus, controlName, A
@@ -44,7 +45,9 @@ spaceDown := 0
 			}
 		}
 	}
-	
+#IfWinActive
+
+#If WinActive("ahk_class Chrome_WidgetWin_1") && borgWhichMachine = THINKPAD
 	$Space::
 		if(!suspended) {
 			vimKeysOn := 1
@@ -57,11 +60,9 @@ spaceDown := 0
 	^Space::
 		vimKeysOn := 0
 	return
-
-#ifWinActive
+#If
 	
 #If vimKeysOn = 1 && !suspended && WinActive("ahk_class Chrome_WidgetWin_1")
-
 	; Up/Down/Left/Right.
 	j::sendVimCommand("{Down}")
 	k::sendVimCommand("{Up}")
@@ -108,8 +109,9 @@ spaceDown := 0
 		vimKeysOn := 0
 		vimUsed := 1
 	return
+#If
 	
-#If suspended && WinActive("ahk_class Chrome_WidgetWin_1")
+#If suspended && WinActive("ahk_class Chrome_WidgetWin_1") && borgWhichMachine = THINKPAD
 		
 	; Manual unsuspend.
 	,::
@@ -125,16 +127,58 @@ spaceDown := 0
 		
 #If
 
+#If borgWhichMachine = THINKPAD
+	$Space up::
+		if(!vimUsed) {
+			Send, {Space}
+		}
+		
+		vimKeysOn := 0
+		vimUsed := 0
+		spaceDown := 0
+	return
+#If
 
-$Space up::
-	if(!vimUsed) {
-		Send, {Space}
-	}
+#If WinActive("ahk_class Chrome_WidgetWin_1") && borgWhichMachine = EPIC_DESKTOP
+	; Up/Down/Left/Right.
+	RAlt & j::Send, {Down}
+	RAlt & k::Send, {Up}
+	RAlt & h::Send, {Left}
+	RAlt & l::Send, {Right}
 	
-	vimKeysOn := 0
-	vimUsed := 0
-	spaceDown := 0
-return
+	; Page Up/Down/Top/Bottom.
+	RAlt & `;::Send, {PgDn}
+	RAlt & p::Send, {PgUp}
+	RAlt & [::Send, {Home}
+	RAlt & ]::Send, {End}
+	
+	; Next/Previous Tab.
+	RAlt & o::Send, ^{Tab}
+	RAlt & u::Send, ^+{Tab}
+	
+	; Close Tab.
+	RAlt & y::Send, ^w
+	
+	; Reload.
+	RAlt & r::Send, ^r
+	
+	; Next/Previous page link.
+	RAlt & m::
+		Send, ^l
+		Sleep, 100
+		Send, n{Enter}
+		spaceDownNow := false
+	return
+	RAlt & n::
+		Send, ^l
+		Sleep, 100
+		Send, p{Enter}
+		spaceDownNow := false
+	return
+	
+	; Find
+	RAlt & /::Send, ^f
+#If
 
 
 
