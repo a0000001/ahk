@@ -2,7 +2,7 @@
 
 ; TLG Hotkey.
 ^t::
-	Send, 14457
+	Send, %epicID%
 return
 
 ; Better access to INTermediate code.

@@ -13,6 +13,8 @@ if(borgWhichMachine = THINKPAD) {
 } else if(borgWhichMachine = EPIC_DESKTOP) {
 	#Include ProgramSpecific\epicStudio.ahk
 	
+	#Include ProgramSpecific\hyperspace.ahk
+	
 	#Include ProgramSpecific\outlook.ahk
 	#Include ProgramSpecific\reflections.ahk
 }
