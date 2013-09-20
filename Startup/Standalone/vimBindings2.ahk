@@ -6,38 +6,40 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; #Include %A_ScriptDir%\iniReadStandalone.ahk
 
-Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
 Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
 
 vimKeysOn := 1
 suspended := 0
 justFound := 0
 justOmnibox := 0
-; vimUsed := 0
-; spaceDown := 0
 
-; ~+!x::
-	; Suspend, Permit
-	; ExitApp				; Shift+Alt+X = Emergency Exit
-; return
-; ~!+r::
-	; Suspend, Permit
-	; Reload				; Shift+Alt+R = Reload
-; return
 ~!#x::
 	Suspend, Toggle
 	if(suspended) {
 		suspended := 0
 		if(vimKeysOn) {
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
-		} else {
 			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+		} else {
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
 		}
 	} else {
 		suspended := 1
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped2.ico
+		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconSuspended.ico
 	}
 return
+
+
+toggleVimKeys(currentlyOn) {
+	global vimKeysOn
+	if(currentlyOn) {
+		vimKeysOn := 0
+		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
+	} else {
+		vimKeysOn := 1
+		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+	}
+}
 
 
 #If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn
@@ -46,6 +48,8 @@ return
 	k::Send, {Up}
 	h::Send, {Left}
 	l::Send, {Right}
+	
+	^a::MsgBox, % vimKeysOn
 	
 	; Page Up/Down/Top/Bottom.
 	`;::Send, {PgDn}
@@ -79,9 +83,7 @@ return
 	/::
 		Send, ^f
 	~^f::
-		vimKeysOn := 0
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
-		
+		toggleVimKeys(vimKeysOn)
 		justFound := 1
 	return
 
@@ -90,26 +92,20 @@ return
 	~^t::
 		justOmnibox := 1
 	i::
-		vimKeysOn := 0
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+		toggleVimKeys(vimKeysOn)
 	return
 #IfWinActive
 
 
 #If WinActive("ahk_class Chrome_WidgetWin_1") && !vimKeysOn
-	; RShift & Space::
 	RAlt & i::
-		vimKeysOn := 1
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+		toggleVimKeys(vimKeysOn)
 	return
-	; $i Up::Send, i
-	; $+i::Send, +i
 	
 	~$Esc::
 		if(justFound) {
-			vimKeysOn := 1
+			toggleVimKeys(vimKeysOn)
 			justFound := 0
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
 		} else {
 			Send, {Esc}
 		}
@@ -117,9 +113,8 @@ return
 	
 	~$Enter::
 		if(justOmnibox) {
-			vimKeysOn := 1
+			toggleVimKeys(vimKeysOn)
 			justOmnibox := 0
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
 		} else {
 			Send, {Enter}
 		}
