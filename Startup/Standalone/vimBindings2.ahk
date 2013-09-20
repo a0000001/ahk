@@ -31,7 +31,8 @@ return
 
 #If WinActive("ahk_class Chrome_WidgetWin_1") && suspended
 	
-	RShift & Space::
+	; RShift & Space::
+	RAlt & i::
 		suspended := 0
 		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
 	return
