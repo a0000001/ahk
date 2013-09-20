@@ -98,10 +98,13 @@ toggleVimKeys(currentlyOn) {
 
 
 #If WinActive("ahk_class Chrome_WidgetWin_1") && !vimKeysOn
-	RAlt & i::
+	; Explicit pause.
+	; RAlt & i::
+	!j::
 		toggleVimKeys(vimKeysOn)
 	return
 	
+	; Unpause specially for find.
 	~$Esc::
 		if(justFound) {
 			toggleVimKeys(vimKeysOn)
@@ -111,6 +114,7 @@ toggleVimKeys(currentlyOn) {
 		}
 	return
 	
+	; Unpause specially for omnibox.
 	~$Enter::
 		if(justOmnibox) {
 			toggleVimKeys(vimKeysOn)
