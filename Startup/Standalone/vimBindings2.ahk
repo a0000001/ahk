@@ -9,11 +9,11 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
 Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
 
+vimKeysOn := 1
 suspended := 0
 justFound := 0
 justOmnibox := 0
 ; vimUsed := 0
-; vimKeysOn := 0
 ; spaceDown := 0
 
 ; ~+!x::
@@ -26,41 +26,21 @@ justOmnibox := 0
 ; return
 ~!#x::
 	Suspend, Toggle
-	; Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+	if(suspended) {
+		suspended := 0
+		if(vimKeysOn) {
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+		} else {
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+		}
+	} else {
+		suspended := 1
+		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped2.ico
+	}
 return
 
-#If WinActive("ahk_class Chrome_WidgetWin_1") && suspended
-	
-	; RShift & Space::
-	RAlt & i::
-		suspended := 0
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
-	return
-	; $i Up::Send, i
-	; $+i::Send, +i
-	
-	~$Esc::
-		if(justFound) {
-			suspended := 0
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
-		} else {
-			Send, {Esc}
-		}
-	return
-	
-	~$Enter::
-		if(justOmnibox) {
-			suspended := 0
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
-		} else {
-			Send, {Enter}
-		}
-	return
-	
-#If
 
-#If WinActive("ahk_class Chrome_WidgetWin_1") && !suspended
-
+#If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn
 	; Up/Down/Left/Right.
 	j::Send, {Down}
 	k::Send, {Up}
@@ -88,20 +68,18 @@ return
 		Send, ^l
 		Sleep, 100
 		Send, n{Enter}
-		spaceDownNow := false
 	return
 	n::
 		Send, ^l
 		Sleep, 100
 		Send, p{Enter}
-		spaceDownNow := false
 	return
 	
 	; Find
 	/::
 		Send, ^f
 	~^f::
-		suspended := 1
+		vimKeysOn := 0
 		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
 		
 		justFound := 1
@@ -112,12 +90,42 @@ return
 	~^t::
 		justOmnibox := 1
 	i::
-		suspended := 1
+		vimKeysOn := 0
 		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
 	return
-
-
 #IfWinActive
+
+
+#If WinActive("ahk_class Chrome_WidgetWin_1") && !vimKeysOn
+	; RShift & Space::
+	RAlt & i::
+		vimKeysOn := 1
+		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+	return
+	; $i Up::Send, i
+	; $+i::Send, +i
+	
+	~$Esc::
+		if(justFound) {
+			vimKeysOn := 1
+			justFound := 0
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+		} else {
+			Send, {Esc}
+		}
+	return
+	
+	~$Enter::
+		if(justOmnibox) {
+			vimKeysOn := 1
+			justOmnibox := 0
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconStopped.ico
+		} else {
+			Send, {Enter}
+		}
+	return
+#If
+
 
 	; ; Function to tell if the URL bar is active.
 	; chromeTextFieldActive() {

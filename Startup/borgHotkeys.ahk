@@ -1,7 +1,10 @@
 ﻿; === Beginning of hotkeys, all auto-executing portions are done. === ;
 
 ; Hotkey for reloading entire script.
-!+r::Reload
+!+r::
+	Suspend, Permit
+	Reload
+return
 
 ; Suspend hotkey, change tray icon too.
 !#x::
