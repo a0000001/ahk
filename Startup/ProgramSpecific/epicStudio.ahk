@@ -103,3 +103,11 @@ INI: %INI%
 return
 
 #ifWinActive
+
+#ifWinActive, New Object
+	; Make ctrl+backspace act as expected.
+	^Backspace::
+		Send, ^+{Left}
+		Send, {Backspace}
+	return
+#ifWinActive
