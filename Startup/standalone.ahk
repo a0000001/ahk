@@ -5,4 +5,4 @@ if(borgWhichMachine = EPIC_DESKTOP) {
 	Run, Standalone\killUAC.ahk
 }
 
-Run, Standalone\vimBindings2.ahk
+Run, Standalone\vimBindings3.ahk

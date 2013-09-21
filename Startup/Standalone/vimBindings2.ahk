@@ -10,7 +10,7 @@ Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
 Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
 
 vimKeysOn := 1
-fullKeysOn := 0
+allKeysOn := 0
 suspended := 0
 justFound := 0
 justOmnibox := 0
@@ -33,14 +33,17 @@ return
 
 toggleVimKeys(currentlyOn) {
 	global vimKeysOn
+	global allKeysOn
 	if(currentlyOn) {
 		vimKeysOn := 0
 		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
+		; allKeysOn := 0
 	} else {
 		vimKeysOn := 1
 		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
 	}
 }
+
 
 #If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn
 	; Up/Down/Left/Right.
@@ -79,7 +82,10 @@ toggleVimKeys(currentlyOn) {
 #IfWinActive, ahk_class Chrome_WidgetWin_1
 	; Close Tab.
 	; y::Send, ^w
-	F9::Send, ^w
+	F9::
+		Send, ^w
+		toggleVimKeys(false)
+	return
 	
 	; Reload.
 	; r::Send, ^r
@@ -100,8 +106,10 @@ toggleVimKeys(currentlyOn) {
 	
 	; Explicit unpause.
 	; RAlt & i::
-	!j::
 	F8::
+	!m::
+		; allKeysOn := 1
+	!j::
 		toggleVimKeys(false)
 	return
 		
@@ -110,8 +118,6 @@ toggleVimKeys(currentlyOn) {
 		if(justFound) {
 			toggleVimKeys(false)
 			justFound := 0
-		} else {
-			Send, {Esc}
 		}
 	return
 
@@ -120,12 +126,19 @@ toggleVimKeys(currentlyOn) {
 		if(justOmnibox) {
 			toggleVimKeys(false)
 			justOmnibox := 0
-		} else {
-			Send, {Enter}
 		}
 	return
 #IfWinActive
 
+; #If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn && allKeysOn
+	; m::
+		; Send, ^l
+		; Sleep, 100
+		; ; Send, np{Enter}
+		; ; SendRaw, javascript:(function(e,a,g,h,f,c,b,d){if(!(f=e.jQuery)||g>f.fn.jquery||h(f)){c=a.createElement("script");c.type="text/javascript";c.src="http://ajax.googleapis.com/ajax/libs/jquery/"+g+"/jquery.min.js";c.onload=c.onreadystatechange=function(){if(!b&&(!(d=this.readyState)||d=="loaded"||d=="complete")){h((f=e.jQuery).noConflict(1),b=1);f(c).remove()}};a.documentElement.childNodes[0].appendChild(c)}})(window,document,"1.3.2",function($,L){window.location = $("div.nav-next").children().attr("href")});
+		; ; Send, {Enter}
+	; return
+; #If
 
 	; ; Function to tell if the URL bar is active.
 	; chromeTextFieldActive() {

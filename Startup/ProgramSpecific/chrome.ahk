@@ -1,29 +1,24 @@
-﻿#ifWinActive, ahk_class Chrome_WidgetWin_1
+﻿sendToOmniboxAndGo(url) {
+	Send, ^l
+	Sleep, 100
+	SendRaw, %url%
+	Send, {Enter}
+}
+
+#ifWinActive, ahk_class Chrome_WidgetWin_1
 
 	; For easier middle-clicking on bookmarks.
 	^MButton::^LButton
 
-	; Darken bookmarklet hotkey.
-	!`;::
-		Send, ^l
-		Sleep, 100
-		Send, d
-		Sleep, 100
-		Send, {Enter}
-	return
-
-	; Increment bookmarklet hotkey.
-	^Down::
-		Send, ^l
-		Sleep, 100
-		SendRaw, +
-		Sleep, 100
-		Send, {Enter}
-	return
+	; Bookmarklet hotkeys.
+	!`;::sendToOmniboxAndGo("d") ; Darken bookmarklet hotkey.
+	$^Right::sendToOmniboxAndGo("+") ; Increment.
+	!z::sendToOmniboxAndGo("pz") ; PageZipper.
 
 	; Options hotkey.
 	!o::
 		Send, !e
+		Sleep, 100
 		Send, s
 	return
 	
@@ -39,20 +34,21 @@
 
 
 ; Epic-Specific.
-#If borgWhichMachine = EPIC_DESKTOP && WinActive("ahk_class Chrome_WidgetWin_1")
+#If WinActive("ahk_class Chrome_WidgetWin_1") && borgWhichMachine = EPIC_DESKTOP
 
 	; Chrome: easy open of file-type links that don't work there.
 	$^+RButton::
+		tempClipboard := clipboard
 		Click, Right
 		Sleep, 500
 		Send, {Down 5}
-		
 		Send, {Enter}
 		Sleep, 100
-		
 		Run, %clipboard%
+		clipboard := tempClipboard
 	return
 
+	; Keepass Lastpass-like hotkey.
 	$!i::Send, ^+u
 	
 #If
