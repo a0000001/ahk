@@ -10,6 +10,7 @@ Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
 Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
 
 vimKeysOn := 1
+fullKeysOn := 0
 suspended := 0
 justFound := 0
 justOmnibox := 0
@@ -41,15 +42,12 @@ toggleVimKeys(currentlyOn) {
 	}
 }
 
-
 #If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn
 	; Up/Down/Left/Right.
 	j::Send, {Down}
 	k::Send, {Up}
 	h::Send, {Left}
 	l::Send, {Right}
-	
-	^a::MsgBox, % vimKeysOn
 	
 	; Page Up/Down/Top/Bottom.
 	`;::Send, {PgDn}
@@ -61,29 +59,11 @@ toggleVimKeys(currentlyOn) {
 	o::Send, ^{Tab}
 	u::Send, ^+{Tab}
 	
-	; Close Tab.
-	y::Send, ^w
-	
-	; Reload.
-	; r::Send, ^r
-	
-	; Next/Previous page link.
-	m::
-		Send, ^l
-		Sleep, 100
-		Send, n{Enter}
-	return
-	n::
-		Send, ^l
-		Sleep, 100
-		Send, p{Enter}
-	return
-	
 	; Find
 	/::
 		Send, ^f
 	~^f::
-		toggleVimKeys(vimKeysOn)
+		toggleVimKeys(true)
 		justFound := 1
 	return
 
@@ -92,38 +72,59 @@ toggleVimKeys(currentlyOn) {
 	~^t::
 		justOmnibox := 1
 	i::
-		toggleVimKeys(vimKeysOn)
+		toggleVimKeys(true)
 	return
-#IfWinActive
+#If
 
-
-#If WinActive("ahk_class Chrome_WidgetWin_1") && !vimKeysOn
-	; Explicit pause.
-	; RAlt & i::
-	!j::
-		toggleVimKeys(vimKeysOn)
+#IfWinActive, ahk_class Chrome_WidgetWin_1
+	; Close Tab.
+	; y::Send, ^w
+	F9::Send, ^w
+	
+	; Reload.
+	; r::Send, ^r
+	
+	; Next/Previous page link.
+	; n::
+	F10::
+		Send, ^l
+		Sleep, 100
+		Send, p{Enter}
+	return
+	; m::
+	F11::
+		Send, ^l
+		Sleep, 100
+		Send, n{Enter}
 	return
 	
+	; Explicit unpause.
+	; RAlt & i::
+	!j::
+	F8::
+		toggleVimKeys(false)
+	return
+		
 	; Unpause specially for find.
 	~$Esc::
 		if(justFound) {
-			toggleVimKeys(vimKeysOn)
+			toggleVimKeys(false)
 			justFound := 0
 		} else {
 			Send, {Esc}
 		}
 	return
-	
+
 	; Unpause specially for omnibox.
 	~$Enter::
 		if(justOmnibox) {
-			toggleVimKeys(vimKeysOn)
+			toggleVimKeys(false)
 			justOmnibox := 0
 		} else {
 			Send, {Enter}
 		}
 	return
-#If
+#IfWinActive
 
 
 	; ; Function to tell if the URL bar is active.
