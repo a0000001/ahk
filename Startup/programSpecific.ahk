@@ -34,5 +34,6 @@ if(borgWhichMachine = THINKPAD) {
 ; #Include ProgramSpecific\processExplorer.ahk
 #Include ProgramSpecific\remoteDesktop.ahk
 
+#Include ProgramSpecific\sites.ahk
 #Include ProgramSpecific\sumatraPDF.ahk
 #Include ProgramSpecific\word.ahk

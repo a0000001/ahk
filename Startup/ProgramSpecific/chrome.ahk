@@ -25,7 +25,9 @@
 	; Extensions hotkey.
 	^+e::
 		Send, !e
+		Sleep, 100
 		Send, l
+		Sleep, 100
 		Send, e
 		Send, {Enter}
 	return
