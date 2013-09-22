@@ -11,7 +11,7 @@ Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
 
 ; State flags.
 global vimKeysOn := 1
-global allKeysOn := 0
+global superKeysOn := 0
 global suspended := 0
 
 ; Special flags for previous action.
@@ -48,7 +48,11 @@ pageHasOwnControls() {
 	if(suspended) {
 		suspended := 0
 		if(vimKeysOn) {
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+			if(superKeysOn) {
+				Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconSuper.ico
+			} else {
+				Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+			}
 		} else {
 			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
 		}
@@ -58,32 +62,47 @@ pageHasOwnControls() {
 	}
 return
 
-toggleVimKeys(toState) {
+setVimState(toState, super = false) {
 	if(toState) {
 		vimKeysOn := 1
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+		if(super) {
+			superKeysOn := 1
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconSuper.ico
+		} else {
+			superKeysOn := 0 ; Reset it.
+			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
+		}
 	} else {
 		vimKeysOn := 0
 		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
-		allKeysOn := 0
+		superKeysOn := 0
 	}
 }
 
 ; Hotkeys related to script state, plus ones that always run.
 #IfWinActive, ahk_class Chrome_WidgetWin_1
-	; Explicit unpause.
-	; RAlt & i::
+	; Special super-on.
 	F8::
-		allKeysOn := 1
+		if(superKeysOn) {
+			setVimState(true, false)
+		} else {
+			setVimState(true, true)
+		}
+	return
+	
+	; Explicit unpause.
 	!m::
 	!j::
-		toggleVimKeys(true)
+		setVimState(true)
 	return
 		
 	; Unpause specially for find.
 	~$Esc::
+		if(superKeysOn) {
+			setVimState(true) ; Special additional reset.
+		}
 		if(justFound) {
-			toggleVimKeys(true)
+			setVimState(true)
 			justFound := 0
 		}
 	return
@@ -91,7 +110,7 @@ toggleVimKeys(toState) {
 	; Unpause specially for omnibox.
 	~$Enter::
 		if(justOmnibox) {
-			toggleVimKeys(true)
+			setVimState(true)
 			justOmnibox := 0
 		}
 	return
@@ -100,7 +119,7 @@ toggleVimKeys(toState) {
 	F9::
 		Send, ^w
 	~^w::
-		toggleVimKeys(true)
+		setVimState(true)
 	return
 #IfWinActive
 
@@ -114,7 +133,7 @@ toggleVimKeys(toState) {
 	/::
 		Send, ^f
 	~^f::
-		toggleVimKeys(false)
+		setVimState(false)
 		justFound := 1
 	return
 
@@ -123,7 +142,7 @@ toggleVimKeys(toState) {
 	~^t::
 		justOmnibox := 1
 	i::
-		toggleVimKeys(false)
+		setVimState(false)
 	return
 	
 	; Reload.
@@ -131,6 +150,11 @@ toggleVimKeys(toState) {
 	
 	; Forward, to match backspace for back.
 	\::Send, !{Right}
+	
+	; Special addition for when j/k turned off because special page.
+	Space & j::Send, {Down}
+	Space & k::Send, {Up}
+	Space Up::Send, {Space}
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
@@ -149,7 +173,7 @@ toggleVimKeys(toState) {
 #If
 
 ; Special keys, only activated at higher level
-#If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn && allKeysOn
+#If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn && superKeysOn
 	; Next/previous page, uses (modified) userscript. (Greasemonkeyboard)
 	m::Send, ^{Right}
 	n::Send, ^{Left}
