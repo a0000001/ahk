@@ -1,6 +1,8 @@
 ﻿; Up and down at an interval. (override Win+up and Win+down windows shortcuts)
-#Up::Send {Volume_Up 5}
-#Down::Send {Volume_Down 5}
+; #Up::Send {Volume_Up 5}
+#PgUp::Send {Volume_Up 5}
+; #Down::Send {Volume_Down 5}
+#PgDn::Send {Volume_Down 5}
 
 ; Volume control.
 +^WheelUp::Send, {Volume_Up}

@@ -17,16 +17,20 @@ return
 
 ; New subpage, promote and demote.
 ^+n::
-	Send, !hy
+	; Send, !hy
+	Send, !5
 return
 ^+[::
-	Send, !ho
+	; Send, !ho
+	Send, !6
 return
 ^+]::
-	Send, !hs
+	; Send, !hs
+	Send, !7
 return
-^d::
-	Send, !hd
+^+d::
+	; Send, !hd
+	Send, !8
 return
 	
 #ifWinActive
