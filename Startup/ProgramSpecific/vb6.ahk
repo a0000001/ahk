@@ -22,4 +22,18 @@
 		Send, o
 	return
 	
+	; Epic Headers Addin.
+	^+h::
+		Send, !a
+		Sleep, 100
+		Send, {Up}{Enter}
+	return
+	
+	; Epic VB Parse Addin.
+	^+p::
+		Send, !a
+		Sleep, 100
+		Send, {Up 2}{Enter}
+	return
+	
 #IfWinActive
