@@ -36,5 +36,6 @@ if(borgWhichMachine = THINKPAD) {
 
 #Include ProgramSpecific\sites.ahk
 #Include ProgramSpecific\sumatraPDF.ahk
+#Include ProgramSpecific\tortoiseSVN.ahk
 #Include ProgramSpecific\vb6.ahk
 #Include ProgramSpecific\word.ahk
