@@ -10,7 +10,17 @@
 	
 	; Show project explorer.
 	$F1::
-		Send, ^r
+		DetectHiddenText, Off
+		If(WinActive("", "Project - ")) {
+			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbProjectExplorerCloseButtonDeselected.png")
+			
+			if(!good) {
+				ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbProjectExplorerCloseButton.png")
+			}
+		} else {
+			Send, ^r
+		}
+		DetectHiddenText, On
 	return
 	
 	; Code vs. design swap.
@@ -63,6 +73,13 @@
 		ImageSearch, outX, outY, 0, 0, width, height, %imagePath%
 		; MsgBox, % outX " " outY " " ErrorLevel
 		
+		if(ErrorLevel = 1) {
+			return false
+		}
+		
+		outX := outX + 5
+		outY := outY + 5
+		
 		; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
 		CoordMode, Mouse, Relative
 		
@@ -76,6 +93,10 @@
 		
 		; Restore this for other scripts' sake.
 		CoordMode, Mouse, Screen
+		
+		; MsgBox, Clicked.
+		
+		return true
 	}
 	
 	getSelectedText() {
