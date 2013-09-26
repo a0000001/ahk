@@ -49,7 +49,7 @@
 		
 		; Move, click the button, move back.
 		MouseMove, outX, outY
-		Click
+		Send, {Click}
 		MouseMove, prevX, prevY
 		
 		; Restore this for other scripts' sake.
@@ -143,9 +143,12 @@
 				}
 			}
 		}
-		
-		
-		
 	return
+	
+	; Hotkeys for adding elements to form.
+	^+l::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbLabelToolbarButton.png")
+	^+t::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbTextboxToolbarButton.png")
+	^+b::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommandButtonToolbarButton.png")
+	^+s::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png")
 	
 #IfWinActive
