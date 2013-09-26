@@ -8,8 +8,30 @@
 		Send, r
 	return
 	
+	; Show project explorer.
+	$F1::
+		Send, ^r
+	return
+	
+	; Code vs. design swap.
+	Pause::
+		WinGetTitle, title
+		; MsgBox, % title
+		
+		StringTrimRight, title, title, 2
+		StringRight, title, title, 4
+		
+		; MsgBox, % title
+		
+		if(title = "Code") {
+			Send, +{F7}
+		} else if(title = "Form") {
+			Send, {F7}
+		}
+	return
+	
 	; Stop when running.
-	F12::
+	$F12::
 		Send, !r
 		Sleep, 100
 		Send, e
