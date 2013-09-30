@@ -194,4 +194,108 @@
 	^+b::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommandButtonToolbarButton.png")
 	^+s::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png")
 	
+	; Create all required procedure stubs from an interface.
+	^+f::
+		ControlGet, CurrentProcedure, List, Selected, ComboBox1
+		; MsgBox, % CurrentProcedure
+		
+		; Allow being on "Implements ..." line instead of having left combobox correctly selected first.
+		if(CurrentProcedure = "(General)") {
+			ClipSave := clipboard ; Save the current clipboard.
+			
+			Send, {End}{Shift Down}{Home}{Shift Up}
+			Send, ^c
+			
+			Sleep, 100 ; Allow clipboard time to populate.
+			
+			lineString := clipboard
+			; MsgBox, % lineString
+			
+			clipboard := ClipSave ; Restore clipboard
+			
+			; Pull the class name from the implements statement.
+			StringTrimLeft, className, lineString, 11
+			
+			; Trims trailing spaces via "Autotrim" behavior.
+			className = %className%
+			
+			; MsgBox, z%className%z
+			
+			; Open the dropdown so we can see everything.
+			ControlFocus, ComboBox1, A
+			Send, {Down}
+			Sleep, 100
+			
+			ControlGet, ObjectList, List, , ComboBox1
+			; MsgBox, % ObjectList
+			
+			classRow := 0
+			
+			Loop, Parse, ObjectList, `n  ; Rows are delimited by linefeeds (`n).
+			{
+				; A_Index ; row number.
+				if(A_LoopField = className) {
+					; MsgBox %className% is on row #%A_Index%.
+					classRow := A_Index
+					break
+				}
+			}
+			
+			; MsgBox, % classRow
+			
+			; if(classRow != 0) {
+				; Send, {Down %classRow%}
+			; }
+			
+			; Send, {Enter}
+			
+			Control, Choose, %classRow%, ComboBox1, A
+		}
+		
+		LastItem := ""
+		SelectedItem := ""
+		
+		; ComboBox1, ComboBox2
+		
+		ControlFocus, ComboBox2, A
+		Send, {Down}
+		
+		Sleep, 100
+		
+		ControlGet, List, List, , ComboBox2
+		
+		; MsgBox, % List
+		
+		RegExReplace(List, "`n", "", countNewLines)
+		
+		; MsgBox, % countNewLines
+		
+		countNewLines++
+		
+		Loop %countNewLines% {
+			; ; Move the dropdown to/create the next function.
+			; ControlFocus, ComboBox2, A
+			; Send, {Down 2}{Enter}
+			
+			; Sleep, 500
+			
+			; ControlGet, SelectedItem, List, Selected, ComboBox2
+			
+			; ; MsgBox, % SelectedItem
+			
+			; If(LastItem == SelectedItem) {
+				; break
+				; ; MsgBox, same
+			; }
+			
+			; LastItem := SelectedItem
+			
+			; MsgBox, % A_Index
+			
+			ControlFocus, ComboBox2, A
+			Control, Choose, %A_Index%, ComboBox2, A
+		}
+	return
+	
+	
 #IfWinActive
