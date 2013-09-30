@@ -64,7 +64,6 @@
 	^+n::
 		Send, ^n
 	return
-	
 
 
 	~^2::
