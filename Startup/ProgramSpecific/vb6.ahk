@@ -233,21 +233,12 @@
 			
 			Loop, Parse, ObjectList, `n  ; Rows are delimited by linefeeds (`n).
 			{
-				; A_Index ; row number.
 				if(A_LoopField = className) {
 					; MsgBox %className% is on row #%A_Index%.
 					classRow := A_Index
 					break
 				}
 			}
-			
-			; MsgBox, % classRow
-			
-			; if(classRow != 0) {
-				; Send, {Down %classRow%}
-			; }
-			
-			; Send, {Enter}
 			
 			Control, Choose, %classRow%, ComboBox1, A
 		}
@@ -272,24 +263,7 @@
 		
 		countNewLines++
 		
-		Loop %countNewLines% {
-			; ; Move the dropdown to/create the next function.
-			; ControlFocus, ComboBox2, A
-			; Send, {Down 2}{Enter}
-			
-			; Sleep, 500
-			
-			; ControlGet, SelectedItem, List, Selected, ComboBox2
-			
-			; ; MsgBox, % SelectedItem
-			
-			; If(LastItem == SelectedItem) {
-				; break
-				; ; MsgBox, same
-			; }
-			
-			; LastItem := SelectedItem
-			
+		Loop %countNewLines% {			
 			; MsgBox, % A_Index
 			
 			ControlFocus, ComboBox2, A
