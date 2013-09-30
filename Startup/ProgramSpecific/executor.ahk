@@ -1,11 +1,14 @@
 ﻿; Executor startup hotkey.
 ^+!x::Run, C:\Program Files (x86)\Executor\Executor.exe
 
-; use Caps Lock as the trigger key.
-CapsLock::
-	; SetCapsLockState, Off
-	Send, #z
-return
+; Protect remote desktop executor from host AHK interference.
+#IfWinNotActive, ahk_class TscShellContainerClass
+	; use Caps Lock as the trigger key.
+	CapsLock::
+		; SetCapsLockState, Off
+		Send, #z
+	return
+#IfWinNotActive
 
 #ifWinActive, ahk_class TSetupForm
 
