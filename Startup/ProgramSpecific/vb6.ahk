@@ -68,6 +68,13 @@
 		Send, {Up 2}{Enter}
 	return
 	
+	; References window.
+	^+r::
+		Send, !p
+		Sleep, 100
+		Send, n
+	return
+	
 	ClickWhereFindImage(imagePath) {
 		WinGetPos, X, Y, width, height, A
 		ImageSearch, outX, outY, 0, 0, width, height, %imagePath%
@@ -193,10 +200,40 @@
 	^+t::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbTextboxToolbarButton.png")
 	^+b::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommandButtonToolbarButton.png")
 	^+s::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png")
-	
+		
 	; Create all required procedure stubs from an interface.
 	^+f::
-		ControlGet, CurrentProcedure, List, Selected, ComboBox1
+		WinGet, List, ControlList, A
+		
+		; MsgBox, % List
+		
+		Loop, Parse, List, `n  ; Rows are delimited by linefeeds (`n).
+		{
+			if(InStr(A_LoopField, "ComboBox")) {
+				; MsgBox %className% is on row #%A_Index%.
+				; classRow := A_Index
+				; break
+				ControlGetPos, x, y, w, h, %A_LoopField%
+				; MsgBox, %x% %y%
+				
+				; When two in a row have the same y value, they're what we're looking for.
+				if(y = yPast) {
+					; MsgBox, Got two! %x% %y% %yPast%
+					fieldName := A_LoopField
+					
+					break
+				}
+				
+				yPast := y
+				fieldNamePast := A_LoopField
+			}
+		}
+		
+		; MsgBox, %fieldNamePast% %fieldName%
+		
+		
+		
+		ControlGet, CurrentProcedure, List, Selected, %fieldNamePast%
 		; MsgBox, % CurrentProcedure
 		
 		; Allow being on "Implements ..." line instead of having left combobox correctly selected first.
@@ -222,11 +259,11 @@
 			; MsgBox, z%className%z
 			
 			; Open the dropdown so we can see everything.
-			ControlFocus, ComboBox1, A
+			ControlFocus, %fieldNamePast%, A
 			Send, {Down}
 			Sleep, 100
 			
-			ControlGet, ObjectList, List, , ComboBox1
+			ControlGet, ObjectList, List, , %fieldNamePast%
 			; MsgBox, % ObjectList
 			
 			classRow := 0
@@ -240,20 +277,18 @@
 				}
 			}
 			
-			Control, Choose, %classRow%, ComboBox1, A
+			Control, Choose, %classRow%, %fieldNamePast%, A
 		}
 		
 		LastItem := ""
 		SelectedItem := ""
 		
-		; ComboBox1, ComboBox2
-		
-		ControlFocus, ComboBox2, A
+		ControlFocus, %fieldName%, A
 		Send, {Down}
 		
 		Sleep, 100
 		
-		ControlGet, List, List, , ComboBox2
+		ControlGet, List, List, , %fieldName%
 		
 		; MsgBox, % List
 		
@@ -266,8 +301,8 @@
 		Loop %countNewLines% {			
 			; MsgBox, % A_Index
 			
-			ControlFocus, ComboBox2, A
-			Control, Choose, %A_Index%, ComboBox2, A
+			ControlFocus, %fieldName%, A
+			Control, Choose, %A_Index%, %fieldName%, A
 		}
 	return
 	

@@ -10,5 +10,19 @@
 		Send, ^+{Left}
 		Send, {Backspace}
 	return
+	
+	; EMC2: Get DLG number from title.
+	^+c::
+		WinGetTitle, title
+		; MsgBox, % title
+		
+		StringSplit, splitTitle, title, -, %A_Space%
+		; MsgBox, % splitTitle1
+		
+		StringSplit, splitFirstPart, splitTitle1, %A_Space%
+		; MsgBox, %splitFirstPart1% - %splitFirstPart2%
+		
+		clipboard := splitFirstPart2
+	return
 
 #IfWinActive
