@@ -134,6 +134,8 @@ return
 :*:uni'::university
 :*:sol'n::solution
 :*:sync'd::synchronized
+:*:pos'n::position
+:*:pos'd::positioned
 
 ; date, time, both, and address
 ::idate::

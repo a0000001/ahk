@@ -8,22 +8,64 @@
 		Send, r
 	return
 	
-	; Show project explorer.
+	; Show/hide project explorer.
 	$F1::
 		DetectHiddenText, Off
+		
 		If(WinActive("", "Project - ")) {
-			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbProjectExplorerCloseButtonDeselected.png")
+			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbGenericCloseButton.png", "PROJECT1")
 			
 			if(!good) {
-				ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbProjectExplorerCloseButton.png")
+				MsgBox, Not Found...
 			}
 		} else {
 			Send, ^r
 		}
+		
 		DetectHiddenText, On
 	return
 	
-	; Code vs. design swap.
+	; Show/hide properties sidebar.
+	$F4::
+		DetectHiddenText, Off
+		
+		If(WinActive("", "Properties - ")) {
+			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbGenericCloseButton.png", "wndclass_pbrs1")
+			
+			if(!good) {
+				MsgBox, Not Found...
+			}
+		} else {
+			Send, {F4}
+		}
+		
+		DetectHiddenText, On
+	return
+	
+	; Show/hide toolbox bar.
+	$F3::
+		DetectHiddenText, Off
+		
+		If(toggleToolbox) {
+			toggleToolbox := false
+			
+			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbGenericCloseButton.png", "ToolsPalette1")
+			
+			if(!good) {
+				MsgBox, Not Found...
+			}
+		} else {
+			toggleToolbox := true
+			
+			Send, !v
+			Sleep, 100
+			Send, x
+		}
+		
+		DetectHiddenText, On
+	return
+	
+	; Code vs. design swap. Note: only works if mini-window within window is maximized within outer window.
 	Pause::
 		WinGetTitle, title
 		; MsgBox, % title
@@ -75,8 +117,120 @@
 		Send, n
 	return
 	
-	ClickWhereFindImage(imagePath) {
+	FindImageCoordsWithinArea(imagePath, X, Y, W, H) {
+		ImageSearch, outX, outY, X, Y, W, H, %imagePath%
+		
+		if(ErrorLevel = 0) { ; We found something, store and recurse!
+			; CoordMode, Mouse, Relative
+			; MouseMove, %outX%, %outY%
+			; CoordMode, Mouse, Screen
+			
+			; MsgBox, %ErrorLevel% Found image at (%outX%, %outY%).
+			
+			outStr = %outX%-%outY%
+			firstXY := FindImageCoordsWithinArea(imagePath, outX+1, outY, W, H)
+			secondXY := FindImageCoordsWithinArea(imagePath, X, outY+1, outX, H)
+			
+			if(firstXY != "") {
+				outStr = %outStr%.%firstXY%
+			}
+			
+			if(secondXY != "") {
+				outStr = %outStr%.%secondXY%
+			}
+		} else {
+			outStr := ""
+		}
+		
+		return outStr
+	}
+	
+	ClickWhereFindImage(imagePath, nnClass = "") {
 		WinGetPos, X, Y, width, height, A
+		; MsgBox, %X% %Y%
+		
+		coords := FindImageCoordsWithinArea(imagePath, X, Y, width+X, height+Y)
+		; MsgBox, % coords
+		
+		RegExReplace(coords, "\.", "", periodCount)
+		coordsCount := periodCount + 1
+		; MsgBox, % coordsCount
+		
+		; Split the coords into a 2-dimensional array. (pointNum, X/Y)
+		StringSplit, splitCoords, coords, .
+		Loop, %coordsCount% {
+			StringSplit, splitCoords%A_Index%_, splitCoords%A_Index%, -
+		}
+		; MsgBox, % splitCoords1_1 " " splitCoords1_2
+		
+		; Store the old mouse position to move back to once we're finished.
+		MouseGetPos, prevX, prevY
+		
+		; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
+		CoordMode, Mouse, Relative
+			
+		; Loop over the given coordinates, move the mouse there, and use mousegetpos to get the class of the control.
+		Loop, %coordsCount% {
+			MouseMove, splitCoords%A_Index%_1, splitCoords%A_Index%_2
+			; MsgBox, % splitCoords%A_Index%_1 ", " splitCoords%A_Index%_2
+			
+			MouseGetPos, , , , controlNN
+			; MsgBox, %imagePath% %ErrorLevel% %controlNN%
+			
+			; If it matches the given control, be done.
+			if(controlNN = nnClass) {
+				; MsgBox, % "Match found at " splitCoords%A_Index%_1 ", " splitCoords%A_Index%_2 "!"
+				foundOne := true
+				break
+			}
+		}
+		
+		; Restore this for other scripts' sake.
+		CoordMode, Mouse, Screen
+		
+		if(foundOne) {
+			; Click the control!
+			Send, {Click}
+		}
+		
+		; Move the mouse back to its former position.
+		MouseMove, prevX, prevY
+		
+		return foundOne
+		
+		Loop 5 {
+			ImageSearch, outX, outY, X, Y, width, height, %imagePath%
+			
+			MsgBox, %x% %y% %imagePath% %ErrorLevel%
+			
+			; ; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
+			; CoordMode, Mouse, Relative
+			
+			; ; Store the old mouse position to move back to once we're finished.
+			; ; MouseGetPos, prevX, prevY
+			
+			; ; Move, click the button, move back.
+			; MouseMove, outX, outY
+			
+			; MouseGetPos, , , , controlNN
+			; MsgBox, %imagePath% %ErrorLevel% %controlNN%
+			
+			; ; return true
+			
+			; ; Send, {Click}
+			; ; MouseMove, prevX, prevY
+			
+			; ; Restore this for other scripts' sake.
+			; CoordMode, Mouse, Screen
+			
+			; if(ErrorLevel = 0 && ) {
+				; break
+			; }
+		}
+		
+		
+		return
+		
 		ImageSearch, outX, outY, 0, 0, width, height, %imagePath%
 		; MsgBox, % outX " " outY " " ErrorLevel
 		
@@ -84,6 +238,7 @@
 			return false
 		}
 		
+		; A little padding to allow screenshot to show area around button if needed.
 		outX := outX + 5
 		outY := outY + 5
 		
@@ -95,6 +250,12 @@
 		
 		; Move, click the button, move back.
 		MouseMove, outX, outY
+		
+		; MouseGetPos, , , , controlNN
+		; MsgBox, %controlNN%
+		
+		; return true
+		
 		Send, {Click}
 		MouseMove, prevX, prevY
 		
