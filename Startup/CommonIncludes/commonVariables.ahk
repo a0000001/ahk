@@ -116,14 +116,14 @@ if(borgWhichMachine = THINKPAD) {
 ; ----- Control screenshots/ClassNN for use with ImageSearch. ----- ;
 
 ; VB6.
-iSearchPath_vbComment := "C:\Users\gborg\ahk\Images\vbCommentToolbarButton.png"
-iSearchPath_vbUncomment := "C:\Users\gborg\ahk\Images\vbUncommentToolbarButton.png"
-iSearchPath_vbGenericClose := "C:\Users\gborg\ahk\Images\vbGenericCloseButton.png"
-iSearchPath_vbToolboxLabel := "C:\Users\gborg\ahk\Images\vbLabelToolbarButton.png"
-iSearchPath_vbToolboxTextbox := "C:\Users\gborg\ahk\Images\vbTextboxToolbarButton.png"
-iSearchPath_vbToolboxCommandButton := "C:\Users\gborg\ahk\Images\vbCommandButtonToolbarButton.png"
-iSearchPath_vbToolboxShape := "C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png"
-iSearchPath_vbToolboxChrontrol := "C:\Users\gborg\ahk\Images\vbChrontrolToolbarButton.png"
+iSearchPath_vbComment := "..\Images\vbCommentToolbarButton.png"
+iSearchPath_vbUncomment := "..\Images\vbUncommentToolbarButton.png"
+iSearchPath_vbGenericClose := "..\Images\vbGenericCloseButton.png"
+iSearchPath_vbToolboxLabel := "..\Images\vbLabelToolbarButton.png"
+iSearchPath_vbToolboxTextbox := "..\Images\vbTextboxToolbarButton.png"
+iSearchPath_vbToolboxCommandButton := "..\Images\vbCommandButtonToolbarButton.png"
+iSearchPath_vbToolboxShape := "..\Images\vbShapeToolbarButton.png"
+iSearchPath_vbToolboxChrontrol := "..\Images\vbChrontrolToolbarButton.png"
 
 iSearchClass_vbToolbar2 := "MsoCommandBar1 MsoCommandBar2 MsoCommandBar3 MsoCommandBar4 MsoCommandBar5"
 iSearchClass_vbProjectExplorer := "PROJECT1"
