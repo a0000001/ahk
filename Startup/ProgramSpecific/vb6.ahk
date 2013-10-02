@@ -195,7 +195,7 @@
 			; If it matches the given control, be done.
 			Loop, %classCount% {
 				; MsgBox, % A_Index classArr%A_Index% controlNN
-				if(controlNN = classArr%A_Index%) {
+				if(controlNN = classArr%A_Index% || classCount = 1) {
 					; MsgBox, % "Match found at " splitCoords%A_Index%_1 ", " splitCoords%A_Index%_2 "!"
 					foundOne := true
 					break

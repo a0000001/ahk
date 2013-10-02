@@ -125,7 +125,7 @@ iSearchPath_vbToolboxCommandButton := "C:\Users\gborg\ahk\Images\vbCommandButton
 iSearchPath_vbToolboxShape := "C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png"
 iSearchPath_vbToolboxChrontrol := "C:\Users\gborg\ahk\Images\vbChrontrolToolbarButton.png"
 
-iSearchClass_vbToolbar2 := "MsoCommandBar2 MsoCommandBar3 MsoCommandBar4"
+iSearchClass_vbToolbar2 := "MsoCommandBar1 MsoCommandBar2 MsoCommandBar3 MsoCommandBar4 MsoCommandBar5"
 iSearchClass_vbProjectExplorer := "PROJECT1"
 iSearchClass_vbPropertiesSidebar := "wndclass_pbrs1"
 iSearchClass_vbToolbarPalette := "ToolsPalette1"
