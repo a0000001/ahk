@@ -13,7 +13,7 @@
 		DetectHiddenText, Off
 		
 		If(WinActive("", "Project - ")) {
-			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbGenericCloseButton.png", "PROJECT1")
+			good := ClickWhereFindImage(iSearchPath_vbGenericClose, iSearchClass_vbProjectExplorer)
 			
 			if(!good) {
 				MsgBox, Not Found...
@@ -30,7 +30,7 @@
 		DetectHiddenText, Off
 		
 		If(WinActive("", "Properties - ")) {
-			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbGenericCloseButton.png", "wndclass_pbrs1")
+			good := ClickWhereFindImage(iSearchPath_vbGenericClose, iSearchClass_vbPropertiesSidebar)
 			
 			if(!good) {
 				MsgBox, Not Found...
@@ -49,7 +49,7 @@
 		If(toggleToolbox) {
 			toggleToolbox := false
 			
-			good := ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbGenericCloseButton.png", "ToolsPalette1")
+			good := ClickWhereFindImage(iSearchPath_vbGenericClose, iSearchClass_vbToolbarPalette)
 			
 			if(!good) {
 				MsgBox, Not Found...
@@ -71,13 +71,18 @@
 		; MsgBox, % title
 		
 		StringTrimRight, title, title, 2
-		StringRight, title, title, 4
+		
+		; MsgBox, % title
+		
+		; StringRight, title, title, 4
+		parenPos := InStr(title, "(")
+		StringTrimLeft, title, title, parenPos
 		
 		; MsgBox, % title
 		
 		if(title = "Code") {
 			Send, +{F7}
-		} else if(title = "Form") {
+		} else if(title = "Form" || title = "UserControl") {
 			Send, {F7}
 		}
 	return
@@ -197,74 +202,6 @@
 		MouseMove, prevX, prevY
 		
 		return foundOne
-		
-		Loop 5 {
-			ImageSearch, outX, outY, X, Y, width, height, %imagePath%
-			
-			MsgBox, %x% %y% %imagePath% %ErrorLevel%
-			
-			; ; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
-			; CoordMode, Mouse, Relative
-			
-			; ; Store the old mouse position to move back to once we're finished.
-			; ; MouseGetPos, prevX, prevY
-			
-			; ; Move, click the button, move back.
-			; MouseMove, outX, outY
-			
-			; MouseGetPos, , , , controlNN
-			; MsgBox, %imagePath% %ErrorLevel% %controlNN%
-			
-			; ; return true
-			
-			; ; Send, {Click}
-			; ; MouseMove, prevX, prevY
-			
-			; ; Restore this for other scripts' sake.
-			; CoordMode, Mouse, Screen
-			
-			; if(ErrorLevel = 0 && ) {
-				; break
-			; }
-		}
-		
-		
-		return
-		
-		ImageSearch, outX, outY, 0, 0, width, height, %imagePath%
-		; MsgBox, % outX " " outY " " ErrorLevel
-		
-		if(ErrorLevel = 1) {
-			return false
-		}
-		
-		; A little padding to allow screenshot to show area around button if needed.
-		outX := outX + 5
-		outY := outY + 5
-		
-		; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
-		CoordMode, Mouse, Relative
-		
-		; Store the old mouse position to move back to once we're finished.
-		MouseGetPos, prevX, prevY
-		
-		; Move, click the button, move back.
-		MouseMove, outX, outY
-		
-		; MouseGetPos, , , , controlNN
-		; MsgBox, %controlNN%
-		
-		; return true
-		
-		Send, {Click}
-		MouseMove, prevX, prevY
-		
-		; Restore this for other scripts' sake.
-		CoordMode, Mouse, Screen
-		
-		; MsgBox, Clicked.
-		
-		return true
 	}
 	
 	getSelectedText() {
@@ -285,11 +222,11 @@
 	}
 	
 	^`;::
-		ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommentToolbarButton.png")
+		ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 	return
 	
 	^+`;::
-		ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbUncommentToolbarButton.png")
+		ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 	return
 	
 	^+c::
@@ -304,11 +241,11 @@
 			; Test the first character.
 			if(SubStr(firstPart, 1, 1) = "'") {
 				; MsgBox, commented!
-				ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbUncommentToolbarButton.png")
+				ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 				
 			} else {
 				; MsgBox, not commented.
-				ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommentToolbarButton.png")
+				ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 			}
 			
 			Send, {Right} ; Unhighlight what we just selected, leaving their cursor where it was previously.
@@ -329,11 +266,11 @@
 				; Test the first character.
 				if(SubStr(firstPart, 1, 1) = "'") {
 					; MsgBox, commented!
-					ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbUncommentToolbarButton.png")
+					ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 					
 				} else {
 					; MsgBox, not commented.
-					ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommentToolbarButton.png")
+					ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 				}
 				
 				; Calculate the distance to get back to the original highlight, and do so.
@@ -347,20 +284,21 @@
 				; MsgBox, multi line.
 				if(SubStr(foundText, newLinePos+1, 1)) = "'" {
 					; MsgBox, commented!
-					ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbUncommentToolbarButton.png")
+					ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 				} else {
 					; MsgBox, not commented.
-					ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommentToolbarButton.png")
+					ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 				}
 			}
 		}
 	return
 	
 	; Hotkeys for adding elements to form.
-	^+l::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbLabelToolbarButton.png")
-	^+t::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbTextboxToolbarButton.png")
-	^+b::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbCommandButtonToolbarButton.png")
-	^+s::ClickWhereFindImage("C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png")
+	^+l::ClickWhereFindImage(iSearchPath_vbToolboxLabel, iSearchClass_vbToolbarPalette)
+	^+t::ClickWhereFindImage(iSearchPath_vbToolboxTextbox, iSearchClass_vbToolbarPalette)
+	^+b::ClickWhereFindImage(iSearchPath_vbToolboxCommandButton, iSearchClass_vbToolbarPalette)
+	^+s::ClickWhereFindImage(iSearchPath_vbToolboxShape, iSearchClass_vbToolbarPalette)
+	^+e::ClickWhereFindImage(iSearchPath_vbToolboxChrontrol, iSearchClass_vbToolbarPalette)
 		
 	; Create all required procedure stubs from an interface.
 	^+f::
@@ -468,4 +406,19 @@
 	return
 	
 	
+#IfWinActive
+
+#IfWinActive, ahk_class #32770
+	; TLG Hotkey.
+	$^t::
+		SetTitleMatchMode, 2
+		
+		if(WinActive(" - Project Properties")) { ; The ahk_class is shared among many, but I don't want it to work with all of them.
+			Send, %epicID%
+		} else {
+			Send, ^t
+		}
+		
+		SetTitleMatchMode, 1
+	return
 #IfWinActive

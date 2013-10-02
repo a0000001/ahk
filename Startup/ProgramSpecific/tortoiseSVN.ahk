@@ -6,7 +6,7 @@
 		SetTitleMatchMode, 2
 		
 		if(WinActive("- Commit - TortoiseSVN")) { ; The ahk_class is shared among many, but I don't want it to work with all of them.
-			SetTitleMatchMode, 2
+			SetTitleMatchMode, 1
 			
 			ControlGetText, svnURL, Edit1
 			; MsgBox, % svnURL
@@ -22,8 +22,6 @@
 		} else {
 			Send, ^d
 		}
-			
-		
 	return
 	
 #IfWinActive

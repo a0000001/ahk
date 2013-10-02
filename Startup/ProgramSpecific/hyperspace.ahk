@@ -5,6 +5,19 @@
 		Send, %epicID%
 	return
 	
+	; Login hotkey.
+	^+t::
+		Send, %epicID%{Tab}%epicUnixPass%{Enter}
+		Sleep, 250
+		If(WinActive("Hyperspace - Test")) {
+			Send, {Enter}
+		}
+		Sleep, 250
+		If(WinActive("Hyperspace - Test")) {
+			Send, {Enter}
+		}
+	return
+	
 	; Make ctrl+backspace act as expected.
 	^Backspace::
 		Send, ^+{Left}

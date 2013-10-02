@@ -1,4 +1,6 @@
-﻿; Program launcher classes and strings.
+﻿
+
+; ----- Program launcher classes and strings. ----- ;
 pLaunchClass_Chrome := "Chrome_WidgetWin_1"
 pLaunchPath_Chrome := "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 
@@ -38,7 +40,9 @@ if(borgWhichMachine = THINKPAD) {
 ; pLaunchClass_Pidgin := "_{NAME}_Buddy List"
 ; pLaunchPath_Pidgin := "C:\Program Files (x86)\Pidgin\pidgin.exe"
 
-; Pick which programs go with which hotkeys.
+
+
+; ----- Program launcher key bindings. ----- ;
 if(borgWhichMachine = THINKPAD) {
 	pLaunchClass_1 := pLaunchClass_Explorer
 	pLaunchPath_1 := pLaunchPath_Explorer
@@ -106,3 +110,24 @@ if(borgWhichMachine = THINKPAD) {
 	pLaunchClass_5 := pLaunchClass_Onenote
 	pLaunchPath_5 := pLaunchPath_Onenote
 }
+
+
+
+; ----- Control screenshots/ClassNN for use with ImageSearch. ----- ;
+
+; VB6.
+iSearchPath_vbComment := "C:\Users\gborg\ahk\Images\vbCommentToolbarButton.png"
+iSearchPath_vbUncomment := "C:\Users\gborg\ahk\Images\vbUncommentToolbarButton.png"
+iSearchPath_vbGenericClose := "C:\Users\gborg\ahk\Images\vbGenericCloseButton.png"
+iSearchPath_vbToolboxLabel := "C:\Users\gborg\ahk\Images\vbLabelToolbarButton.png"
+iSearchPath_vbToolboxTextbox := "C:\Users\gborg\ahk\Images\vbTextboxToolbarButton.png"
+iSearchPath_vbToolboxCommandButton := "C:\Users\gborg\ahk\Images\vbCommandButtonToolbarButton.png"
+iSearchPath_vbToolboxShape := "C:\Users\gborg\ahk\Images\vbShapeToolbarButton.png"
+iSearchPath_vbToolboxChrontrol := "C:\Users\gborg\ahk\Images\vbChrontrolToolbarButton.png"
+
+iSearchClass_vbToolbar2 := "MsoCommandBar2"
+iSearchClass_vbProjectExplorer := "PROJECT1"
+iSearchClass_vbPropertiesSidebar := "wndclass_pbrs1"
+iSearchClass_vbToolbarPalette := "ToolsPalette1"
+
+
