@@ -173,7 +173,17 @@
 		
 		; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
 		CoordMode, Mouse, Relative
-			
+		
+		; Split up the given classNN argument by spaces.
+		RegExReplace(nnClass, " ", "", classCount)
+		classCount++
+		
+		; MsgBox, %nnClass% %classCount%
+		
+		StringSplit, classArr, nnClass, %A_Space%
+		
+		
+		
 		; Loop over the given coordinates, move the mouse there, and use mousegetpos to get the class of the control.
 		Loop, %coordsCount% {
 			MouseMove, splitCoords%A_Index%_1, splitCoords%A_Index%_2
@@ -183,15 +193,20 @@
 			; MsgBox, %imagePath% %ErrorLevel% %controlNN%
 			
 			; If it matches the given control, be done.
-			if(controlNN = nnClass) {
-				; MsgBox, % "Match found at " splitCoords%A_Index%_1 ", " splitCoords%A_Index%_2 "!"
-				foundOne := true
-				break
+			Loop, %classCount% {
+				; MsgBox, % A_Index classArr%A_Index% controlNN
+				if(controlNN = classArr%A_Index%) {
+					; MsgBox, % "Match found at " splitCoords%A_Index%_1 ", " splitCoords%A_Index%_2 "!"
+					foundOne := true
+					break
+				}
 			}
 		}
 		
 		; Restore this for other scripts' sake.
 		CoordMode, Mouse, Screen
+		
+		; MsgBox, % foundOne
 		
 		if(foundOne) {
 			; Click the control!
