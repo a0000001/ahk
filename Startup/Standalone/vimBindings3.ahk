@@ -80,7 +80,7 @@ setVimState(toState, super = false) {
 }
 
 ; Hotkeys related to script state, plus ones that always run.
-#IfWinActive, ahk_class Chrome_WidgetWin_1
+#If WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass")
 	; Special super-on.
 	F8::
 		if(superKeysOn) {
@@ -121,10 +121,10 @@ setVimState(toState, super = false) {
 	~^w::
 		setVimState(true)
 	return
-#IfWinActive
+#If
 
 ; Main hotkeys, run if not turned off.
-#If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn
+#If (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn
 	; Next/Previous Tab.
 	o::Send, ^{Tab}
 	u::Send, ^+{Tab}
@@ -158,7 +158,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
-#If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn && !pageHasOwnControls()
+#If ( WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && !pageHasOwnControls()
 	; Up/Down/Left/Right.
 	j::Send, {Down}
 	k::Send, {Up}
@@ -173,7 +173,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Special keys, only activated at higher level
-#If WinActive("ahk_class Chrome_WidgetWin_1") && vimKeysOn && superKeysOn
+#If ( WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && superKeysOn
 	; Next/previous page, uses (modified) userscript. (Greasemonkeyboard)
 	m::Send, ^{Right}
 	n::Send, ^{Left}
