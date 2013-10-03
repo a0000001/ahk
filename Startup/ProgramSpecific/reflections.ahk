@@ -29,6 +29,11 @@
 	^t::
 		Send, %epicID%
 	return
+	
+	; Unix password hotkey.
+	^!t::
+		Send, %epicUnixPass%
+	return
 
 	^l::
 	^+l::
