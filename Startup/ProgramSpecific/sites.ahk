@@ -1,7 +1,7 @@
 ; Sites to open with a global hotkey.
 
 ^+!a::
-	if(borgWhichMachine = THINKPAD) {	
+	; if(borgWhichMachine = THINKPAD) {	
 		howManySites := 4
 		Run, https://mail.google.com/
 		Sleep, 100
@@ -11,9 +11,9 @@
 		Sleep, 100
 		Run, http://cloud.feedly.com/#latest
 		Sleep, 100
-	} else if(borgWhichMachine = EPIC_DESKTOP) {
-		; Betelgeuse
-	}
+	; } else if(borgWhichMachine = EPIC_DESKTOP) {
+		; ; Betelgeuse
+	; }
 	
 	howManySites--
 	

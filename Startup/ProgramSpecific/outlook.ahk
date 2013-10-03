@@ -58,8 +58,12 @@
 ;	^m::^!4
 
 	; TLG Event Creation Macro.
-	^n::
-		Send, !hy
+	$^n::
+		if(WinActive("Calendar - ") || WinActive("TLG - ")) {
+			Send, !hy
+		} else {
+			Send, ^n
+		}
 	return
 	^+n::
 		Send, ^n

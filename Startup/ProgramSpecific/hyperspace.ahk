@@ -18,6 +18,14 @@
 		}
 	return
 	
+	; Exit hotkey.
+	^d::
+		KeyWait, Control
+		Send, {Alt Down}{Alt Up}
+		Sleep, 100
+		Send, x
+	return
+	
 	; Make ctrl+backspace act as expected.
 	^Backspace::
 		Send, ^+{Left}

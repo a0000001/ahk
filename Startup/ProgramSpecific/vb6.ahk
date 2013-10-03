@@ -8,6 +8,13 @@
 		Send, r
 	return
 	
+	; Make hotkey.
+	^+m::
+		Send, !f
+		Sleep, 100
+		Send, k
+	return
+	
 	; Show/hide project explorer.
 	$F1::
 		DetectHiddenText, Off
