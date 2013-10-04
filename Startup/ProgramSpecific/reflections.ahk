@@ -39,6 +39,36 @@
 	^+l::
 		Send, !el{Enter}
 	return
+	
+	^z::
+		SendRaw, d ^`%ZeW
+		Send, {Enter}
+	return
+	
+	^e::
+		SendRaw, d ^e
+		Send, {Enter}
+	return
+	
+	^+e::
+		SendRaw, d ^EAVIEWID
+		Send, {Enter}
+	return
+	
+	^a::
+		SendRaw, d ^`%ZeADMIN
+		Send, {Enter}
+	return
+	
+	^m::
+		SendRaw, d ^EZMENU
+		Send, {Enter}
+	return
+	
+	^o::
+		SendRaw, d ^EDTop
+		Send, {Enter}
+	return
 
 #ifWinActive
 
