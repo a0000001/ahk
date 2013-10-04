@@ -61,47 +61,47 @@ HID_Register(1,2,0,RIDEV_REMOVE)
 
 if(%mouse_Moved% = %n%) {
 
-; Taskbar Overlord addition    
+; ; Taskbar Overlord addition    
 	
-	CoordMode, Mouse, Screen
-	MouseGetPos, x, y, WinUnderMouseID
+	; CoordMode, Mouse, Screen
+	; MouseGetPos, x, y, WinUnderMouseID
 
-	;Get y position relative to the top of the screen.
-	yTop := y
+	; ;Get y position relative to the top of the screen.
+	; yTop := y
 	
-	; Close taskbar program on middle click, if click on a taskbar icon
-	if yTop <= 23
-	{
-		BlockInput On
-		Send, +{Click %x% %y% right} ;shift right click
-		Sleep, 100
-		Send, C ;send c which is Close All Windows
-		WinWaitNotActive, ahk_class Shell_TrayWnd,, 0.5 ; wait for save dialog, etc
-		If ErrorLevel = 1
-			Send, {Escape} ;hides context menu if no program icon clicked.
-		BlockInput Off
-	; else send normal middle click
-	} else {
+	; ; Close taskbar program on middle click, if click on a taskbar icon
+	; if yTop <= 23
+	; {
+		; BlockInput On
+		; Send, +{Click %x% %y% right} ;shift right click
+		; Sleep, 100
+		; Send, C ;send c which is Close All Windows
+		; WinWaitNotActive, ahk_class Shell_TrayWnd,, 0.5 ; wait for save dialog, etc
+		; If ErrorLevel = 1
+			; Send, {Escape} ;hides context menu if no program icon clicked.
+		; BlockInput Off
+	; ; else send normal middle click
+	; } else {
 		
-		; ; Special for Chrome - ctrl+click if not on tabs bar.
-		; if(WinActive("ahk_class Chrome_WidgetWin_1")) {
-			; CoordMode, Mouse, Relative
-			; MouseGetPos, , posY
-			; CoordMode, Mouse, Screen
+		; ; ; Special for Chrome - ctrl+click if not on tabs bar.
+		; ; if(WinActive("ahk_class Chrome_WidgetWin_1")) {
+			; ; CoordMode, Mouse, Relative
+			; ; MouseGetPos, , posY
+			; ; CoordMode, Mouse, Screen
 			
-			; if(posY > 30) {
-				; ; MsgBox, % posY
-				; Send, ^{Click}
-			; } else {
-				; MouseClick, Middle
-			; }
-		; } else {
-			MouseClick, Middle
-		; }
+			; ; if(posY > 30) {
+				; ; ; MsgBox, % posY
+				; ; Send, ^{Click}
+			; ; } else {
+				; ; MouseClick, Middle
+			; ; }
+		; ; } else {
+			; MouseClick, Middle
+		; ; }
 		
-	 }
+	 ; }
 	
-; end Taskbar Overlord addition
+; ; end Taskbar Overlord addition
 
 }
 	

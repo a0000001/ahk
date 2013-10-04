@@ -449,13 +449,13 @@ return
 ; like an extra measure of security for
 ; an operation like this.
 !MButton::
-If DoubleAlt
-{
-    MouseGetPos,,,KDE_id
-    WinClose,ahk_id %KDE_id%
-    DoubleAlt := false
-    return
-}
+; If DoubleAlt
+; {
+    ; MouseGetPos,,,KDE_id
+    ; WinClose,ahk_id %KDE_id%
+    ; DoubleAlt := false
+    ; return
+; }
 
 ; Toggle window Maximize/Original size with Alt+Middle mouse button
 If MayToggle
@@ -475,12 +475,12 @@ return
 return
 
 
-; This detects "double-clicks" of the alt key.
-~Alt::
-    DoubleAlt := A_PriorHotKey = "~Alt" AND A_TimeSincePriorHotkey < 400
-    Sleep 0
-    KeyWait Alt  ; This prevents the keyboard's auto-repeat feature from interfering.
-return
+; ; This detects "double-clicks" of the alt key.
+; ~Alt::
+    ; DoubleAlt := A_PriorHotKey = "~Alt" AND A_TimeSincePriorHotkey < 400
+    ; Sleep 0
+    ; KeyWait Alt  ; This prevents the keyboard's auto-repeat feature from interfering.
+; return
 
 
 
