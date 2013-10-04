@@ -96,7 +96,7 @@ if(%mouse_Moved% = %n%) {
 				; ; MouseClick, Middle
 			; ; }
 		; ; } else {
-			; MouseClick, Middle
+			MouseClick, Middle
 		; ; }
 		
 	 ; }
