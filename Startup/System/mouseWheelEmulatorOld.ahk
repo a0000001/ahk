@@ -6,8 +6,6 @@ Created by Blahman (blah238 at gmail dot com)
 v1.0
 10/18/2009
 
-From: http://www.autohotkey.com/board/topic/46203-mouse-wheel-emulator/
-
 Summary: This script combines the functionality of TheGood's AHKHID and ManaUser's MakeChord libraries to provide emulated middle-click and scroll wheel abilities to users of mice, trackpads and trackballs without a scroll wheel.
 
 Features:
@@ -90,25 +88,8 @@ scrollChord_Up:
 	ToolTip
 	BlockInput, MouseMoveOff
 	HID_Register(1,2,0,RIDEV_REMOVE)
-	
-	; MsgBox, %mouseMoved% %n% a
-	if(%mouse_Moved% = %n%) {
-		if(WinActive("ahk_class Chrome_WidgetWin_1")) {
-			CoordMode, Mouse, Relative
-			MouseGetPos, , posY
-			CoordMode, Mouse, Screen
-			; MsgBox, % posY
-			
-			if(posY > 90) {
-				; MsgBox, % posY
-				Send, ^{Click}
-			} else {
-				MouseClick, Middle
-			}
-		} else {
-			MouseClick, Middle
-		}
-	}
+	if mouse_Moved = n
+		MouseClick, Middle
 return
 
 InputMsg(wParam, lParam) {

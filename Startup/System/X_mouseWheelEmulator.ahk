@@ -1,12 +1,13 @@
-;; MouseWheelEmulator.ahk
+; Note that on a thinkpad, middle click must be set to scroll, and to SMOOTH scroll.
 
 /*
+
+Modified from: http://www.autohotkey.com/forum/topic50093.html
+
 MouseWheelEmulator
 Created by Blahman (blah238 at gmail dot com)
 v1.0
 10/18/2009
-
-From: http://www.autohotkey.com/board/topic/46203-mouse-wheel-emulator/
 
 Summary: This script combines the functionality of TheGood's AHKHID and ManaUser's MakeChord libraries to provide emulated middle-click and scroll wheel abilities to users of mice, trackpads and trackballs without a scroll wheel.
 
@@ -16,9 +17,8 @@ Features:
 -Sends scroll wheel messages to window or control under cursor, not just the active window (in supported applications; see note about different scroll modes below)
 
 Installation:
-1) Download the AHKHID and MakeChord libraries and place the AHKHID.ahk and MakeChord.ahk files in the same folder as this script.
+1) Download the AHKHID library and place the AHKHID.ahk file in the same folder as this script.
 AHKHID: http://www.autohotkey.com/forum/topic41397.html
-MakeChord (just the second half that starts with the MakeChord() function): http://www.autohotkey.com/forum/topic44399.html
 2) Run this script.
 
 Usage:
@@ -29,75 +29,65 @@ Click the left and right mouse buttons simultaneously (often referred to as "cho
 Hold Alt and right click.
 
 To scroll the virtual mouse wheel:
-Click and hold the left and right mouse buttons simultaneously and move the mouse in the direction you wish to scroll.
--or-
-Hold Alt, click and hold the right mouse button, and move the mouse in the direction you wish to scroll.
-
-Note: If you need to terminate the script you can use Ctrl-Alt-Break.
+Hold down Middle Click and move the mouse.
 
 About the different scroll modes:
 There are several different ways that any given program may implement mouse scrolling. AHK has built-in WheelUp and WheelDown functions, but not all applications respond to them.
 Some applications respond to WM_VSCROLL/WM_HSCROLL messages, while others respond to WM_MOUSEWHEEL/WM_HSCROLL messages.
 If you find an application you use doesn't work with this script out of the box, you can probably fix it yourself by adding that application's process name to the conditional statements in the GetScrollMode() function.
-
 The default scroll mode, 0, is AHK's built-in WheelUp and WheelDown commands. This does not support horizontal scrolling or scrolling the window or control under the cursor, while the other two modes do.
 Some applications respond to more than one scroll mode, so you can try them all and decide which works best for you.
-
 Finally, to further muddy the waters, some applications have frames within them that respond to scroll messages differently to the rest of the application. An example of this is the AHK help file, which uses the Internet Explorer_Server1 control to display HTML pages in one frame, and standard Windows controls to display the table of contents, index, etc. in another frame, and each responds to different scroll modes. I have tried to account for this in the GetScrollMode() function as well, but there may be other implementations I have not covered. You can use AHK's Window Spy to determine the name of the non-conforming control and write an exception for it, similar to the examples I have provided.
+
 */
 
-;; Configuration
-
-; mouse_Threshold = 3 ; the number of pixels the mouse must move for a scroll tick to occur
-; MakeChord("LButton", "RButton", "scrollChord", 20) ; Chord to activate middle click or scrolling. See MakeChord.ahk for instructions
-; scroll_Hotkey = !RButton ; Hotkey to activate middle click or scrolling
-
-; ;; End Configuration
-; #SingleInstance Force
-; #NoEnv
-; #Persistent
-
-; SendMode Input
-; Process, Priority, , Realtime
-; #Include %A_ScriptDir%\AHKHID.ahk
-
-; ;Create GUI to receive messages
-; Gui, +LastFound
-; hGui := WinExist()
-
-; ;Intercept WM_INPUT messages
-; OnMessage(0x00FF, "InputMsg")
-; SetDefaultMouseSpeed, 0
-; scrollMode = 0 ; 0 = MouseClick, WheelUp/WheelDown, 1 = WM_VSCROLL/WM_HSCROLL, 2 = WM_MOUSEWHEEL/WM_HSCROLL
-; CoordMode, Mouse, Screen
-
-; HotKey, %scroll_Hotkey%, scrollChord
-; HotKey, %scroll_Hotkey% Up, scrollChord_Up
-
-; return
-
 scrollChord:
-	mouse_Moved = n
-	BlockInput, MouseMove
-	MouseGetPos, m_x, m_y, winID, control
-	WinGet, procName, ProcessName, ahk_id %winID%
-	hw_m_target := DllCall( "WindowFromPoint", "int", m_x, "int", m_y )
-	GetScrollMode()
-	HID_Register(1, 2, hGui, RIDEV_INPUTSINK)
+mouse_Moved = n
+BlockInput, MouseMove
+
+CoordMode, Mouse, Screen ; Gavin added.
+
+MouseGetPos, m_x, m_y, winID, control
+WinGet, procName, ProcessName, ahk_id %winID%
+hw_m_target := DllCall( "WindowFromPoint", "int", m_x, "int", m_y )
+GetScrollMode()
+HID_Register(1, 2, hGui, RIDEV_INPUTSINK)
 return
 
 scrollChord_Up:
-	ToolTip
-	BlockInput, MouseMoveOff
-	HID_Register(1,2,0,RIDEV_REMOVE)
+ToolTip
+BlockInput, MouseMoveOff
+HID_Register(1,2,0,RIDEV_REMOVE)
+
+if(%mouse_Moved% = %n%) {
+	; MsgBox, % mouse_Moved " x " n
+; ; Taskbar Overlord addition    
 	
-	; MsgBox, %mouseMoved% %n% a
-	if(%mouse_Moved% = %n%) {
+	; CoordMode, Mouse, Screen
+	; MouseGetPos, x, y, WinUnderMouseID
+
+	; ;Get y position relative to the top of the screen.
+	; yTop := y
+	
+	; ; Close taskbar program on middle click, if click on a taskbar icon
+	; if yTop <= 23
+	; {
+		; BlockInput On
+		; Send, +{Click %x% %y% right} ;shift right click
+		; Sleep, 100
+		; Send, C ;send c which is Close All Windows
+		; WinWaitNotActive, ahk_class Shell_TrayWnd,, 0.5 ; wait for save dialog, etc
+		; If ErrorLevel = 1
+			; Send, {Escape} ;hides context menu if no program icon clicked.
+		; BlockInput Off
+	; ; else send normal middle click
+	; } else {
+		
+		; Special for Chrome - ctrl+click if not on tabs bar or bookmark bar.
 		if(WinActive("ahk_class Chrome_WidgetWin_1")) {
 			CoordMode, Mouse, Relative
 			MouseGetPos, , posY
 			CoordMode, Mouse, Screen
-			; MsgBox, % posY
 			
 			if(posY > 90) {
 				; MsgBox, % posY
@@ -108,7 +98,13 @@ scrollChord_Up:
 		} else {
 			MouseClick, Middle
 		}
-	}
+		
+	 ; }
+	
+; ; end Taskbar Overlord addition
+
+}
+	
 return
 
 InputMsg(wParam, lParam) {
@@ -153,7 +149,7 @@ GetScrollMode()
                     scrollMode = 2
             }
     }
-    else if (procName = "firefox.exe" or procName = "notepad.exe" or procName = "explorer.exe" or procName = "EXCEL.exe")
+    else if (procName = "firefox.exe" or procName = "notepad.exe" or procName = "explorer.exe")
         scrollMode = 2
     else
         scrollMode = 0
@@ -195,7 +191,8 @@ ScrollUp()
 ScrollRight()
 {
     global
-    if (scrollMode <> 0)
+;	MouseClick, WheelRight, , , 2
+;    if (scrollMode <> 0)
         loop, 2
             SendMessage, 0x114, 1, 0, %control%, ahk_id %winID%
 }
@@ -203,11 +200,7 @@ ScrollRight()
 ScrollLeft()
 {
     global
-    if (scrollMode <> 0)
+;    if (scrollMode <> 0)
         loop, 2
             SendMessage, 0x114, 0, 0, %control%, ahk_id %winID%
 }
-
-; ^!CtrlBreak::ExitApp
-
-; #Include %A_ScriptDir%\MakeChord.ahk

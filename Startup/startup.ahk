@@ -22,12 +22,40 @@ MayToggle := true
 
 
 ; @Mouse wheel emulator.
-#Persistent
-Process, Priority, , Realtime
+; #Persistent
+; Process, Priority, , Realtime
 
-; Configuration
+; ; Configuration
+; mouse_Threshold = 5 ; the number of pixels the mouse must move for a scroll tick to occur
+; scroll_Hotkey = MButton ; Hotkey to activate middle click or scrolling
+
+; ;Create GUI to receive messages
+; Gui, +LastFound
+; hGui := WinExist()
+
+; ;Intercept WM_INPUT messages
+; OnMessage(0x00FF, "InputMsg")
+
+; SetDefaultMouseSpeed, 0
+; scrollMode = 0 ; 0 = MouseClick, WheelUp/WheelDown, 1 = WM_VSCROLL/WM_HSCROLL, 2 = WM_MOUSEWHEEL/WM_HSCROLL
+; CoordMode, Mouse, Screen
+
+; HotKey, $MButton, scrollChord
+; HotKey, $MButton Up, scrollChord_Up
+
+
 mouse_Threshold = 5 ; the number of pixels the mouse must move for a scroll tick to occur
+; MakeChord("LButton", "RButton", "scrollChord", 20) ; Chord to activate middle click or scrolling. See MakeChord.ahk for instructions
 scroll_Hotkey = MButton ; Hotkey to activate middle click or scrolling
+
+;; End Configuration
+#SingleInstance Force
+#NoEnv
+#Persistent
+
+SendMode Input
+Process, Priority, , Realtime
+; #Include %A_ScriptDir%\AHKHID.ahk
 
 ;Create GUI to receive messages
 Gui, +LastFound
@@ -35,13 +63,13 @@ hGui := WinExist()
 
 ;Intercept WM_INPUT messages
 OnMessage(0x00FF, "InputMsg")
-
 SetDefaultMouseSpeed, 0
 scrollMode = 0 ; 0 = MouseClick, WheelUp/WheelDown, 1 = WM_VSCROLL/WM_HSCROLL, 2 = WM_MOUSEWHEEL/WM_HSCROLL
 CoordMode, Mouse, Screen
 
-HotKey, $MButton, scrollChord
-HotKey, $MButton Up, scrollChord_Up
+HotKey, %scroll_Hotkey%, scrollChord
+HotKey, %scroll_Hotkey% Up, scrollChord_Up
+
 ; @End mouse wheel emulator.
 
 
