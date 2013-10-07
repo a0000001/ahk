@@ -23,7 +23,7 @@
 	; Archive the current message.
 	$^e::
 		Send, ^q
-		Send, !4
+		Send, !5
 		; Send, ^+2
 	return
 	

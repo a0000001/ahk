@@ -18,26 +18,40 @@ global suspended := 0
 global justFound := 0
 global justOmnibox := 0
 
-; Titles for which pages to check for.
-global titles := 4
-global titles1 := " - Gmail"
-global titles2 := " - Google Search"
-global titles3 := " - feedly"
-global titles4 := " - Reddit"
+; Titles for which pages have controls of their own.
+global ownControlTitles := 4
+global ownControlTitles1 := " - Gmail"
+global ownControlTitles2 := " - Google Search"
+global ownControlTitles3 := " - feedly"
+global ownControlTitles4 := " - Reddit"
+
+global excludeTitles := 1
+global excludeTitles1 := "MightyText Quick Reply"
 
 pageHasOwnControls() {
 	WinGetTitle, pageTitle, A
 	StringTrimRight, pageTitle, pageTitle, 16 ; Slice off the " - Google Chrome" on the end.
-	
 	; MsgBox, % pageTitle
 	
-	i := 1
-	Loop, %titles% {
-		if(InStr(pageTitle, titles%i%)) {
-			; MsgBox, % titles%i%
+	Loop, %ownControlTitles% {
+		if(InStr(pageTitle, ownControlTitles%A_Index%)) {
+			; MsgBox, % ownControlTitles%A_Index%
 			return true
 		}
-		i++
+	}
+	
+	return false
+}
+
+pageToExclude() {
+	WinGetTitle, pageTitle, A	
+	; MsgBox, % pageTitle
+	
+	Loop, %excludeTitles% {
+		if(InStr(pageTitle, excludeTitles%A_Index%)) {
+			; MsgBox, % excludeTitles%A_Index%
+			return true
+		}
 	}
 	
 	return false
@@ -124,7 +138,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Main hotkeys, run if not turned off.
-#If (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn
+#If (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && !pageToExclude()
 	; Next/Previous Tab.
 	o::Send, ^{Tab}
 	u::Send, ^+{Tab}
@@ -158,7 +172,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
-#If ( WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && !pageHasOwnControls()
+#If ( WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && !pageHasOwnControls() && !pageToExclude()
 	; Up/Down/Left/Right.
 	j::Send, {Down}
 	k::Send, {Up}

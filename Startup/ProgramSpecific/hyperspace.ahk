@@ -6,17 +6,21 @@
 	return
 	
 	; Login hotkey.
-	^+t::
+	^+t::		
 		Send, %epicID%{Tab}%epicUnixPass%{Enter}
 		Sleep, 250
-		If(WinActive("Hyperspace - Test")) {
+		if(hyperspaceNotLoadedYet()) {
 			Send, {Enter}
 		}
 		Sleep, 250
-		If(WinActive("Hyperspace - Test")) {
+		If(hyperspaceNotLoadedYet()) {
 			Send, {Enter}
 		}
 	return
+	
+	hyperspaceNotLoadedYet() {
+		return WinActive("Hyperspace - Test") || WinActive("Hyperspace - Training")
+	}
 	
 	; Exit hotkey.
 	^d::
