@@ -8,7 +8,9 @@
 #ifWinActive, ahk_class Chrome_WidgetWin_1
 
 	; For easier middle-clicking on bookmarks.
-	^MButton::^LButton
+	; ^MButton::^LButton
+	^LButton::^MButton
+	
 
 	; Bookmarklet hotkeys.
 	!`;::sendToOmniboxAndGo("d") ; Darken bookmarklet hotkey.
