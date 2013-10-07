@@ -1,4 +1,4 @@
-#ifWinActive, ahk_class r2Window
+#if WinActive("ahk_class r2Window") || WinActive("Reflection Secure Shell Client")
 
 	^i::
 		; Block and buffer input until {ENTER} is pressed.
