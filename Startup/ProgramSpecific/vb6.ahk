@@ -19,7 +19,7 @@
 	$F1::
 		DetectHiddenText, Off
 		
-		If(WinActive("", "Project - ")) {
+		If(WinActive("", "Project - ") || WinActive("", "Project Group - ")) {
 			good := ClickWhereFindImage(iSearchPath_vbGenericClose, iSearchClass_vbProjectExplorer)
 			
 			if(!good) {
