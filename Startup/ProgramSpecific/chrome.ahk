@@ -7,11 +7,21 @@
 
 #ifWinActive, ahk_class Chrome_WidgetWin_1
 
-	; For easier middle-clicking on bookmarks.
-	; ^MButton::^LButton
-	^LButton::^MButton
+	; To save bookmark folders in bottom half, but retain ctrl+clicking on tabs at top.
+	^LButton::
+		CoordMode, Mouse, Relative
+		MouseGetPos, , posY
+		CoordMode, Mouse, Screen
+		; MsgBox, % posY
+		
+		if(posY > 90) {
+			; MsgBox, % posY
+			Send, MButton
+		} else {
+			Send, ^{Click}
+		}
+	return
 	
-
 	; Bookmarklet hotkeys.
 	!`;::sendToOmniboxAndGo("d") ; Darken bookmarklet hotkey.
 	$^Right::sendToOmniboxAndGo("+") ; Increment.
