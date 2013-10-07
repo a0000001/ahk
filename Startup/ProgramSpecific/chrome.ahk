@@ -24,7 +24,7 @@
 	
 	; Bookmarklet hotkeys.
 	!`;::sendToOmniboxAndGo("d") ; Darken bookmarklet hotkey.
-	$^Right::sendToOmniboxAndGo("+") ; Increment.
+	; $^Right::sendToOmniboxAndGo("+") ; Increment.
 	!z::sendToOmniboxAndGo("pz") ; PageZipper.
 
 	; Options hotkey.
