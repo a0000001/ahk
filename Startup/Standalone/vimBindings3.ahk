@@ -177,4 +177,18 @@ setVimState(toState, super = false) {
 	; Next/previous page, uses (modified) userscript. (Greasemonkeyboard)
 	m::Send, ^{Right}
 	n::Send, ^{Left}
+	
+	; These are also forced on, regardless of page having own controls, if superkeys are on.
+	
+	; Up/Down/Left/Right.
+	j::Send, {Down}
+	k::Send, {Up}
+	h::Send, {Left}
+	l::Send, {Right}
+	
+	; Page Up/Down/Top/Bottom.
+	`;::Send, {PgDn}
+	p::Send, {PgUp}
+	[::Send, {Home}
+	]::Send, {End}
 #If
