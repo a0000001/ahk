@@ -26,7 +26,7 @@ global ownControlTitles3 := " - feedly"
 global ownControlTitles4 := " - Reddit"
 
 global excludeTitles := 1
-global excludeTitles1 := "MightyText Quick Reply"
+global excludeTitles1 := "MightyText"
 
 pageHasOwnControls() {
 	WinGetTitle, pageTitle, A

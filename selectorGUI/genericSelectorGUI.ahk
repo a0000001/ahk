@@ -23,8 +23,8 @@ Loop, Read, %1%
 		title := A_LoopReadLine
 	} else if (A_Index = 2) {
 		prompt := A_LoopReadLine
-	} else if(A_LoopReadLine = "") {
-		; Blank line, ignore it.
+	} else if(A_LoopReadLine = "" || SubStr(A_LoopReadLine, 1, 1) = ";") {
+		; Blank line or comment, ignore it.
 		; MsgBox, blank
 	} else {
 		Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
