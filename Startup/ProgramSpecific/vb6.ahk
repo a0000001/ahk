@@ -356,7 +356,7 @@
 				; MsgBox %className% is on row #%A_Index%.
 				; classRow := A_Index
 				; break
-				ControlGetPos, x, y, w, h, %A_LoopField%
+				ControlGetPos, x, y, w, h, %A_LoopField%, A
 				; MsgBox, %x% %y%
 				
 				; When two in a row have the same y value, they're what we're looking for.
@@ -446,6 +446,75 @@
 			
 			ControlFocus, %fieldName%, A
 			Control, Choose, %A_Index%, %fieldName%, A
+		}
+	return
+	
+	^!h::
+		WinGet, List, ControlList, A
+		
+		; MsgBox, % List
+		
+		Loop, Parse, List, `n  ; Rows are delimited by linefeeds (`n).
+		{
+			; MsgBox, %A_LoopField%
+			if(InStr(A_LoopField, "ComboBox")) {
+				; MsgBox %className% is on row #%A_Index%.
+				; classRow := A_Index
+				; break
+				ControlGetPos, x, y, w, h, %A_LoopField%, A
+				; MsgBox, %x% %y%
+				
+				; When two in a row have the same y value, they're what we're looking for.
+				if(y = yPast) {
+					; MsgBox, Got two! %x% %y% %yPast%
+					fieldName := A_LoopField
+					
+					break
+				}
+				
+				yPast := y
+				fieldNamePast := A_LoopField
+			}
+		}
+			
+		; MsgBox, %fieldNamePast% %fieldName%
+		
+	; return
+		
+		objectComboClass := fieldNamePast
+		procedureComboClass := fieldName
+		
+		objectComboValue := ""
+		objectComboValuePast := ""
+		procedureComboValue := ""
+		procedureComboValuePast := ""
+		
+		; Module header.
+		Send, !a
+		Send, {Up}{Enter}
+		WinWait, Epic Header Add-In
+		Send, !m
+		Sleep, 100
+		
+		Loop {
+			Send, ^{Down}
+			Sleep, 100
+			
+			ControlGetText, objectComboValue, %objectComboClass%, A
+			ControlGetText, procedureComboValue, %procedureComboClass%, A
+			; MsgBox, % objectComboValue . " " . procedureComboValue
+			
+			if(objectComboValue = objectComboValuePast && procedureComboValue = procedureComboValuePast) {
+				break
+			}
+			procedureComboValuePast := procedureComboValue
+			objectComboValuePast := objectComboValue
+			
+			; Add the header.
+			Send, !a
+			Send, {Up}{Enter}
+			WinWait, Epic Header Add-In
+			Send, !p
 		}
 	return
 #IfWinActive
