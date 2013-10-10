@@ -15,8 +15,12 @@ height := 152 ; Starting height. Includes prompt, plus extra newline above and b
 sessionsArr := Object() ; Object to hold all the read-in info.
 sessionsLen := 1
 
+filePath = %1%
+StringTrimRight, lastExecutedFileName, filePath, 4
+lastExecutedFileName := lastExecutedFileName . "Last.ini"
+
 ; Read in the various paths, names, and abbreviations.
-Loop, Read, %1%
+Loop, Read, %filePath%
 {
 	; MsgBox, %A_LoopReadLine%
 	if(A_Index = 1) {
@@ -54,6 +58,16 @@ if(userIn = "" || ErrorLevel) {
 	ExitApp
 }
 
+; Special case: if "." was entered, execute last-executed command instead.
+if(userIn = ".") {
+	FileReadLine, recentFilePath, %lastExecutedFileName%, 1
+	; MsgBox, %recentFilePath%
+	if(recentFilePath) {
+		Run, % recentFilePath
+		ExitApp
+	}
+}
+
 ; MsgBox, %userIn%
 
 ; Figure out if what they gave us matches anything.
@@ -70,6 +84,12 @@ if(foundNum = -1) {
 	MsgBox, No matches found!
 	ExitApp
 }
+
+; Remove the old 'last entered' file and stick this one in as the new one.
+lastExecutedPath := sessionsArr[foundNum, PATH]
+; MsgBox, % lastExecutedFileName
+FileDelete, %lastExecutedFileName%
+FileAppend, %lastExecutedPath%, %lastExecutedFileName%
 
 ; So now we have a match - launch it!
 Run, % sessionsArr[foundNum, PATH]
