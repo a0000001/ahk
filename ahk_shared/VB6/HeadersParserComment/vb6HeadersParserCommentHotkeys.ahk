@@ -1,4 +1,24 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#SingleInstance Force
+
 #IfWinActive, ahk_class wndclass_desked_gsk
+	
+	; Redo, not yank.
+	^y::
+	^+z::
+		Send, !e
+		Sleep, 100
+		Send, r
+	return
+	
+	; Make hotkey.
+	^m::
+		Send, !f
+		Sleep, 100
+		Send, k
+	return
 	
 	; Epic Headers Addin.
 	^+h::
@@ -12,6 +32,21 @@
 		Send, !a
 		Sleep, 100
 		Send, {Up 2}{Enter}
+	return
+	
+	; References window.
+	^+r::
+		Send, !p
+		Sleep, 100
+		Send, n
+	return
+	
+	^`;::
+		ClickWhereFindImage("vbCommentToolbarButton.png")
+	return
+	
+	^+`;::
+		ClickWhereFindImage("vbUncommentToolbarButton.png")
 	return
 	
 	ClickWhereFindImage(imagePath) {
@@ -33,13 +68,5 @@
 		; Restore this for other scripts' sake.
 		CoordMode, Mouse, Screen
 	}
-	
-	^`;::
-		ClickWhereFindImage("F:\personal\gborg\ahk\Images\vbCommentToolbarButton.png")
-	return
-	
-	^+`;::
-		ClickWhereFindImage("F:\personal\gborg\ahk\Images\vbUncommentToolbarButton.png")
-	return
 	
 #IfWinActive

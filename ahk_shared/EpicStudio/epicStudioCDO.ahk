@@ -1,3 +1,8 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#SingleInstance Force
+
 #ifWinActive, ahk_class WindowsForms10.Window.8.app.0.2bf8098_r13_ad1
 
 ; GUI input for Chronicles Data Operation GENERATE code.

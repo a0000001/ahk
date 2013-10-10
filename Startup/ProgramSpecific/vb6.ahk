@@ -1,5 +1,10 @@
 #IfWinActive, ahk_class wndclass_desked_gsk
-
+	
+	; TLG Hotkey.
+	^t::
+		Send, %epicID%
+	return
+	
 	; Redo, not yank.
 	^y::
 	^+z::
@@ -9,11 +14,59 @@
 	return
 	
 	; Make hotkey.
-	^+m::
+	^m::
 		Send, !f
 		Sleep, 100
 		Send, k
 	return
+	
+	; Make hotkey (Group)
+	^+m::
+		Send, !f
+		Sleep, 100
+		Send, g
+	return
+	
+	; Stop when running.
+	$F12::
+		Send, !r
+		Sleep, 100
+		Send, e
+	return
+	
+	; Options.
+	$!o::
+		Send, {Blind}t ; Because it's an ALT+ hotkey, alt coming up prematurely disrupted the selection. So, just use the alt already down.
+		Sleep, 250
+		Send, o
+	return
+	
+	; Epic Headers Addin.
+	^+h::
+		Send, !a
+		Sleep, 100
+		Send, {Up}{Enter}
+	return
+	
+	; Epic VB Parse Addin.
+	^+p::
+		Send, !a
+		Sleep, 100
+		Send, {Up 2}{Enter}
+	return
+	
+	; References window.
+	^+r::
+		Send, !p
+		Sleep, 100
+		Send, n
+	return
+	
+	; Components window.
+	$^r::
+		Send, ^t
+	return
+	
 	
 	; Show/hide project explorer.
 	$F1::
@@ -92,41 +145,6 @@
 		} else if(title = "Form" || title = "UserControl") {
 			Send, {F7}
 		}
-	return
-	
-	; Stop when running.
-	$F12::
-		Send, !r
-		Sleep, 100
-		Send, e
-	return
-	
-	; Options.
-	$!o::
-		Send, {Blind}t ; Because it's an ALT+ hotkey, alt coming up prematurely disrupted the selection. So, just use the alt already down.
-		Sleep, 250
-		Send, o
-	return
-	
-	; Epic Headers Addin.
-	^+h::
-		Send, !a
-		Sleep, 100
-		Send, {Up}{Enter}
-	return
-	
-	; Epic VB Parse Addin.
-	^+p::
-		Send, !a
-		Sleep, 100
-		Send, {Up 2}{Enter}
-	return
-	
-	; References window.
-	^+r::
-		Send, !p
-		Sleep, 100
-		Send, n
 	return
 	
 	FindImageCoordsWithinArea(imagePath, X, Y, W, H) {
@@ -458,11 +476,6 @@ expandReferenceLine(input, prepend = "", postpend = "") {
 	return prepend . input . postpend
 }
 
-; ^b::
-	; a := expandAndCleanLine("	ApplCore Common Record Interfaces (8.1)", "GDB", " ANB")
-	; MsgBox, % a
-; return
-
 ; References window.
 #IfWinActive, References - 
 	^f::
@@ -499,7 +512,7 @@ expandReferenceLine(input, prepend = "", postpend = "") {
 		While, notFoundYet {
 			SendRaw, %firstChar%
 			
-			; Sleep, 1
+			Sleep, 1
 			ControlGetText, currRow, Button5, A
 			; MsgBox, %currRow%
 			
