@@ -263,7 +263,5 @@ return
 	SendRaw, %ahkHeaderCode%
 return
 :*:.ahkdefault::
-	SendRaw, %ahkDefaultHotkeys%
-	Send, {Backspace} ; Untab at the last bit.
-	SendRaw, %ahkDefaultHotkeys2%
+	sendRawWithTabs(ahkDefaultHotkeys)
 return

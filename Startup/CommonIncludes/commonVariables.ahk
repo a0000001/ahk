@@ -15,11 +15,7 @@ ahkDefaultHotkeys =
 ~#!x::Suspend
 ~!+r::
 	Suspend, Permit
-Reload
-
-)
-ahkDefaultHotkeys2 = 
-(
+	Reload
 return
 )
 
