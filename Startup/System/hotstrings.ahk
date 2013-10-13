@@ -1,17 +1,39 @@
 ; note to self: this must be in UTF-8 encoding.
 
+; Emails.
 :*:emaila::
 	Send, % emailAddress
 return
 :*:gemaila::
 	Send, % emailAddressGDB
 return
+:*:eemaila::
+	Send, % epicEmailAddress
+return
+
+; Addresses
+:*:waddr::
+	Send, % madisonAddress
+return
+:*:fwaddr::
+	Send, % madisonAddressFill
+return
+:*:eaddr::
+	Send, % epicAddress
+return
+:*:feaddr::
+	Send, % epicAddressFill
+return
+
+; Usernames
 :*:uname::
 	Send, % userName
 return
+
 ; ::sig::
 	; Send, %fullName%`n%wfuEmailAddress%`n%phoneNumberFormatted%`n
 ; return
+
 :*:phoneno::
 	Send, % phoneNumber
 return
@@ -19,27 +41,19 @@ return
 	Send, % phoneNumberFormatted
 return
 
-; Madison
-:*:wiaddr::
-	Send, % madisonAddress
-return
-:*:wfiaddr::
-	Send, % madisonAddressFull
-return
-
-; WFU
-:*:wfusid::
-:*:wfuidn::
-:*:wsid::
-:*:studid::
-	Send, % wfuSID
-return
-:*:wuname::
-	Send, % wfuUserName
-return
-:*:wemaila::
-	Send, % wfuEmailAddress
-return
+; ; WFU
+; :*:wfusid::
+; :*:wfuidn::
+; :*:wsid::
+; :*:studid::
+	; Send, % wfuSID
+; return
+; :*:wuname::
+	; Send, % wfuUserName
+; return
+; :*:wemaila::
+	; Send, % wfuEmailAddress
+; return
 ; :*:wiaddr::
 	; Send, % wfuAddress
 ; return
@@ -245,6 +259,11 @@ return
 ; :*:wswppe::http://wakestudent.com/wp-admin/post.php?action=edit&post=
 
 ; Meta-AHK stuff.
-:*:ahkemergency::
-	SendRaw, `; ~+!x::ExitApp		`;Shift+Alt+X = Emergency Exit`n`; ~!+r::Reload			`;Shift+Alt+R = Reload
+:*:.ahkhead::
+	SendRaw, %ahkHeaderCode%
+return
+:*:.ahkdefault::
+	SendRaw, %ahkDefaultHotkeys%
+	Send, {Backspace} ; Untab at the last bit.
+	SendRaw, %ahkDefaultHotkeys2%
 return

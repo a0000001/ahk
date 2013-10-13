@@ -25,8 +25,9 @@ global ownControlTitles2 := " - Google Search"
 global ownControlTitles3 := " - feedly"
 global ownControlTitles4 := " - Reddit"
 
-global excludeTitles := 1
+global excludeTitles := 2
 global excludeTitles1 := "MightyText"
+global excludeTitles2 := "Login" ; Lastpass
 
 pageHasOwnControls() {
 	WinGetTitle, pageTitle, A

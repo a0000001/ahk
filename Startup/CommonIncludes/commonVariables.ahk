@@ -1,4 +1,28 @@
-﻿
+﻿; ----- AHK Script-related things. ----- ;
+ahkHeaderCode =
+(
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+; #NoTrayIcon
+#SingleInstance force
+)
+
+ahkDefaultHotkeys = 
+(
+; Exit, reload, and suspend.
+~!+x::ExitApp
+~#!x::Suspend
+~!+r::
+	Suspend, Permit
+Reload
+
+)
+ahkDefaultHotkeys2 = 
+(
+return
+)
+
 
 ; ----- Program launcher classes and strings. ----- ;
 pLaunchClass_Chrome := "Chrome_WidgetWin_1"
