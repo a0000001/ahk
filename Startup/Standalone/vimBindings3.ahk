@@ -18,6 +18,10 @@ global suspended := 0
 global justFound := 0
 global justOmnibox := 0
 
+; Control classes.
+ChromeSearchboxClass := "Chrome_WidgetWin_11"
+ChromeOmnibarClass := "" ; Blank at this time.
+
 ; Titles for which pages have controls of their own.
 global ownControlTitles := 4
 global ownControlTitles1 := " - Gmail"
@@ -58,6 +62,20 @@ pageToExclude() {
 	return false
 }
 
+chromeOrFirefoxActive() {
+	return (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass"))
+}
+
+specialTextFieldActive() {
+	ControlGetFocus, controlName, A
+	; MsgBox, % controlName
+	if(controlName = ChromeOmnibarClass || controlName = ChromeSearchboxClass) {
+		return true
+	} else {
+		return false
+	}
+}
+
 ~!#x::
 	Suspend, Toggle
 	if(suspended) {
@@ -95,7 +113,7 @@ setVimState(toState, super = false) {
 }
 
 ; Hotkeys related to script state, plus ones that always run.
-#If WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass")
+#If chromeOrFirefoxActive()
 	; Special super-on.
 	F8::
 		if(superKeysOn) {
@@ -139,7 +157,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Main hotkeys, run if not turned off.
-#If (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && !pageToExclude()
+#If chromeOrFirefoxActive() && vimKeysOn && !pageToExclude() && !specialTextFieldActive()
 	; Next/Previous Tab.
 	o::Send, ^{Tab}
 	u::Send, ^+{Tab}
@@ -173,7 +191,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
-#If ( WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && !pageHasOwnControls() && !pageToExclude()
+#If chromeOrFirefoxActive() && vimKeysOn && !pageHasOwnControls() && !pageToExclude() && !specialTextFieldActive()
 	; Up/Down/Left/Right.
 	j::Send, {Down}
 	k::Send, {Up}
@@ -188,7 +206,7 @@ setVimState(toState, super = false) {
 #If
 
 ; Special keys, only activated at higher level
-#If ( WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass") ) && vimKeysOn && superKeysOn
+#If chromeOrFirefoxActive() && vimKeysOn && superKeysOn
 	; Next/previous page, uses (modified) userscript. (Greasemonkeyboard)
 	m::Send, ^{Right}
 	n::Send, ^{Left}
@@ -206,4 +224,4 @@ setVimState(toState, super = false) {
 	p::Send, {PgUp}
 	[::Send, {Home}
 	]::Send, {End}
-#If
+#If 
