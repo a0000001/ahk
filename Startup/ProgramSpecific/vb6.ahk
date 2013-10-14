@@ -148,18 +148,22 @@
 	return
 	
 	FindImageCoordsWithinArea(imagePath, X, Y, W, H) {
-		ImageSearch, outX, outY, X, Y, W, H, %imagePath%
+		global iSearch_imageSpacingTolerance
+		
+		; MsgBox, %X% %Y% %W% %H%
+		
+		; Find image onscreen. Note that *TransWhite means that a full-white transparent color can match anything.
+		ImageSearch, outX, outY, X, Y, W, H, *TransWhite %imagePath%
 		
 		if(ErrorLevel = 0) { ; We found something, store and recurse!
 			; CoordMode, Mouse, Relative
 			; MouseMove, %outX%, %outY%
 			; CoordMode, Mouse, Screen
-			
 			; MsgBox, %ErrorLevel% Found image at (%outX%, %outY%).
 			
 			outStr = %outX%-%outY%
-			firstXY := FindImageCoordsWithinArea(imagePath, outX+1, outY, W, H)
-			secondXY := FindImageCoordsWithinArea(imagePath, X, outY+1, outX, H)
+			firstXY := FindImageCoordsWithinArea(imagePath, outX + iSearch_imageSpacingTolerance, outY, W, H)
+			secondXY := FindImageCoordsWithinArea(imagePath, X, outY + iSearch_imageSpacingTolerance, outX, H)
 			
 			if(firstXY != "") {
 				outStr = %outStr%.%firstXY%
@@ -170,6 +174,7 @@
 			}
 		} else {
 			outStr := ""
+			; MsgBox, Nuttin': %ErrorLevel%
 		}
 		
 		return outStr
@@ -177,9 +182,9 @@
 	
 	ClickWhereFindImage(imagePath, nnClass = "") {
 		WinGetPos, X, Y, width, height, A
-		; MsgBox, %X% %Y%
+		; MsgBox, %X% %Y% %width% %height%
 		
-		coords := FindImageCoordsWithinArea(imagePath, X, Y, width+X, height+Y)
+		coords := FindImageCoordsWithinArea(imagePath, X, Y, width, height)
 		; MsgBox, % coords
 		
 		RegExReplace(coords, "\.", "", periodCount)
@@ -265,10 +270,10 @@
 		return textFound
 	}
 	
+	; Comment/uncomment hotkeys.
 	^`;::
 		ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 	return
-	
 	^+`;::
 		ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 	return

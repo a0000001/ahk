@@ -51,7 +51,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 	
 	ClickWhereFindImage(imagePath) {
 		WinGetPos, X, Y, width, height, A
-		ImageSearch, outX, outY, 0, 0, width, height, %imagePath%
+		ImageSearch, outX, outY, 0, 0, width, height, *TransWhite %imagePath%
 		; MsgBox, % outX " " outY " " ErrorLevel
 		
 		; ImageSearch gives us back x and y based on the current window, so the mouse should move based on that, too.
