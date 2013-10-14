@@ -17,12 +17,15 @@ return
 
 ; Duplicate Line.
 ^d::
+	ClipSave := Clipboard
 	Send, {End}{Shift Down}{Home}{Shift Up}
 	Send, ^c
 	Sleep, 100
 	Send, {End}{Enter}
 	SendRaw, %clipboard%
 	Send, {Up}{End}
+	Clipboard := ClipSave
+	ClipSave := ""
 return
 	
 ; Toggle comment. 

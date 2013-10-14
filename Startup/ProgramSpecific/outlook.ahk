@@ -2,7 +2,7 @@
 #ifWinActive, ahk_class rctrl_renwnd32
 
 	; Make Control+1 go to the inbox, rather than just to mail.
-	^1::Send, ^+i
+	~^1::Send, ^+i
 
 	; Make Control+F be search, not forward.
 	^f::Send, ^e
@@ -70,10 +70,10 @@
 	return
 
 
-	~^2::
-;		Sleep, 100
-		Send, {Left}
-	return
+	; ~^2::
+; ;		Sleep, 100
+		; Send, {Left}
+	; return
 	
 	!WheelUp::!Up
 	!WheelDown::!Down
