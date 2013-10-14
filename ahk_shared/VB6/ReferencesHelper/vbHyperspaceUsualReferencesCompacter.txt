@@ -7,7 +7,6 @@ Epic Systems Data Engine (8.1)
 [ bEpic Systems Desktop |e (8.1)
 	Classes
 	Interfaces	2
-	Services Interfaces
 ]
 
 [ bEpic Systems Foundations |e (8.1)
