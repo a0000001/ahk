@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force
 
 ; Exit, reload, and suspend.
-~!+x::ExitApp
+!+x::ExitApp
 ~#!x::Suspend
 ~!+r::
 	Suspend, Permit
