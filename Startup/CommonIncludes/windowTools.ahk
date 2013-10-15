@@ -36,9 +36,9 @@ closeWindowSpecial(case = 0) {
 	if WinActive("ahk_class FM") ; 7-zip
 	or WinActive("ahk_class tSkMainForm") ; Skype Buddy List
 	or WinActive("ahk_class Framework::CFrame")
-	or WinActive("ahk_class PP12FrameClass") ; PPT - presentation?
+	; or WinActive("ahk_class PP12FrameClass") ; PPT - presentation?
 	or WinActive("ahk_class ahk_class QWidget")
-	or WinActive("ahk_class PPTFrameClass") ; PPT - presentation?
+	; or WinActive("ahk_class PPTFrameClass") ; PPT - Main window.
 	or WinActive("ahk_class TfrmMain")
 	or WinActive("ahk_class THomeForm")
 	; or WinActive("ahk_class Miranda") ; Miranda IM

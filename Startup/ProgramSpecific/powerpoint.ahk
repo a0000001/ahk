@@ -5,6 +5,9 @@
 ;k::up
 MButton & RButton::Send !sc
 
+; Reading mode - like slideshow, but doesn't fullscreen!
+^+r::Send, !wd
+
 #ifWinActive
 
 
