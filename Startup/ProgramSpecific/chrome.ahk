@@ -16,7 +16,7 @@
 		
 		if(posY > 90) {
 			; MsgBox, % posY
-			Send, MButton
+			Send, {Click, Middle}
 		} else {
 			Send, ^{Click}
 		}

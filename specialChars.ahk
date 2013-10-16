@@ -6,7 +6,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; note to self: this must be in UTF-8 encoding.
 
-
 ;; Computer Science symbols
 ; ⊕→←↓↑
 ; RCtrl & +:: Send ⊕
@@ -39,6 +38,7 @@ RAlt & >::Send ≥
 RAlt & =::Send ≠
 
 ;; Math characters
+; ≈∞
 RCtrl & =::Send ≈
 RAlt & 0::Send ∞
 

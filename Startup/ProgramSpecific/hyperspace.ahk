@@ -19,7 +19,15 @@
 	return
 	
 	hyperspaceNotLoadedYet() {
-		return WinActive("Hyperspace - Test") || WinActive("Hyperspace - Training")
+		if(WinActive("Hyperspace - Test") ; Hyperspace 2012, FNDEX.
+			|| WinActive("Hyperspace - Training") ; PTC Hyperspace Project Dev.
+			|| WinActive("Hyperspace - Foundations Lab QA") ; PTC Hyperspace Project QA.
+			|| WinActive("Development Training Lab - TRNTRACK") ; EMC2 SteamTrainTrack.
+		|| 0) {
+			return true
+		}
+		
+		return false
 	}
 	
 	; Exit hotkey.

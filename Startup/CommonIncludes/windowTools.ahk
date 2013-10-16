@@ -54,7 +54,7 @@ closeWindowSpecial(case = 0) {
 
 	if WinActive("ahk_class CabinetWClass") ; Windows Explorer
 	or WinActive("ahk_class Notepad++") ; Notepad++
-	or WinActive("MightyText Quick Reply") ; MightyText Popup Window
+	or WinActive("MightyText") ; MightyText Popup Window
 	; or WinActive("Source of: ") ; Firefox Source View
 	; or (WinActive("Library") && !WinActive("Media Library Search")) ; Firefox All Bookmarks View, but not Foobar's media library search!
 	; or WinActive(" - DownThemAll!") ; DownThemAll Download Manager Window

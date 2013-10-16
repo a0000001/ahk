@@ -12,20 +12,43 @@
 		Send, ^2
 		Send, {Up}{Down}
 		Send, !h
-;		Send, 12
 		Send, od
-		Send, !1
 		Send, !3
-		Send, {Left}
-		Send, {Home}
+		Send, {Left}{Home}
 	return
-	
+
+	; TLG Event Creation Macro.
+	$^n::
+		if(WinActive("Calendar - ") || WinActive("TLG - ")) {
+			Send, !hy
+		} else {
+			Send, ^n
+		}
+	return
+	^+n::
+		Send, ^n
+	return
+
+	; Calendar view: for 3-day view
+	~^2::
+		Send, {Left}
+	return
+#IfWinActive
+
+; Activity-specific keys, must filter on title.
+#If WinActive("Inbox - " localEmailAddress " - Microsoft Outlook")
 	; Archive the current message.
 	$^e::
 		Send, ^q
 		Send, !5
-		; Send, ^+2
 	return
+
+#If WinActive("Calendar - " localEmailAddress " - Microsoft Outlook") || WinActive("TLG - " localEmailAddress " - Microsoft Outlook")
+	; Calendar view: 3-day view.
+	$^e::Send, !3
+	
+	; Calendar view: work week view.
+	^w::Send, !-
 	
 	; Toggle the preview pane in calendar view.
 	!r::
@@ -46,42 +69,15 @@
 		Send, sc
 		Send, 1
 	return
-	^+3::
+	^+2::
 		Send, !v
 		Send, sc
 		Send, 3
 	return
 	
-	; Week vs. Month vs. 2-day view.
-;	^d::^!1
-;	^w::^!2
-;	^m::^!4
-
-	; TLG Event Creation Macro.
-	$^n::
-		if(WinActive("Calendar - ") || WinActive("TLG - ")) {
-			Send, !hy
-		} else {
-			Send, ^n
-		}
-	return
-	^+n::
-		Send, ^n
-	return
-
-
-	; ~^2::
-; ;		Sleep, 100
-		; Send, {Left}
-	; return
-	
 	!WheelUp::!Up
 	!WheelDown::!Down
-	
-#ifWinActive
-
-; Outlook activation hotkey.
-; !2::WinActivate, ahk_class rctrl_renwnd32
+#If
 
 ; Universal new email.
 !+e::

@@ -1,5 +1,5 @@
 ; Powerpoint hotkeys.
-#ifWinActive, ahk_class PPTFrameClass
+#IfWinActive, ahk_class PPTFrameClass
 
 ;j::down
 ;k::up
@@ -8,15 +8,35 @@ MButton & RButton::Send !sc
 ; Reading mode - like slideshow, but doesn't fullscreen!
 ^+r::Send, !wd
 
-#ifWinActive
+RButton::
+	wID := WinActive("PowerPoint Slide Show - [")
+	MouseGetPos, , , currWin
+	if(wID = currWin) {
+		Send, {Down}
+	} else {
+		Click, Right
+	}
+return
+LButton::
+	wID := WinActive("PowerPoint Slide Show - [")
+	MouseGetPos, , , currWin
+	if(wID = currWin) {
+		Send, {Up}
+	} else {
+		Click, Left
+	}
+return
+
+#IfWinActive
 
 
 ; Powerpoint Slideshow hotkeys.
-#ifWinActive, ahk_class screenClass
+#IfWinActive, ahk_class screenClass
 
 j::down
 k::up
-RButton::Send {Up}
+LButton::Send {Up}
+RButton::Send {Down}
 MButton & RButton::Send {Esc}
 
-#ifWinActive
+#IfWinActive
