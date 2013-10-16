@@ -1,7 +1,6 @@
 ;; MouseWheelEmulator.ahk
 
 /*
-
 MouseWheelEmulator
 Created by Blahman (blah238 at gmail dot com)
 v1.0
@@ -40,22 +39,24 @@ About the different scroll modes:
 There are several different ways that any given program may implement mouse scrolling. AHK has built-in WheelUp and WheelDown functions, but not all applications respond to them.
 Some applications respond to WM_VSCROLL/WM_HSCROLL messages, while others respond to WM_MOUSEWHEEL/WM_HSCROLL messages.
 If you find an application you use doesn't work with this script out of the box, you can probably fix it yourself by adding that application's process name to the conditional statements in the GetScrollMode() function.
+
 The default scroll mode, 0, is AHK's built-in WheelUp and WheelDown commands. This does not support horizontal scrolling or scrolling the window or control under the cursor, while the other two modes do.
 Some applications respond to more than one scroll mode, so you can try them all and decide which works best for you.
-Finally, to further muddy the waters, some applications have frames within them that respond to scroll messages differently to the rest of the application. An example of this is the AHK help file, which uses the Internet Explorer_Server1 control to display HTML pages in one frame, and standard Windows controls to display the table of contents, index, etc. in another frame, and each responds to different scroll modes. I have tried to account for this in the GetScrollMode() function as well, but there may be other implementations I have not covered. You can use AHK's Window Spy to determine the name of the non-conforming control and write an exception for it, similar to the examples I have provided.
 
+Finally, to further muddy the waters, some applications have frames within them that respond to scroll messages differently to the rest of the application. An example of this is the AHK help file, which uses the Internet Explorer_Server1 control to display HTML pages in one frame, and standard Windows controls to display the table of contents, index, etc. in another frame, and each responds to different scroll modes. I have tried to account for this in the GetScrollMode() function as well, but there may be other implementations I have not covered. You can use AHK's Window Spy to determine the name of the non-conforming control and write an exception for it, similar to the examples I have provided.
 */
 
-; ;; Configuration
+;; Configuration
 
 ; mouse_Threshold = 3 ; the number of pixels the mouse must move for a scroll tick to occur
-; scroll_Hotkey = MButton ; Hotkey to activate middle click or scrolling
+; MakeChord("LButton", "RButton", "scrollChord", 20) ; Chord to activate middle click or scrolling. See MakeChord.ahk for instructions
+; scroll_Hotkey = !RButton ; Hotkey to activate middle click or scrolling
 
 ; ;; End Configuration
-
 ; #SingleInstance Force
 ; #NoEnv
 ; #Persistent
+
 ; SendMode Input
 ; Process, Priority, , Realtime
 ; #Include %A_ScriptDir%\AHKHID.ahk
@@ -66,18 +67,17 @@ Finally, to further muddy the waters, some applications have frames within them 
 
 ; ;Intercept WM_INPUT messages
 ; OnMessage(0x00FF, "InputMsg")
-
 ; SetDefaultMouseSpeed, 0
 ; scrollMode = 0 ; 0 = MouseClick, WheelUp/WheelDown, 1 = WM_VSCROLL/WM_HSCROLL, 2 = WM_MOUSEWHEEL/WM_HSCROLL
 ; CoordMode, Mouse, Screen
 
-
 ; HotKey, %scroll_Hotkey%, scrollChord
 ; HotKey, %scroll_Hotkey% Up, scrollChord_Up
+
 ; return
 
 scrollChord:
-	mouse_Moved := "n"
+	mouse_Moved = n
 	BlockInput, MouseMove
 	MouseGetPos, m_x, m_y, winID, control
 	WinGet, procName, ProcessName, ahk_id %winID%
@@ -90,8 +90,9 @@ scrollChord_Up:
 	ToolTip
 	BlockInput, MouseMoveOff
 	HID_Register(1,2,0,RIDEV_REMOVE)
-	if(mouse_Moved = "n") {
-		; MouseClick, Middle
+	
+	; MsgBox, %mouseMoved% %n% a
+	if(%mouse_Moved% = %n%) {
 		if(WinActive("ahk_class Chrome_WidgetWin_1")) {
 			CoordMode, Mouse, Relative
 			MouseGetPos, , posY
@@ -134,7 +135,8 @@ InputMsg(wParam, lParam) {
     ;; Uncomment the above line for handy debug info shown while scrolling
 }
 
-GetScrollMode() {
+GetScrollMode()
+{
     global
     local ctl_x, ctl_y, ctl_w, ctl_h, ctl_hwnd, win_x, win_y
     if (procName = "hh.exe" or procName = "iexplore.exe" or procName = "dexplore.exe" or procName = "OUTLOOK.EXE")
@@ -158,7 +160,8 @@ GetScrollMode() {
     return
 }
 
-ScrollDown() {
+ScrollDown()
+{
     global
     if (scrollMode = 0)
         MouseClick, WheelDown
@@ -172,7 +175,8 @@ ScrollDown() {
     }
 }
 
-ScrollUp() {
+ScrollUp()
+{
     global
     if (scrollMode = 0)
         MouseClick, WheelUp
@@ -188,16 +192,22 @@ ScrollUp() {
     }
 }
 
-ScrollRight() {
+ScrollRight()
+{
     global
     if (scrollMode <> 0)
         loop, 2
             SendMessage, 0x114, 1, 0, %control%, ahk_id %winID%
 }
 
-ScrollLeft() {
+ScrollLeft()
+{
     global
     if (scrollMode <> 0)
         loop, 2
             SendMessage, 0x114, 0, 0, %control%, ahk_id %winID%
 }
+
+; ^!CtrlBreak::ExitApp
+
+; #Include %A_ScriptDir%\MakeChord.ahk
