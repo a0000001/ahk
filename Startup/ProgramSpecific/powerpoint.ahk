@@ -12,7 +12,7 @@
 		wID := WinActive("PowerPoint Slide Show - [")
 		MouseGetPos, , , currWin
 		if(wID = currWin) {
-			Send, {Down}
+			Click, Left
 		} else {
 			Click, Right
 		}
@@ -34,6 +34,6 @@
 	j::down
 	k::up
 	LButton::Send {Up}
-	RButton::Send {Down}
+	RButton::Send {Click}
 	MButton & RButton::Send {Esc}
 #IfWinActive
