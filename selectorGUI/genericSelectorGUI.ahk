@@ -18,6 +18,7 @@ sessionsLen := 1
 filePath = %1%
 StringTrimRight, lastExecutedFileName, filePath, 4
 lastExecutedFileName := lastExecutedFileName . "Last.ini"
+mode := ""
 
 ; Read in the various paths, names, and abbreviations.
 Loop, Read, %filePath%
@@ -25,8 +26,12 @@ Loop, Read, %filePath%
 	; MsgBox, %A_LoopReadLine%
 	if(A_Index = 1) {
 		title := A_LoopReadLine
-	} else if (A_Index = 2) {
+	} else if(A_Index = 2) {
 		prompt := A_LoopReadLine
+	} else if(A_Index = 3) {
+		if(A_LoopReadLine = "_PASTE_") {
+			mode := "p"
+		}
 	} else if(A_LoopReadLine = "" || SubStr(A_LoopReadLine, 1, 1) = ";") {
 		; Blank line or comment, ignore it.
 		; MsgBox, blank
@@ -42,6 +47,7 @@ Loop, Read, %filePath%
 ; MsgBox, % sessionsLen
 ; MsgBox, % sessionsArr[4, PATH]
 
+; Adjust by one.
 sessionsLen--
 
 ; Put the above stuff together.
@@ -60,10 +66,14 @@ if(userIn = "" || ErrorLevel) {
 
 ; Special case: if "." was entered, execute last-executed command instead.
 if(userIn = ".") {
-	FileReadLine, recentFilePath, %lastExecutedFileName%, 1
-	; MsgBox, %recentFilePath%
-	if(recentFilePath) {
-		Run, % recentFilePath
+	FileReadLine, recentRun, %lastExecutedFileName%, 1
+	; MsgBox, %recentRun%
+	if(recentRun) {
+		if(mode = "") {
+			Run, % recentRun
+		} else if(mode = "p") {
+			SendRaw, %recentRun%
+		}
 		ExitApp
 	}
 }
@@ -92,5 +102,8 @@ FileDelete, %lastExecutedFileName%
 FileAppend, %lastExecutedPath%, %lastExecutedFileName%
 
 ; So now we have a match - launch it!
-Run, % sessionsArr[foundNum, PATH]
-
+if(mode = "") {
+	Run, % sessionsArr[foundNum, PATH]
+} else if(mode = "p") {
+	SendRaw, % sessionsArr[foundNum, PATH]
+}
