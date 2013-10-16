@@ -1,6 +1,5 @@
 ; Outlook Hotkeys.
 #ifWinActive, ahk_class rctrl_renwnd32
-
 	; Make Control+1 go to the inbox, rather than just to mail.
 	~^1::Send, ^+i
 
@@ -86,4 +85,4 @@
 	SetTitleMatchMode, 1
 	
 	Send, ^+m
-Return
+return

@@ -1,4 +1,5 @@
-﻿; ----- AHK Script-related things. ----- ;
+﻿
+; ----- AHK Script-related things. ----- ;
 ahkHeaderCode =
 (
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
