@@ -66,10 +66,6 @@ chromeOrFirefoxActive() {
 	return (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass"))
 }
 
-^a::
-	MsgBox, % chromeOrFirefoxActive()
-return
-
 specialTextFieldActive() {
 	ControlGetFocus, controlName, A
 	; MsgBox, % controlName
