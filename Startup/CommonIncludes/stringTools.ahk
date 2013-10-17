@@ -33,3 +33,37 @@ sendRawWithTabs(input) {
 		Send, +{Tab %numTabs%}
 	}
 }
+
+; Grabs the selected text using the clipboard, fixing the clipboard as it finishes.
+getSelectedText() {
+	ClipSaved := ClipboardAll   ; Save the entire clipboard to a variable of your choice.
+	
+	; ... here make temporary use of the clipboard, such as for pasting Unicode text via Transform Unicode ...
+	Clipboard := ; Clear the clipboard
+	
+	Send, ^c
+	Sleep, 100
+	
+	textFound := clipboard
+	
+	Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of Clipboard (not ClipboardAll).
+	ClipSaved =   ; Free the memory in case the clipboard was very large.
+	
+	return textFound
+}
+
+; Grabs the selected text using the clipboard, fixing the clipboard as it finishes.
+sendTextWithClipboard(text) {
+	; MsgBox, %text%
+	
+	ClipSaved := ClipboardAll   ; Save the entire clipboard to a variable of your choice.
+	Clipboard := "" ; Clear the clipboard
+	
+	Clipboard := text
+	Sleep, 100
+	Send, ^v
+	Sleep, 100
+	
+	Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of Clipboard (not ClipboardAll).
+	ClipSaved =   ; Free the memory in case the clipboard was very large.
+}
