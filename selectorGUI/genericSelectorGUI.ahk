@@ -5,24 +5,26 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance, force
 
-#Include httpQuery.ahk
+#Include HTTPRequest.ahk
 
 ; Constants and such.
-ROW_HEIGHT := 18 ; Height to add per row of text.
 NAME := 1
 ABBREV := 2
 PATH := 3
 
-height := 152 ; Starting height. Includes prompt, plus extra newline above and below choice list.
+; height := 152 ; Starting height. Includes prompt, plus extra newline above and below choice list.
+height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 sessionsArr := Object() ; Object to hold all the read-in info.
 sessionsLen := 1
 ; starArr := Object()
 starLen := -1
+extraLines := Object()
+extraLen := 1
 
 filePath = %1%
 actionType = %2%
-StringTrimRight, lastExecutedFileName, filePath, 4
-lastExecutedFileName := lastExecutedFileName . "Last.ini"
+lastExecutedFileName := SubStr(filePath, 1, -4) "Last.ini"
+; MsgBox, % lastExecutedFileName
 
 ; Read in the various paths, names, and abbreviations.
 Loop, Read, %filePath%
@@ -30,10 +32,19 @@ Loop, Read, %filePath%
 	; MsgBox, %A_LoopReadLine%
 	if(A_Index = 1) {
 		title := A_LoopReadLine
-	} else if(A_Index = 2) {
-		prompt := A_LoopReadLine
+	; } else if(A_Index = 2) {
+		; prompt := A_LoopReadLine
 	} else if(A_LoopReadLine = "" || SubStr(A_LoopReadLine, 1, 1) = ";") { ; Blank line or comment, ignore it.
 		; MsgBox, blank
+	} else if(SubStr(A_LoopReadLine, 1, 1) = "#") { ; Special: add a title and/or blank row in the list display.
+		; MsgBox, #
+		if(StrLen(A_LoopReadLine) < 3) { ; If title, #{Space}Title.
+			extraLines[sessionsLen] := " "
+		} else {
+			extraLines[sessionsLen] .= SubStr(A_LoopReadLine, 3)
+		}
+		
+		extraLen++
 	} else {
 		if(SubStr(A_LoopReadLine, 1, 1) = "*") {
 			; MsgBox, It's a star row!
@@ -65,17 +76,30 @@ Loop, Read, %filePath%
 ; Adjust by one.
 sessionsLen--
 starLen++
+extraLen--
 
 ; Put the above stuff together.
-displayText := prompt "`n`n"
+; displayText := prompt "`n`n"
+displayText := ""
 Loop, %sessionsLen% {
-	displayText := displayText A_Index ") " sessionsArr[A_Index, ABBREV] ":`t" sessionsArr[A_Index, NAME] "`n"
-	height := height + ROW_HEIGHT
+	; Extra newline if requested.
+	if(extraLines[A_Index]) {
+		if(extraLines[A_Index] != " " && A_Index != 1) {
+			displayText .= "`n"
+		}
+		
+		displayText .= extraLines[A_Index]"`n"
+	}
+	
+	displayText .= A_Index ") " sessionsArr[A_Index, ABBREV] ":`t" sessionsArr[A_Index, NAME] "`n"
 }
 
 ; Actually prompt the user.
 ; MsgBox, % displayText
-InputBox, userIn, %title%, %displayText%, , 400, height
+; InputBox, userIn, %title%, %displayText%, , 400, height
+
+height += getTextHeight(displayText)
+InputBox, userIn, %title%, %displayText%, , 400, %height%
 if(ErrorLevel || userIn = "") {
 	ExitApp
 }
@@ -141,6 +165,19 @@ ExitApp
 
 
 
+; Gives the height of the given text.
+getTextHeight(text) {
+	StringReplace, text, text, `n, `n, UseErrorLevel
+	lines := ErrorLevel + 1
+	
+	lineHeight := 17 ; play with this value
+	
+	height := lines * lineHeight
+	; MsgBox % lines " " height
+	
+	Return height
+}
+
 ; Function to do what it is we want done, then exit.
 doAction(input) {
 	global actionType
@@ -152,9 +189,12 @@ doAction(input) {
 	} else if(actionType = "PASTE") {
 		SendRaw, %input%
 	} else if(actionType = "CALL") {
+		
+		URL := "http://guru/services/Webdialer.asmx/"
+		
 		if(input = "-") {
 			; MsgBox, Hanging up current call.
-			URL :="http://guru/services/Webdialer.asmx/HangUpCall?"
+			URL .= "HangUpCall?"
 			MsgText = Hanging up current call. `n`nContinue?
 		} else {
 			; MsgBox, Calling %input%...
@@ -164,7 +204,7 @@ doAction(input) {
 				return
 			}
 			
-			URL := "http://guru/services/Webdialer.asmx/CallNumber?extension=" . phoneNum
+			URL .= "CallNumber?extension=" . phoneNum
 			MsgText = Calling: `n`n%input% `n[%phoneNum%] `n`nContinue?
 		}
 		
@@ -172,8 +212,16 @@ doAction(input) {
 		IfMsgBox No
 			ExitApp
 		
-		MsgBox, % URL
-		; httpQuery(html, URL)
+		; MsgBox, % URL
+		; URL := "http://guru/services/Webdialer.asmx/CallNumber?extension=813015291674"
+		
+		; MsgBox, URL: %URL%
+		
+		; httpQuery(html, URL) ; Utter, miserable failure.
+		; Run, http://guru/services/Webdialer.asmx/CallNumber?extension=813015291674 ; Works, but pops up the response in browser.
+		HTTPRequest(URL, In := "", Out := "")
+		
+		; MsgBox, Response: %html%
 	} else {
 		MsgBox, No action type given, exiting...
 	}

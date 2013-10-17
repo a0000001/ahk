@@ -1,4 +1,8 @@
-﻿
+﻿; Icon path for main icons.
+borgIconPath := "CommonIncludes\Icons\borg.ico"
+borgIconPathStopped := "CommonIncludes\Icons\borgStopped.ico"
+
+
 ; ----- AHK Script-related things. ----- ;
 ahkHeaderCode =
 (

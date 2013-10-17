@@ -8,6 +8,6 @@ DetectHiddenWindows, On
 
 ; Tray icon setup.
 ; #NoTrayIcon
-Menu, Tray, Icon, CommonIncludes\Icons\all.ico
+Menu, Tray, Icon, %borgIconPath%
 activeTrayIcon := true
 Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.

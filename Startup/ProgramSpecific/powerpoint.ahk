@@ -9,23 +9,28 @@
 	^+r::Send, !wd
 
 	RButton::
-		wID := WinActive("PowerPoint Slide Show - [")
-		MouseGetPos, , , currWin
-		if(wID = currWin) {
-			Click, Left
+		if(WinActive("PowerPoint Slide Show - [")) {
+			Send, {Up}
 		} else {
 			Click, Right
 		}
+		; wID := WinActive("PowerPoint Slide Show - [")
+		; MouseGetPos, , , currWin
+		; if(wID = currWin) {
+			; Click, Left
+		; } else {
+			; Click, Right
+		; }
 	return
-	LButton::
-		wID := WinActive("PowerPoint Slide Show - [")
-		MouseGetPos, , , currWin
-		if(wID = currWin) {
-			Send, {Up}
-		} else {
-			Click, Left
-		}
-	return
+	; LButton::
+		; wID := WinActive("PowerPoint Slide Show - [")
+		; MouseGetPos, , , currWin
+		; if(wID = currWin) {
+			; Send, {Up}
+		; } else {
+			; Click, Left
+		; }
+	; return
 #IfWinActive
 
 

@@ -4,20 +4,40 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 #SingleInstance force
 
+
+; setupTrayIcon("..\Startup\CommonIncludes\Icons\turtle.ico", "..\Startup\CommonIncludes\Icons\turtleRed.ico", "suspended")
+
 ; Exit, reload, and suspend.
 !+x::ExitApp
-~#!x::Suspend
+; ~#!x::Suspend
 ~!+r::
 	Suspend, Permit
 	Reload
 return
 
-; --------------------------------------------------------------------------------------------------------------------------------------------
+; ----------------------------------------------------------------------------------------------------------------------
 
 ^a::
-	testObj := Object()
+	a := Object()
+	a[1] := "asdf"
+	testFunc(a)
 
-	testObj[-1] := 5
+	; a["01"] := 1
+	; ; testObj["1"] := Object()
+	
+	; a["1", "a"] := "z"
 
-	MsgBox, % testObj[-1]
+	; ; MsgBox, % testObj["01"]
+	; MsgBox, % a["1", "a"]
+	
+	; filePath := "blahBlahBlah.ini"
+	; lastFilePath := SubStr(filePath, 1, -4) "Last.ini"
+	; MsgBox, % lastFilePath
 return
+
+testFunc(obj) {
+	MsgBox, % obj[1]
+}
+
+
+; #Include SetupTrayIcon.ahk

@@ -10,10 +10,10 @@ return
 !#x::
 	Suspend
 	if(activeTrayIcon) {
-		Menu, Tray, Icon, CommonIncludes\Icons\allStopped.ico
+		Menu, Tray, Icon, %borgIconPathStopped%
 		activeTrayIcon := false
 	} else {
-		Menu, Tray, Icon, CommonIncludes\Icons\all.ico
+		Menu, Tray, Icon, %borgIconPath%
 		activeTrayIcon := true
 	}
 return

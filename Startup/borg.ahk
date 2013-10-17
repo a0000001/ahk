@@ -19,13 +19,13 @@ if(machineName = "THINKPAD") {
 ; Standalone scripts. Must be first to execute.
 #Include standalone.ahk
 
-; Setup for this script.
-#Include borgSetup.ahk
-
 ; Common functions, hotkeys, and other such setup. 
 #Include commonIncludes.ahk
 
-; Common setup for scripts. (Variables, etc.) Includes all auto-executing code.
+; Setup for this script.
+#Include borgSetup.ahk
+
+; Setup for rest of scripts. (Variables, etc.) Includes all auto-executing code.
 #Include startup.ahk
 
 ; Must go after startup, but before hotkeys begin.
