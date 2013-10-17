@@ -14,7 +14,7 @@
 		CoordMode, Mouse, Screen
 		; MsgBox, % posY
 		
-		if(posY > 90) {
+		if(posY > chrome_TopHeight) {
 			; MsgBox, % posY
 			Send, {Click, Middle}
 		} else {

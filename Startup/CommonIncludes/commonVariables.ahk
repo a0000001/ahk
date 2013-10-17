@@ -25,6 +25,14 @@ return
 )
 
 
+; ----- Other arbitrary constants. ----- ;
+if(borgWhichMachine = THINKPAD) {
+	chrome_TopHeight := 90
+} else if(borgWhichMachine = EPIC_DESKTOP) {
+	chrome_TopHeight := 100
+}
+
+
 ; ----- Program launcher classes and strings. ----- ;
 pLaunchClass_Chrome := "Chrome_WidgetWin_1"
 pLaunchPath_Chrome := "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
