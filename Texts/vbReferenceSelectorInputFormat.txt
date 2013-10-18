@@ -1,0 +1,33 @@
+=========================================
+Formatting Rules for VB6 Reference Picker AHK Script:
+=========================================
+
+Reference names should be entered in full, exactly as they are labelled in the table.
+
+All blank lines and lines which begin with two forward slashes (//) will be ignored.
+
+If a single tab (	) is the first character in a line, it will be stripped off.
+
+If there are mutliple instances of the same name in references and you wish to get one besides the first, include a tab (	) and the number of the matched title you want (i.e., to pick the second, add tab and a 2 at the end of your title).
+	
+If many items have the same beginning or ending strings, you can use the following condensed syntax:
+	Opening square bracket and a space to open a block ([ )
+		After the space, you may include one or two items from the following, pipe (|) delimited:
+			For a beginning string, a "b" and the string.
+			For an ending string, a "e" and the string.
+		Note that these arguments are inclusive of all spaces - include spaces after "b" or "e" only if you want to begin your prepend/postpend with a space, and include a space between the first argument and the pipe only if you want a space at the end of that string. Note that extra spaces can cause the script to not match those references.
+	Closing square bracket to close a block.
+
+Example of condensed syntax
+	
+=====Original=====
+Epic Systems Desktop Classes (8.1)
+Epic Systems Desktop Interfaces (8.1)	2
+Epic Systems Desktop Services Interfaces (8.1)
+
+=====Reduced=====
+[ Epic Systems Desktop |e (8.1)
+	Classes
+	Interfaces	2
+	Services Interfaces
+]

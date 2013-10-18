@@ -38,7 +38,6 @@
 #IfWinActive, ahk_class screenClass
 	j::down
 	k::up
-	LButton::Send {Up}
-	RButton::Send {Click}
+	RButton::Send {Up}
 	MButton & RButton::Send {Esc}
 #IfWinActive

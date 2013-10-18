@@ -8,7 +8,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; setupTrayIcon("..\Startup\CommonIncludes\Icons\turtle.ico", "..\Startup\CommonIncludes\Icons\turtleRed.ico", "suspended")
 
 ; Exit, reload, and suspend.
-!+x::ExitApp
+~!+x::ExitApp
 ; ~#!x::Suspend
 ~!+r::
 	Suspend, Permit
@@ -18,9 +18,24 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^a::
-	a := Object()
-	a[1] := "asdf"
-	testFunc(a)
+	Send, {Delete 2}
+	SendRaw, *
+	Send, {Space}{End}{Delete}{Enter}{Home}{Down}
+return
+
+^d::
+	Send, {End}{Enter}{Tab}A{Backspace}
+return
+
+$^b::
+	Send, {Home}{Shift Down}{End}{Shift Up}^b{Down}{Home}
+	
+	; ControlGetText, test, WindowsForms10.Window.8.app.0.2bf8098_r13_ad160
+	; MsgBox, % test
+	
+	; a := Object()
+	; a[1] := "asdf"
+	; testFunc(a)
 
 	; a["01"] := 1
 	; ; testObj["1"] := Object()
@@ -35,9 +50,9 @@ return
 	; MsgBox, % lastFilePath
 return
 
-testFunc(obj) {
-	MsgBox, % obj[1]
-}
+; testFunc(obj) {
+	; MsgBox, % obj[1]
+; }
 
 
 ; #Include SetupTrayIcon.ahk

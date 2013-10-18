@@ -1,0 +1,8 @@
+Epic Systems ApplCore Common Record Interfaces (8.1)
+Epic Systems ApplCore Services Interfaces (8.1)
+Epic Systems Data Engine (8.1)
+Epic Systems Desktop Classes (8.1)
+Epic Systems Desktop Interfaces (8.1)	2
+Epic Systems Foundations Data Objects (8.1)
+Epic Systems Foundations Interfaces (8.1)
+Epic Systems Foundations Utilities (8.1)
