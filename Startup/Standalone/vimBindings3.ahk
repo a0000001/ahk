@@ -4,15 +4,25 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force ; Force just one instance, we don't want muliple of this running around.
 ; #NoTrayIcon
 
-; #Include %A_ScriptDir%\iniReadStandalone.ahk
-
-Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
-Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
+#Include CommonIncludes\trayTools.ahk
 
 ; State flags.
+global suspended := 0
 global vimKeysOn := 1
 global superKeysOn := 0
-global suspended := 0
+
+; Mapping for what states make which tray icons.
+v := Object()
+v[0] := "suspended"
+v[1] := "vimKeysOn"
+v[2] := "superKeysOn"
+m := Object()
+m[0, 0] := "..\CommonIncludes\Icons\vimIconPaused.ico"
+m[0, 1, 0] := "..\CommonIncludes\Icons\vimIcon.ico"
+m[0, 1, 1] := "..\CommonIncludes\Icons\vimIconSuper.ico"
+m[1] := "..\CommonIncludes\Icons\vimIconSuspended.ico"
+
+setupTrayIcons(v, m)
 
 ; Special flags for previous action.
 global justFound := 0
@@ -82,38 +92,14 @@ specialTextFieldActive() {
 
 ~!#x::
 	Suspend, Toggle
-	if(suspended) {
-		suspended := 0
-		if(vimKeysOn) {
-			if(superKeysOn) {
-				Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconSuper.ico
-			} else {
-				Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
-			}
-		} else {
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
-		}
-	} else {
-		suspended := 1
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconSuspended.ico
-	}
+	suspended := !suspended
+	updateTrayIcon()
 return
 
 setVimState(toState, super = false) {
-	if(toState) {
-		vimKeysOn := 1
-		if(super) {
-			superKeysOn := 1
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconSuper.ico
-		} else {
-			superKeysOn := 0 ; Reset it.
-			Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIcon.ico
-		}
-	} else {
-		vimKeysOn := 0
-		Menu, Tray, Icon, ..\CommonIncludes\Icons\vimIconPaused.ico
-		superKeysOn := 0
-	}
+	vimKeysOn := toState
+	superKeysOn := (toState && super)
+	updateTrayIcon()
 }
 
 ; Hotkeys related to script state, plus ones that always run.

@@ -4,6 +4,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 #SingleInstance force
 
+#Include TrayIconToggler.ahk
+
 ; setupTrayIcon("..\Startup\CommonIncludes\Icons\turtle.ico", "..\Startup\CommonIncludes\Icons\turtleRed.ico", "suspended")
 
 global suspended, super
@@ -107,4 +109,4 @@ return
 	; MsgBox, % obj[1]
 ; }
 
-#Include TrayIconToggler.ahk
+

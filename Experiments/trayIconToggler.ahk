@@ -7,28 +7,6 @@ setupTrayIcons(v, m) {
 	Menu, Tray, Icon, , , 1 ; Keep suspend from changing it to the AHK default.
 	
 	updateTrayIcon()
-	
-	; Map it all to begin wtih.
-	
-	; MsgBox, % mapping[0][0]
-	
-	; ; Get the normal icon out of the mapping (all 0s)
-	; varsLen := vars.MaxIndex()
-	; ; MsgBox, % varsLen
-	
-	; temp := mapping[0]
-	; ; MsgBox, Start: %temp%
-	
-	; Loop, %varsLen% {
-		; temp := temp[0]
-		; ; MsgBox, % A_Index "	" temp
-	; }
-	
-	; MsgBox, Final: %temp%
-	
-	; ; Initial icon setup.
-	; Menu, Tray, Icon, % temp
-	
 }
 
 getValuesFromNames(names) {
@@ -65,25 +43,3 @@ updateTrayIcon() {
 	
 	Menu, Tray, Icon, % temp
 }
-	
-	
-	; temp := %varName%
-	; MsgBox, % temp
-; }
-
-; setupTrayIcon(iconOn, iconOff = "", varToToggle) {
-	; global activeTrayIcon, iconPathOn, iconPathOff
-	
-	; iconPathOn := iconOn
-	; iconPathOff := iconOff
-	
-	; ; MsgBox, %iconOn% %iconOff%
-	
-	
-; }
-
-; Suspend hotkey, change tray icon too.
-; !#x::
-; ToggleSuspend:
-	
-; return
