@@ -9,7 +9,7 @@
 		Sleep, 100
 		Run, http://www.reddit.com/
 		Sleep, 100
-		Run, http://cloud.feedly.com/#latest
+		Run, http://cloud.feedly.com/#my
 		Sleep, 100
 	; } else if(borgWhichMachine = EPIC_DESKTOP) {
 		; ; Betelgeuse
