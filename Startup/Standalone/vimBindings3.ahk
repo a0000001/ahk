@@ -33,23 +33,24 @@ ChromeSearchboxClass := "Chrome_WidgetWin_11"
 ChromeOmnibarClass := "" ; Blank at this time.
 
 ; Titles for which pages have controls of their own.
-global ownControlTitles := 4
-global ownControlTitles1 := " - Gmail"
-global ownControlTitles2 := " - Google Search"
-global ownControlTitles3 := " - feedly"
-global ownControlTitles4 := " - Reddit"
+global ownControlTitles := Object()
+ownControlTitles[1] := " - Gmail"
+ownControlTitles[2] := " - feedly"
+ownControlTitles[3] := " - Reddit"
+; ownControlTitles[4] := " - Google Search"
 
-global excludeTitles := 2
-global excludeTitles1 := "MightyText"
-global excludeTitles2 := "Login" ; Lastpass
+global excludeTitles := Object()
+excludeTitles[1] := "MightyText"
+excludeTitles[2] := "Login" ; Lastpass
 
 pageHasOwnControls() {
 	WinGetTitle, pageTitle, A
 	StringTrimRight, pageTitle, pageTitle, 16 ; Slice off the " - Google Chrome" on the end.
 	; MsgBox, % pageTitle
 	
-	Loop, %ownControlTitles% {
-		if(InStr(pageTitle, ownControlTitles%A_Index%)) {
+	numTitles := ownControlTitles.MaxIndex()
+	Loop, %numTitles% {
+		if(InStr(pageTitle, ownControlTitles[A_Index])) {
 			; MsgBox, % ownControlTitles%A_Index%
 			return true
 		}
@@ -62,8 +63,9 @@ pageToExclude() {
 	WinGetTitle, pageTitle, A	
 	; MsgBox, % pageTitle
 	
-	Loop, %excludeTitles% {
-		if(InStr(pageTitle, excludeTitles%A_Index%)) {
+	numTitles := excludeTitles.MaxIndex()
+	Loop, %numTitles% {
+		if(InStr(pageTitle, excludeTitles[A_Index])) {
 			; MsgBox, % excludeTitles%A_Index%
 			return true
 		}
