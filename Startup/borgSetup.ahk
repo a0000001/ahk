@@ -8,6 +8,18 @@ DetectHiddenWindows, On
 
 ; Tray icon setup.
 ; #NoTrayIcon
-Menu, Tray, Icon, %borgIconPath%
-activeTrayIcon := true
-Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
+; State flags.
+global suspended := 0
+
+; Mapping for what states make which tray icons.
+v := Object()
+v[0] := "suspended"
+m := Object()
+m[0] := borgIconPath
+m[1] := borgIconPathStopped
+
+setupTrayIcons(v, m)
+
+; Menu, Tray, Icon, %borgIconPath%
+; activeTrayIcon := true
+; Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.

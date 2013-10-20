@@ -8,14 +8,17 @@ return
 
 ; Suspend hotkey, change tray icon too.
 !#x::
-	Suspend
-	if(activeTrayIcon) {
-		Menu, Tray, Icon, %borgIconPathStopped%
-		activeTrayIcon := false
-	} else {
-		Menu, Tray, Icon, %borgIconPath%
-		activeTrayIcon := true
-	}
+	Suspend, Toggle
+	suspended := !suspended
+	updateTrayIcon()
+	; Suspend
+	; if(activeTrayIcon) {
+		; Menu, Tray, Icon, %borgIconPathStopped%
+		; activeTrayIcon := false
+	; } else {
+		; Menu, Tray, Icon, %borgIconPath%
+		; activeTrayIcon := true
+	; }
 return
 
 ; ; Emergency Exit (for use when VirtualBox joins forces with altdrag, sticks, and freaks out)

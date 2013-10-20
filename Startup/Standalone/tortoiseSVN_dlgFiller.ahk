@@ -3,9 +3,16 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
-Menu, Tray, Icon, ..\CommonIncludes\Icons\turtle.ico
-activeTrayIcon := true
-Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
+#Include CommonIncludes\trayTools.ahk
+
+; Tray icon setup.
+global suspended := 0
+v := Object()
+v[0] := "suspended"
+m := Object()
+m[0] := "..\CommonIncludes\Icons\turtle.ico"
+m[1] := "..\CommonIncludes\Icons\turtleRed.ico"
+setupTrayIcons(v, m)
 
 SetTitleMatchMode RegEx
 
@@ -20,3 +27,11 @@ Loop {
 	
 	Sleep, 5000 ; Wait 5 seconds before going again, to reduce idle looping.
 }
+
+return
+
+~!#x::
+	Suspend, Toggle
+	suspended := !suspended
+	updateTrayIcon()
+return
