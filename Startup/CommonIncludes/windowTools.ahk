@@ -44,7 +44,7 @@ closeWindowSpecial(case = 0) {
 	; or WinActive("ahk_class Miranda") ; Miranda IM
 	or WinActive("Buddy List") ; Pidgin Buddy List
 	or WinActive("ahk_class classFoxitReader") ; FoxIt PDF Reader
-	or WinActive("ahk_class SUMATRA_PDF_FRAME") ; SumatraPDF Reader
+	; or WinActive("ahk_class SUMATRA_PDF_FRAME") ; SumatraPDF Reader ; Now in sumatraPDF's program specific - needed additional case for search box.
 	or WinActive("ahk_class Notepad") ; Notepad.
 	or WinActive("ahk_class 1by1WndClass") ; 1by1 Audio Player.
 	{

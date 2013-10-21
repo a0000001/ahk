@@ -8,22 +8,6 @@
 	
 	Volume_Mute::Send, {Media_Prev}
 
-	; For ergonomic keyboard.
-	browser_back up::
-		; Send, {Media_Prev}
-		Click
-	return
-	browser_forward up::
-		; Send, {Media_Next}
-		Click, Right
-	return
-
-	browser_back::
-	browser_forward::
-	XButton1::
-	XButton2::
-		return
-	
 	; Ergonomic keyboard: middle wheel slider.
 	^NumpadAdd::
 	^WheelUp::

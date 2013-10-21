@@ -42,6 +42,18 @@ return
 	Send, {F11}
 return
 
+; Want to close on Esc, but also just unfocus controls at top if focused.
+Esc::
+	ControlGetFocus, currControl, A
+	if(currControl = "Edit1") {
+		Send, {Tab 2}
+	} else if(currControl = "Edit2") {
+		Send, {Tab}
+	} else {
+		WinClose
+	}
+return
+
 ; Kill unconventional hotkey to quit.
 ^q::Return
 
