@@ -4,37 +4,15 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 #SingleInstance force
 
-#Include TrayIconToggler.ahk
-
-; setupTrayIcon("..\Startup\CommonIncludes\Icons\turtle.ico", "..\Startup\CommonIncludes\Icons\turtleRed.ico", "suspended")
-
-global suspended, super
+; #Include TrayIconToggler.ahk
+#Include ..\Startup\CommonIncludes\trayTools.ahk
 
 suspended := 0
-vimKeysOn := 1
-superKeysOn := 0
-
 v := Object()
 m := Object()
-
-; v[0] := "suspended"
-; v[1] := "super"
-; ; m[0] := "..\Startup\CommonIncludes\Icons\turtle.ico"
-; m[0, 0] := "..\Startup\CommonIncludes\Icons\turtle.ico"
-; m[0, 1] := "..\Startup\CommonIncludes\Icons\KDE Mover-Sizer.ico"
-; m[1] := "..\Startup\CommonIncludes\Icons\turtleRed.ico"
-
 v[0] := "suspended"
-v[1] := "vimKeysOn"
-v[2] := "superKeysOn"
-m[0, 0] := "..\Startup\CommonIncludes\Icons\vimIconPaused.ico"
-m[0, 1, 0] := "..\Startup\CommonIncludes\Icons\vimIcon.ico"
-m[0, 1, 1] := "..\Startup\CommonIncludes\Icons\vimIconSuper.ico"
-m[1] := "..\Startup\CommonIncludes\Icons\vimIconSuspended.ico"
-
-; m[0] := "a"
-; m[0, 1] := "b"
-
+m[0] := "..\Startup\CommonIncludes\Icons\test.ico"
+m[1] := "..\Startup\CommonIncludes\Icons\testSuspended.ico"
 setupTrayIcons(v, m)
 
 ~#!x::
@@ -54,17 +32,12 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^a::
-	Suspend, Permit
-	vimKeysOn := !vimKeysOn
+
 return
 
-^b::
-	Suspend, Permit
-	superKeysOn := !superKeysOn
-return
+; CapsLock::Pause
 
-^e::updateTrayIcon()
-
+; CapsLock::RButton
 	; x = 1
 	; while(x < 5) {
 		; MsgBox, %A_Index%	
