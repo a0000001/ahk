@@ -128,7 +128,7 @@ return
 
 ; extensions
 :*:btw::by the way
-:*:wful::Wake Forest University
+; :*:wful::Wake Forest University
 :*:gov't::government
 :*:eq'm::equilibrium
 :*:f'n::function
@@ -150,6 +150,14 @@ return
 :*:sync'd::synchronized
 :*:pos'n::position
 :*:pos'd::positioned
+:*:imp't::implement
+:*:imp'n::implementation
+
+; Healthcare-specific expansions.
+:*:Med'c::Medicare
+:*:Med'a::Medicaid
+:*:Medi'c::Medicare
+:*:Medi'a::Medicaid
 
 ; date, time, both, and address
 ::idate::

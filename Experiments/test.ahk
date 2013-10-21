@@ -51,9 +51,9 @@ return
 	; ; ; Send, {Space}{End}{Delete}{Enter}{Home}{Down}
 ; return
 
-; ^d::
-	; Send, {End}{Enter}{Tab}A{Backspace}
-; return
+^d::
+	Send, {End}{Enter}{Tab}A{Backspace}
+return
 
 ; $^b::
 	; Send, {Home}{Shift Down}{End}{Shift Up}^b{Down}{Home}
