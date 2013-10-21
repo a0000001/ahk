@@ -32,6 +32,11 @@
 	~^2::
 		Send, {Left}
 	return
+	
+	; Send whitespace character that outlook checks the body of the message for in order to skip delay send.
+	!x::
+		Send, {Enter}2000!x
+	return
 #IfWinActive
 
 ; Activity-specific keys, must filter on title.
