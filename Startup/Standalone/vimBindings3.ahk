@@ -27,6 +27,7 @@ setupTrayIcons(v, m)
 ; Special flags for previous action.
 global justFound := 0
 global justOmnibox := 0
+global justFeedlySearched := 0
 
 ; Control classes.
 ChromeSearchboxClass := "Chrome_WidgetWin_11"
@@ -121,24 +122,32 @@ setVimState(toState, super = false) {
 		setVimState(true)
 	return
 		
-	; Unpause specially for find.
-	~$Esc::
-		if(superKeysOn) {
-			setVimState(true) ; Special additional reset.
-		}
-		if(justFound) {
-			setVimState(true)
-			justFound := 0
-		}
-	return
+	; Unpause specially for find (and feedly)
+	~$Esc::unpause(1)
+		; if(superKeysOn) {
+			; setVimState(true) ; Special additional reset.
+		; }
+		; if(justFound) {
+			; setVimState(true)
+			; justFound := 0
+		; }
+		; if(justFeedlySearched) {
+			; setVimState(true)
+			; justFeedlySearched := 0
+		; }
+	; return
 
-	; Unpause specially for omnibox.
-	~$Enter::
-		if(justOmnibox) {
-			setVimState(true)
-			justOmnibox := 0
-		}
-	return
+	; Unpause specially for omnibox (and feedly)
+	~$Enter::unpause(2)
+		; if(justOmnibox) {
+			; setVimState(true)
+			; justOmnibox := 0
+		; }
+		; if(justFeedlySearched) {
+			; setVimState(true)
+			; justFeedlySearched := 0
+		; }
+	; return
 	
 	; Close Tab. Here because F9 is not a typically-pressed key.
 	F9::
@@ -147,6 +156,32 @@ setVimState(toState, super = false) {
 		setVimState(true)
 	return
 #If
+
+unpause(escOrEnter) {
+	; Escape
+	if(escOrEnter = 1) {
+		if(superKeysOn) {
+			setVimState(true) ; Special additional reset.
+		}
+		if(justFound) {
+			setVimState(true)
+			justFound := 0
+		}
+	
+	; Enter
+	} else if(escOrEnter = 2) {
+		if(justOmnibox) {
+			setVimState(true)
+			justOmnibox := 0
+		}
+	}
+	
+	; Feedly should work with either.
+	if(justFeedlySearched) {
+		setVimState(true)
+		justFeedlySearched := 0
+	}
+}
 
 ; Main hotkeys, run if not turned off.
 #If chromeOrFirefoxActive() && vimKeysOn && !pageToExclude() && !specialTextFieldActive()
@@ -162,6 +197,17 @@ setVimState(toState, super = false) {
 		justFound := 1
 	return
 
+	; Feedly: if gg, pause script until enter or esc.
+	~g::
+		WinGetTitle, pageTitle, A	
+		; MsgBox, % pageTitle
+		
+		if(InStr(pageTitle, " - feedly")) {
+			justFeedlySearched := 1
+			setVimState(false)
+		}
+	return
+	
 	; Pause/suspend.
 	~^l::
 	~^t::
@@ -177,9 +223,9 @@ setVimState(toState, super = false) {
 	\::Send, !{Right}
 	
 	; Special addition for when j/k turned off because special page.
-	Space & j::Send, {Down}
-	Space & k::Send, {Up}
-	Space Up::Send, {Space}
+	`; & j::Send, {Down}
+	`; & k::Send, {Up}
+	`; Up::Send, `;
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
