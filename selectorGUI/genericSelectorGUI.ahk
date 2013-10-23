@@ -23,8 +23,12 @@ extraLen := 1
 
 filePath = %1%
 actionType = %2%
+silentChoice = %3%
 lastExecutedFileName := SubStr(filePath, 1, -4) "Last.ini"
 ; MsgBox, % lastExecutedFileName
+; if(silentChoice != "") {
+	; MsgBox, % silentChoice
+; }
 
 ; Read in the various paths, names, and abbreviations.
 Loop, Read, %filePath%
@@ -55,7 +59,7 @@ Loop, Read, %filePath%
 		Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
 		{
 			if(starRow) { ; Special case: allow matching on this row, but don't show it. (Generally will be treated as row 0).
-				; MsgBox, got a star chunk: %A_LoopField%
+				; MsgBox, got a star chunk: %A_LoopField% %starLen%
 				sessionsArr[starLen, A_Index] := A_LoopField
 			} else {
 				; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
@@ -78,32 +82,39 @@ sessionsLen--
 starLen++
 extraLen--
 
-; Put the above stuff together.
-; displayText := prompt "`n`n"
-displayText := ""
-Loop, %sessionsLen% {
-	; Extra newline if requested.
-	if(extraLines[A_Index]) {
-		if(extraLines[A_Index] != " " && A_Index != 1) {
-			displayText .= "`n"
+; Allow for a command-line-passed input rather than popping up a GUI.
+if(silentChoice != "") {
+	userIn := silentChoice
+} else {
+	; Put the above stuff together.
+	; displayText := prompt "`n`n"
+	displayText := ""
+	Loop, %sessionsLen% {
+		; Extra newline if requested.
+		if(extraLines[A_Index]) {
+			if(extraLines[A_Index] != " " && A_Index != 1) {
+				displayText .= "`n"
+			}
+			
+			displayText .= extraLines[A_Index]"`n"
 		}
 		
-		displayText .= extraLines[A_Index]"`n"
+		displayText .= A_Index ") " sessionsArr[A_Index, ABBREV] ":`t" sessionsArr[A_Index, NAME] "`n"
 	}
+
+	; Actually prompt the user.
+	; MsgBox, % displayText
+	; InputBox, userIn, %title%, %displayText%, , 400, height
+
+	height += getTextHeight(displayText)
+	InputBox, userIn, %title%, %displayText%, , 400, %height%
+	if(ErrorLevel || userIn = "") {
+		ExitApp
+	}
+}
+
+; MsgBox, z%userIn%z
 	
-	displayText .= A_Index ") " sessionsArr[A_Index, ABBREV] ":`t" sessionsArr[A_Index, NAME] "`n"
-}
-
-; Actually prompt the user.
-; MsgBox, % displayText
-; InputBox, userIn, %title%, %displayText%, , 400, height
-
-height += getTextHeight(displayText)
-InputBox, userIn, %title%, %displayText%, , 400, %height%
-if(ErrorLevel || userIn = "") {
-	ExitApp
-}
-
 ; Special case: if "." was entered, execute last-executed command instead.
 if(userIn = ".") {
 	FileReadLine, recentRun, %lastExecutedFileName%, 1
