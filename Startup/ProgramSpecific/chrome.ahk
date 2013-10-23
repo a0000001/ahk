@@ -43,7 +43,14 @@
 		Send, e
 		Send, {Enter}
 	return
-
+	
+	; Easy copy of link contents.
+	^RButton::
+		Click, Right
+		Sleep, 500
+		Send, {Down 5}
+		Send, {Enter}
+	return
 #ifWinActive
 
 
@@ -61,7 +68,7 @@
 		Run, %clipboard%
 		clipboard := tempClipboard
 	return
-
+	
 	; Keepass Lastpass-like hotkey.
 	$!i::Send, ^+u
 	

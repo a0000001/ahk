@@ -1,5 +1,10 @@
 ; Input change/fixing functions.
 
+; Executor normally uses CapsLock, but (very) occasionally, we need to use it for its intended purpose.
+^!CapsLock::
+	SetCapsLockState, On
+return
+
 #If borgWhichMachine = EPIC_DESKTOP
 	; For ergonomic keyboard.
 	browser_back up::
@@ -20,10 +25,10 @@
 	
 	; For ergonomic mouse. 1 is closer to me.
 	XButton1::
-		Send, {Media_Play_Pause}
+		Send, {Browser_Favorites}
 	return
 	XButton2::
-		Send, {Browser_Favorites}
+		Send, {Media_Play_Pause}
 	return
 	
 	; Hotkey to fix one-spot-too-late spaces.

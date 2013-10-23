@@ -23,6 +23,7 @@ Loop {
 		WinGetActiveTitle, Title
 		RegExMatch(Title, "^C:\\EpicSource\\\d\.\d\\DLG-(\d+)[-\\].* - Commit - TortoiseSVN", DLG)
 		ControlSend, Edit2, %DLG1%
+		Send, {Tab 2}
 	}
 	
 	Sleep, 5000 ; Wait 5 seconds before going again, to reduce idle looping.

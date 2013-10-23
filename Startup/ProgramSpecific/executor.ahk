@@ -5,7 +5,7 @@
 #IfWinNotActive, ahk_class TscShellContainerClass
 	; use Caps Lock as the trigger key.
 	CapsLock::
-		; SetCapsLockState, Off
+		SetCapsLockState, AlwaysOff
 		Send, #z
 	return
 #IfWinNotActive

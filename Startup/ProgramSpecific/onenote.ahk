@@ -32,5 +32,15 @@ return
 	; Send, !hd
 	Send, !8
 return
-	
+
+; Adds a new sub-bullet that won't disappear.
+^+a::
+	Send, {End}{Enter}{Tab}A{Backspace}
+return
+
+; Bolds the full row.
+^+b::
+	Send, {Home}{Shift Down}{End}{Shift Up}^b{Down}{Home}
+return
+
 #ifWinActive
