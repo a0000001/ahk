@@ -26,4 +26,5 @@
 #Include ProgramSpecific\sumatraPDF.ahk
 #Include ProgramSpecific\tortoiseSVN.ahk
 #Include ProgramSpecific\vb6.ahk
+#Include ProgramSpecific\vlc.ahk
 #Include ProgramSpecific\word.ahk
