@@ -1,0 +1,96 @@
+Choose/Choose32/Choose64 2.2
+(C) 2006-2010 by Bill Stewart (bstewart@iname.com)
+
+Description:
+
+Choose/Choose32/Choose64 is intended for use in shell scripts (aka batch
+files). It presents a list of choices and allows the user to select one of the
+choices. The script can use Choose's exit code to determine which choice the
+user selected. The program is provided in three versions:
+
+*   CHOOSE.EXE - real-mode MS-DOS version; works in MS-DOS and in Windows 9x/Me
+    COMMAND.COM sessions
+
+*   Choose32.exe - Windows x86 (32-bit) console program
+
+*   Choose64.exe - Windows x64 console program
+
+In this documentation, Choose refers to any version of the program.
+
+Choose is similar to the Microsoft Choice utility, but it has the following
+advantages:
+
+*   It doesn't beep when the user makes an invalid choice.
+
+*   It offers a "default key" feature, which lets the user press Enter to
+    select a default choice.
+
+*   Choose supports multiple platforms (MS-DOS, Win32, and Win64).
+
+*   Choose's timeout feature doesn't have problems when you run multiple
+    instances of it in separate console windows (this was a problem with
+    earlier versions of the Win32 version of Microsoft's Choice utility).
+
+*   It can suppress the display of the user's choice.
+
+*   It provides a line input mode where the user must press Enter after making
+    a choice.
+
+For these reasons, Choose may be preferable to Choice except in environments
+where third-party executables are prohibited.
+
+Usage:
+
+Choose [-c choices] [-d x] [-l] [-n] [-p prompt] [-q] [-s] [-t x,n]
+
+Arguments:
+
+-c choices  Specifies valid choices. The default choices are 'YN'. If -s is
+            used, the default choices are 'yn'.
+
+-d x        Choose 'x' if the user presses Enter.
+
+-l          Use line input mode (i.e., the user must press Enter after making a
+            choice).
+
+-n          Do not display the list of choices. Normally, Choose displays valid
+            choices between '[' and ']' to prompt the user (e.g., '[Y,N]').
+
+-p prompt   Specifies a prompt for the user. If it contains spaces or tabs,
+            enclose it in quotes (").
+
+-q          Do not display the selected choice (ignored when using -l).
+
+-s          Choices are case sensitive.
+
+-t x,n      Chooses 'x' automatically if the user doesn't make a choice within
+            'n' seconds.
+
+All command-line arguments are optional and may appear in any order.
+
+If the /? argument is present and is first on the command line, the program
+will display a short usage message.
+
+Exit Codes:
+
+0       The command line contains an error
+1-254   The position of the user's choice in the list (e.g., 1 for the first
+        choice, 2 for the second choice, etc.)
+255     User pressed Ctrl-C to abort
+
+Examples:
+
+1.  choose32 -p "Are you sure?"
+
+    This command will display the following prompt:
+
+    Are you sure? [Y,N]
+
+    If you press y or Y, Choose will return an exit code of 1; if you press n
+    or N, it will return an exit code of 2. If you press Ctrl-C, Choose will
+    return an exit code of 255.
+
+2.  choose32 -p "Do you want to continue?" -t n,60
+
+    Choose will wait for you to press Y, y, N, or n. If you don't type anything
+    within 1 minute, Choose will answer "no" automatically.

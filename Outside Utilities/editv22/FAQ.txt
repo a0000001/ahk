@@ -1,0 +1,129 @@
+EditVar/EditV32/EditV64 and Choose/Choose32/Choose64
+(C) 2006-2010 by Bill Stewart (bstewart@iname.com)
+
+Frequently Asked Questions
+
+This file is based partly on users' questions, and partly based on my own
+investigation.
+
+Last update: 18 Mar 2010
+
+Q1.     Why are some versions of these programs flagged as
+        suspicious/virus/malware by some anti-virus or malware scanners?
+
+A1.     UPX compression seems to trigger false-positives for some programs
+        using some anti-virus or anti-malware scanners. As a result, the
+        programs are no longer compressed using UPX to try to avoid these
+        false-positives.
+
+Q2.     What language did you use to write these programs?
+
+A2.     The MS-DOS versions are compiled with Turbo Pascal, and the 32-bit and
+        64-bit versions are compiled with Free Pascal.
+
+Q3.     I have placed an EditVar or Choose command in a shell script (batch
+        file), but when I double-click on the script from Explorer, EditVar or
+        Choose doesn't run.
+
+A3.     Any time a shell script calls an executable file, the executable file
+        that it runs must be in a location where the script can find it. When
+        you double-click on a script in Windows Explorer, the script's
+        "starting directory" may not be the same directory the script is in
+        (this seems to depend on the OS version).
+
+        Here are some possible workarounds:
+
+        1.  Copy the program file to a directory in the system path.
+
+        2.  Use the %0\..\ syntax to run the .EXE file from inside the script;
+            e.g. '%0\..\choose32' instead of just 'choose32'.
+
+            The %0\..\ shorthand works because %0 expands to the script's file
+            name, and \..\ means "the parent directory." Since %0 includes the
+            file name itself, the \..\ "tricks" the command shell into thinking
+            the script file's name is a directory, and thus points to the
+            parent directory of a non-existent directory, which is the same
+            directory that the script is in.
+
+            See Microsoft Knowledge Base article 121387 for more information
+            about how they used this syntax to deploy the SMS client software.
+
+        3.  In Windows 2000 and later Cmd.exe, you can use a line like this in
+            the script:
+
+            "%~dp0choose32" ...
+
+            The %~dp0 syntax means "return the current script's drive and
+            directory, without quotes." The quotes are needed in case the
+            directory the script is in (or the script's name itself!) contains
+            spaces.
+
+Q4.     Input redirection doesn't work...
+
+A4.     The MS-DOS versions (EditVar.exe and Choose.exe) use the system BIOS
+        function (INT 10h) to read the keyboard, and this function call does
+        not support input redirection.
+
+        The console input handler in the Win32 and Win64 versions do not
+        support input redirection.
+
+Q5.     Why is the MS-DOS version of Choose.exe so slow on the Windows NT
+        platform (NT/2000/XP/etc.)?
+
+A5.     MS-DOS programs are fully emulated and displayed inside a Win32 console
+        session on the Windows NT platform. This has an important ramification
+        on how the program is presented on the screen in a console window.
+
+        Most MS-DOS programs were not designed to handle the large number of
+        screen rows and/or columns that are common in Windows NT console
+        sessions. If NT detects that the MS-DOS program is expecting a small
+        screen size, it will temporarily resize the console window to a smaller
+        size to accommodate the MS-DOS program. This imposes a considerable
+        performance penalty.
+
+        You can observe this behavior by creating a shortcut to Cmd.exe and
+        defining an unusual (e.g. anything larger that 80x50) window size in
+        the shortcut. Upon opening the shortcut, run Choose.exe and observe how
+        the OS resizes the console window temporarily while Choose.exe is
+        running. After you press Y or N to end the program, the OS will resize
+        the window back to its previous dimensions.
+
+        As a side note, the Command.com executable on the Windows NT platform
+        is merely a "stub" program that passes nearly every command onto the
+        underlying system command interpreter (Cmd.exe), and only includes a
+        very small set of internal commands.
+
+Q6.     My command-line parameters aren't working properly...
+
+A6.     Try explicitly separating the parameters with spaces, and for the
+        parameters that need arguments, separate the parameter's argument from
+        the parameter with a space. If the parameter's argument includes
+        embedded spaces or tabs, enclose it in quotes.
+
+Q7.     How do I use quotes in a prompt?
+
+A7.     You can use either single or double quotes when specifying a
+        command-line parameter that contains spaces or tabs. If you want to
+        includes quotes as part of a parameter, use the alternate quote
+        character (' or ") to include them. For example:
+
+        'Press "Enter" to continue...'
+
+        It's currently not possible to include both types of quotes in a single
+        string.
+
+Q8.     EditVar or Choose don't seem to return a correct exit code, or the If
+        Errorlevel command isn't working...
+
+A8.     "If Errorlevel n" really means "If Errorlevel >= n", so make sure to
+        test exit codes in descending order.
+
+Q9.     Why don't the MS-DOS versions and EditV32 work in x64 Windows versions?
+
+A9.     The x64 Windows versions dropped 16-bit emulation, so MS-DOS and 16-bit
+        Windows applications will not run at all in x64 Windows. EditV32.exe
+        doesn't work in x64 Windows either because of 32-bit emulation: Use
+        EditV64 instead. You can check which version of Windows you are running
+        from a shell script by checking the PROCESSOR_ARCHITECTURE environment
+        variable. If PROCESSOR_ARCHITECTURE is x86, then you're running a
+        32-bit version of Windows.

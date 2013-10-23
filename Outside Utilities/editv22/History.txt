@@ -1,0 +1,80 @@
+EditVar/EditV32/EditV64 and Choose/Choose32/Choose64
+(C) 2006-2010 by Bill Stewart (bstewart@iname.com)
+
+Version History
+
+2.2: 18 Mar 2010
+
+*   The executables are no longer compressed with UPX as this seems to cause
+    false-positives with some anti-virus/anti-malware scanners.
+
+2.1: 01 Jun 2009
+
+*   Choose32 and Choose64 contained a bug that caused the keypad Enter and /
+    keys to be ignored. Fixed. (Should have noticed this and fixed it back in
+    version 1.7.)
+
+2.0: 14 May 2009
+
+*   Added 64-bit versions.
+
+*   Compiled with Free Pascal 2.2.2. DOS and Win32 versions compressed with UPX
+    3.03. As of this writing, UPX does not support compression of 64-bit
+    Windows executables.
+
+1.8: 3 April 2008
+
+*   Fixed a Win32 version bug introduced by the bug fix in version 1.7.
+
+1.7: 2 April 2008
+
+*   Line input routine in the Win32 versions was ignoring the Enter and / keys
+    on the numeric keypad. Fixed.
+
+*   Compiled with Free Pascal 2.2.0 and compressed with UPX 3.02.
+
+1.6: 7 March 2007
+
+*   EditV32.exe used a list of characters that was too restrictive when
+    checking whether a variable name contains illegal characters. This version
+    greatly expands the list of characters allowed to be used in variable
+    names.
+
+*   EditV32.exe no longer converts the environment variable's name to
+    uppercase.
+
+1.5: 12 September 2006
+
+*   Added the -e argument for EditV32.exe.
+
+*   The programs are now compiled with Free Pascal 2.0.4 and compressed with
+    UPX.
+
+1.4: 21 April 2006
+
+*   EditVar/EditV32 had a bug with the -u option if the initial character of
+    the variable to edit was lowercase. This has been fixed.
+
+1.3: 18 April 2006
+
+*   Found out that COMMAND.COM does indeed allow spaces in a variable name.
+    Updated the MS-DOS version also.
+
+1.2: 18 April 2006
+
+*   On advice from Phil Robyn and others in the microsoft.public.win2000
+    .cmdprompt.admin newsgroup, added the space character as a legal character
+    in an environment variable name in the Win32 version.
+
+1.1: 17 April 2006
+
+*   Fixed a (minor) bug in the line editor.
+
+*   Fixed bugs in MS-DOS environment access for EditVar.exe.
+
+
+1.0: 14 April 2006
+
+*   Initial version. EditV32 and Choose32 are loosely based on two older
+    programs I wrote called Getkey and Getvar, and are intended to replace
+    them.

@@ -1,0 +1,13 @@
+EditVar/EditV32/EditV64 and Choose/Choose32/Choose64
+(C) 2006-2010 by Bill Stewart (bstewart@iname.com)
+
+These programs may be used freely. You may redistribute them provided you do
+the following:
+
+*   Give me credit. Credit should go where it's due.
+*   Let me know how the software is being used.
+*   Don't modify the executables in any way.
+
+These programs are distributed in the hope that they will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
