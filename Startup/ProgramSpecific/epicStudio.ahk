@@ -55,6 +55,17 @@
 	return
 
 	^q::Send, % commentStartString
+	
+	; Get routine name from title to clipboard.
+	!c::
+		WinGetTitle, title
+		; MsgBox, % title
+		
+		StringSplit, splitTitle, title, (, %A_Space%
+		; MsgBox, % splitTitle1
+		
+		clipboard := splitTitle1
+	return
 
 	; GUI input for Chronicles Data Operation GENERATE code.
 	:*:`;cdo::
