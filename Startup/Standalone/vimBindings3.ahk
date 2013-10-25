@@ -223,9 +223,9 @@ unpause(escOrEnter) {
 	\::Send, !{Right}
 	
 	; Special addition for when j/k turned off because special page.
-	`; & j::Send, {Down}
-	`; & k::Send, {Up}
-	`; Up::Send, `;
+	' & j::Send, {Down}
+	' & k::Send, {Up}
+	' Up::Send, '
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
