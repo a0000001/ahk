@@ -33,6 +33,10 @@ return
 
 ^a::
 
+return
+
+; #Tab::
+	; MsgBox, asdf
 ; return
 
 ; CapsLock::Pause
@@ -47,16 +51,16 @@ return
 	; ; MsgBox, % suspended
 	; ; suspended := !suspended
 	; Send, {Delete 2}
-	SendRaw, *
-	Send, {Space}{End}{Delete}{Enter}{Home}{Down}
+	; SendRaw, *
+	; Send, {Space}{End}{Delete}{Enter}{Home}{Down}
+; ; return
+
+; ^d::
+	; Send, {End}{Enter}{Tab}A{Backspace}
 ; return
 
-^d::
-	Send, {End}{Enter}{Tab}A{Backspace}
-return
-
-$^b::
-	Send, {Home}{Shift Down}{End}{Shift Up}^b{Down}{Home}
+; $^b::
+	; Send, {Home}{Shift Down}{End}{Shift Up}^b{Down}{Home}
 	
 	; ControlGetText, test, WindowsForms10.Window.8.app.0.2bf8098_r13_ad160
 	; MsgBox, % test
@@ -76,7 +80,7 @@ $^b::
 	; filePath := "blahBlahBlah.ini"
 	; lastFilePath := SubStr(filePath, 1, -4) "Last.ini"
 	; MsgBox, % lastFilePath
-return
+; return
 
 ; testFunc(obj) {
 	; MsgBox, % obj[1]

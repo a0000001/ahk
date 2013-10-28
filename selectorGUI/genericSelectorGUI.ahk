@@ -165,6 +165,7 @@ if(foundNum != 0) {
 	action := sessionsArr[foundNum, PATH]
 } else if(actionType = "CALL") { ; For phone, allow other numeric input as well.
 	action := userIn
+	foundNum := 1 ; So that it gets saved.
 } else {
 	MsgBox, No matches found!
 	ExitApp

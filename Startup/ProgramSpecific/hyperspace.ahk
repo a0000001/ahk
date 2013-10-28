@@ -57,5 +57,10 @@
 		
 		clipboard := splitFirstPart2
 	return
+	
+	; Allow my save reflex to live on.
+	^s::
+		Send, !s
+	return
 
 #IfWinActive
