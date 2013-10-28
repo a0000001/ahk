@@ -92,7 +92,6 @@ if(silentChoice != "") {
 	userIn := silentChoice
 } else {
 	; Put the above stuff together.
-	; displayText := prompt "`n`n"
 	displayText := ""
 	Loop, %sessionsLen% {
 		; Extra newline if requested.
@@ -108,9 +107,6 @@ if(silentChoice != "") {
 	}
 
 	; Actually prompt the user.
-	; MsgBox, % displayText
-	; InputBox, userIn, %title%, %displayText%, , 400, height
-
 	height += getTextHeight(displayText)
 	InputBox, userIn, %title%, %displayText%, , 400, %height%
 	if(ErrorLevel || userIn = "") {
