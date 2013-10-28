@@ -58,9 +58,17 @@
 		clipboard := splitFirstPart2
 	return
 	
-	; Allow my save reflex to live on.
+	; Allow my save reflex to live on. Return to the field we were in when we finish.
 	^s::
+		ControlGetFocus, currControl, A
+		; MsgBox, %currControl%
+		
 		Send, !s
+		Sleep, 100
+		
+		; Send, +{Tab}
+		ControlFocus, %currControl%, A
+		; ControlFocus, ThunderRT6TextBox2, A
 	return
 
 #IfWinActive
