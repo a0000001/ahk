@@ -24,11 +24,16 @@ extraLen := 1
 filePath = %1%
 actionType = %2%
 silentChoice = %3%
-lastExecutedFileName := SubStr(filePath, 1, -4) "Last.ini"
+fileName := SubStr(filePath, 1, -4)
+iconName := fileName ".ico"
+lastExecutedFileName := fileName "Last.ini"
 ; MsgBox, % lastExecutedFileName
 ; if(silentChoice != "") {
 	; MsgBox, % silentChoice
 ; }
+
+; Set the tray icon based on the input ini filename.
+Menu, Tray, Icon, %iconName%
 
 ; Read in the various paths, names, and abbreviations.
 Loop, Read, %filePath%
@@ -156,12 +161,17 @@ if(foundNum = 0) {
 	}
 }
 
-if(foundNum = 0) {
+if(foundNum != 0) {
+	action := sessionsArr[foundNum, PATH]
+} else if(actionType = "CALL") { ; For phone, allow other numeric input as well.
+	action := userIn
+} else {
 	MsgBox, No matches found!
 	ExitApp
 }
 
-action := sessionsArr[foundNum, PATH]
+; MsgBox, %userIn%
+; ExitApp
 
 if(foundNum > 0) {
 	; Remove the old 'last entered' file and stick this one in as the new one.
@@ -172,7 +182,7 @@ if(foundNum > 0) {
 	
 ; So now we have a match - do it and die.
 doAction(action)
-ExitApp
+return
 
 
 
