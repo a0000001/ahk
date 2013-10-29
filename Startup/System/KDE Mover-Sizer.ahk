@@ -1,3 +1,6 @@
+; So that this doesn't mess with remote desktop.
+#IfWinNotActive, ahk_class TscShellContainerClass
+
 ;	Internationally known as "KDE Mover-Sizer"							Version 1.3
 ;
 ;	http://corz.org/windows/software/accessories/KDE-resizing-moving-for-XP-or-Vista.php
@@ -504,3 +507,5 @@ GetCurrentScreenBoarders(ByRef CurrentScreenLeft, ByRef CurrentScreenRight, ByRe
         }
     }
 }
+
+#IfWinNotActive 
