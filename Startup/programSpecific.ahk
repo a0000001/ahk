@@ -1,6 +1,7 @@
 ﻿; === Program-specific scripts.. === ;
 
 #Include ProgramSpecific\chrome.ahk
+#Include ProgramSpecific\ciscoAnyConnect.ahk
 #Include ProgramSpecific\cygwin.ahk
 #Include ProgramSpecific\ditto.ahk
 #Include ProgramSpecific\eclipse.ahk
