@@ -123,31 +123,10 @@ setVimState(toState, super = false) {
 	return
 		
 	; Unpause specially for find (and feedly)
-	~$Esc::unpause(1)
-		; if(superKeysOn) {
-			; setVimState(true) ; Special additional reset.
-		; }
-		; if(justFound) {
-			; setVimState(true)
-			; justFound := 0
-		; }
-		; if(justFeedlySearched) {
-			; setVimState(true)
-			; justFeedlySearched := 0
-		; }
-	; return
-
-	; Unpause specially for omnibox (and feedly)
-	~$Enter::unpause(2)
-		; if(justOmnibox) {
-			; setVimState(true)
-			; justOmnibox := 0
-		; }
-		; if(justFeedlySearched) {
-			; setVimState(true)
-			; justFeedlySearched := 0
-		; }
-	; return
+	~$Esc::
+	~$Enter::
+		unpauseSpecial()
+	return
 	
 	; Close Tab. Here because F9 is not a typically-pressed key.
 	F9::
@@ -157,29 +136,13 @@ setVimState(toState, super = false) {
 	return
 #If
 
-unpause(escOrEnter) {
-	; Escape
-	if(escOrEnter = 1) {
-		if(superKeysOn) {
-			setVimState(true) ; Special additional reset.
-		}
-		if(justFound) {
-			setVimState(true)
-			justFound := 0
-		}
+unpauseSpecial() {
+	global superKeysOn, justFeedlySearched, justDoubleQuoted
 	
-	; Enter
-	} else if(escOrEnter = 2) {
-		if(justOmnibox) {
-			setVimState(true)
-			justOmnibox := 0
-		}
-	}
-	
-	; Feedly should work with either.
-	if(justFeedlySearched) {
+	if(superKeysOn || justFeedlySearched || justDoubleQuoted) {
 		setVimState(true)
 		justFeedlySearched := 0
+		justDoubleQuoted := 0
 	}
 }
 
@@ -208,10 +171,17 @@ unpause(escOrEnter) {
 		}
 	return
 	
+	+'::
+		justDoubleQuoted := 1
+		setVimState(false)
+	return
+	
+	; General: Double quote will never be a legitimate control input, turn it off.
+	
 	; Pause/suspend.
-	~^l::
-	~^t::
-		justOmnibox := 1
+	; ~^l::
+	; ~^t::
+		; justOmnibox := 1
 	i::
 		setVimState(false)
 	return
