@@ -129,6 +129,9 @@ if(silentChoice != "") {
 
 ; ----- Parse input to meaningful command. ----- ;
 
+dotPos := InStr(userIn, ".")
+; MsgBox, % dotPos
+
 ; "." gives us the last executed command.
 if(userIn = ".") {
 	FileReadLine, recentRun, %lastExecutedFileName%, 1
@@ -146,6 +149,13 @@ if(userIn = ".") {
 	action := SubStr(userIn, 2)
 	; MsgBox, % action
 
+; Allow concatentation of arbitrary addition with short.yada or #.yada.
+} else if(dotPos > 1) {
+	StringSplit, dotParts, userIn, .
+	; MsgBox, % dotParts1 . "	" dotParts2
+	action := searchTable(sessionsArr, sessionsLen, starLen, dotParts1)
+	action .= dotParts2
+	
 ; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
 	action := searchTable(sessionsArr, sessionsLen, starLen, userIn)
