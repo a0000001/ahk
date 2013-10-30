@@ -8,9 +8,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include HTTPRequest.ahk
 
 ; Constants and such.
-NAME := 1
-ABBREV := 2
-PATH := 3
+global NAME := 1
+global ABBREV := 2
+global PATH := 3
 
 ; height := 152 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
@@ -20,6 +20,9 @@ sessionsLen := 1
 starLen := -1
 extraLines := Object()
 extraLen := 1
+
+foundNum := 0
+saveEntry := 1
 
 filePath = %1%
 actionType = %2%
@@ -87,6 +90,10 @@ sessionsLen--
 starLen++
 extraLen--
 
+
+; ----- Get choice. ----- ;
+
+
 ; Allow for a command-line-passed input rather than popping up a GUI.
 if(silentChoice != "") {
 	userIn := silentChoice
@@ -114,70 +121,55 @@ if(silentChoice != "") {
 	}
 }
 
+
+
 ; MsgBox, z%userIn%z
-	
-; Special case: if "." was entered, execute last-executed command instead.
+
+
+
+; ----- Parse input to meaningful command. ----- ;
+
+; "." gives us the last executed command.
 if(userIn = ".") {
 	FileReadLine, recentRun, %lastExecutedFileName%, 1
 	; MsgBox, %recentRun%
 	if(recentRun) {
-		doAction(recentRun)
+		action := recentRun
+		saveEntry := 0
 	} else {
 		MsgBox, No recent item stored!
+		ExitApp
 	}
-	
-	ExitApp
-}
 
-; MsgBox, %userIn%
+; ".yada" passes in "yada" as an arbitrary, meaninful command.
+} else if(subStr(userIn, 1, 1) = ".") {
+	action := SubStr(userIn, 2)
+	; MsgBox, % action
 
-; Figure out if what they gave us matches anything.
-foundNum := 0
-Loop, %sessionsLen% {
-	if(userIn = A_Index || userIn = sessionsArr[A_Index, ABBREV] || userIn = sessionsArr[A_Index, NAME]) {
-		; MsgBox, Found: %userIn% at index: %A_Index%
-		foundNum := A_Index
-		break
-	}
-}
-
-; MsgBox, % foundNum
-
-; Try the star entries if you didn't find it above.
-if(foundNum = 0) {
-	tempLen := -starLen
-	Loop, %tempLen% {
-		idx := -A_Index
-		; MsgBox, % userIn " " idx " " sessionsArr[idx, ABBREV] " " sessionsArr[idx, NAME]
-		if(userIn = idx || userIn = sessionsArr[idx, ABBREV] || userIn = sessionsArr[idx, NAME]) {
-			; MsgBox, Star Found: %userIn% at index: %A_Index%
-			foundNum := idx
-			break
-		}
-	}
-}
-
-if(foundNum != 0) {
-	action := sessionsArr[foundNum, PATH]
-} else if(actionType = "CALL") { ; For phone, allow other numeric input as well.
-	action := userIn
-	foundNum := 1 ; So that it gets saved.
+; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
-	MsgBox, No matches found!
-	ExitApp
+	action := searchTable(sessionsArr, sessionsLen, starLen, userIn)
+	
+	; MsgBox, % action
+	
+	if(action = "") {
+		MsgBox, No matches found!
+		ExitApp
+	}
 }
 
-; MsgBox, %userIn%
+; MsgBox, %action%, %saveEntry%
 ; ExitApp
 
-if(foundNum > 0) {
+; Don't save star entries or the previous entry (input of ".").
+if(saveEntry) {
 	; Remove the old 'last entered' file and stick this one in as the new one.
 	; MsgBox, % lastExecutedFileName
 	FileDelete, %lastExecutedFileName%
 	FileAppend, %action%, %lastExecutedFileName%
 }
-	
-; So now we have a match - do it and die.
+
+; So now we have something valid - do it and die.
 doAction(action)
 return
 
@@ -193,7 +185,39 @@ getTextHeight(text) {
 	height := lines * lineHeight
 	; MsgBox % lines " " height
 	
-	Return height
+	return height
+}
+
+; Function to search our generated table for a given index/shortcut.
+searchTable(table, tableLen, starLen, input) {
+	global saveEntry
+	; MsgBox, % input . ", " . table[1, NAME] . " " . table[1, PATH]
+	
+	; First try the normal, visible entries.
+	Loop, %tableLen% {
+		if(input = A_Index || input = table[A_Index, ABBREV] || input = table[A_Index, NAME]) {
+			; MsgBox, Found: %input% at index: %A_Index%
+			; foundNum := A_Index
+			; action := table[A_Index, PATH]
+			return table[A_Index, PATH]
+		}
+	}
+	
+	; Try the star entries if you didn't find it above.
+	tempLen := -starLen
+	Loop, %tempLen% {
+		idx := -A_Index
+		; MsgBox, % input " " idx " " table[idx, ABBREV] " " table[idx, NAME]
+		if(input = idx || input = table[idx, ABBREV] || input = table[idx, NAME]) {
+			; MsgBox, Star Found: %input% at index: %A_Index%
+			; foundNum := idx
+			; action := table[idx, PATH]
+			saveEntry := 0
+			return table[idx, PATH]
+		}
+	}
+	
+	return ""
 }
 
 ; Function to do what it is we want done, then exit.
