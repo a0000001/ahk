@@ -15,13 +15,13 @@ global PATH := 3
 ; height := 152 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 sessionsArr := Object() ; Object to hold all the read-in info.
-sessionsLen := 1
+global sessionsLen := 1
 ; starArr := Object()
-starLen := -1
+global starLen := -1
 extraLines := Object()
-extraLen := 1
+global extraLen := 1
 
-foundNum := 0
+; foundNum := 0
 saveEntry := 1
 
 filePath = %1%
@@ -153,12 +153,12 @@ if(userIn = ".") {
 } else if(dotPos > 1) {
 	StringSplit, dotParts, userIn, .
 	; MsgBox, % dotParts1 . "	" dotParts2
-	action := searchTable(sessionsArr, sessionsLen, starLen, dotParts1)
+	action := searchTable(sessionsArr, dotParts1)
 	action .= dotParts2
 	
 ; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
-	action := searchTable(sessionsArr, sessionsLen, starLen, userIn)
+	action := searchTable(sessionsArr, userIn)
 	
 	; MsgBox, % action
 	
@@ -171,6 +171,10 @@ if(userIn = ".") {
 ; MsgBox, %action%, %saveEntry%
 ; ExitApp
 
+
+; ----- Store what we're about to do, then do it. ----- ;
+
+
 ; Don't save star entries or the previous entry (input of ".").
 if(saveEntry) {
 	; Remove the old 'last entered' file and stick this one in as the new one.
@@ -182,6 +186,9 @@ if(saveEntry) {
 ; So now we have something valid - do it and die.
 doAction(action)
 return
+
+
+
 
 
 
@@ -199,12 +206,12 @@ getTextHeight(text) {
 }
 
 ; Function to search our generated table for a given index/shortcut.
-searchTable(table, tableLen, starLen, input) {
+searchTable(table, input) {
 	global saveEntry
 	; MsgBox, % input . ", " . table[1, NAME] . " " . table[1, PATH]
 	
 	; First try the normal, visible entries.
-	Loop, %tableLen% {
+	Loop, %sessionsLen% {
 		if(input = A_Index || input = table[A_Index, ABBREV] || input = table[A_Index, NAME]) {
 			; MsgBox, Found: %input% at index: %A_Index%
 			; foundNum := A_Index
