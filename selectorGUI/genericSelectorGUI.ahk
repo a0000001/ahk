@@ -113,7 +113,7 @@ if(userIn = ".") {
 				ExitApp
 			}
 		}
-		
+	
 	} else {
 		MsgBox, No recent item stored!
 		ExitApp
