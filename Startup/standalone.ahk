@@ -6,4 +6,4 @@ if(borgWhichMachine = EPIC_DESKTOP) {
 	Run, Standalone\tortoiseSVN_dlgFiller.ahk
 }
 
-Run, Standalone\vimBindings3.ahk
+Run, Standalone\vimBindings.ahk
