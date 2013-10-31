@@ -1,6 +1,6 @@
-=========================================
-Formatting Rules for VB6 Reference Picker AHK Script:
-=========================================
+=====================================================
+Formatting Rules for VB6 Reference Helper AHK Script:
+=====================================================
 
 Reference names should be entered in full, exactly as they are labelled in the table.
 

@@ -1,7 +1,26 @@
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+/*
+Author: Gavin Borg
+Description: Interface Function Populator. Does all of the clicking needed when you implement an interface in your code and now must implement all interface functions.
+Installation: Copy this file (vb6InterfaceFunctionPopulate.ahk) to your desktop and run it.
+Shortcuts:
+	Ctrl+Shift+F:
+		Populate all implemented functions for the selected reference.
+Notes:
+	If you run VB6 as an admin, you need to also run AutoHotkey.exe (typically in C:\Program Files\AutoHotkey\) as an admin as well.
+		Failing to do so will result in this script not appearing to work at all.
+	To begin, put your cursor either:
+		On the line “Implements ...” where ... is the interface.
+		Inside of a function/function stub from that interface (The Object dropdown should show the name of your interface).
+		Press Ctrl+Shift+F.
+	The script will put all needed function stubs into place. Note that if some of these stubs/functions already exist, they will not be overwritten, and no duplicates will be created.
+
+*/
+
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-#SingleInstance Force
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#SingleInstance force
+; #NoTrayIcon ; Uncomment to hide the tray icon.
 
 #IfWinActive, ahk_class wndclass_desked_gsk
 

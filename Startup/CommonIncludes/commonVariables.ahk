@@ -7,10 +7,10 @@ borgIconPathStopped := "CommonIncludes\Icons\borgStopped.ico"
 ahkHeaderCode =
 (
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+SetWorkingDir `%A_ScriptDir`%  ; Ensures a consistent starting directory.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-#SingleInstance force
-; #NoTrayIcon
+#SingleInstance force  ; Ensures that if this script is running, running it again replaces the first instance.
+; #NoTrayIcon  ; Uncomment to hide the tray icon.
 )
 
 ahkDefaultHotkeys = 
