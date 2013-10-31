@@ -13,7 +13,6 @@ global NAME := 1
 global ABBREV := 2
 global PATH := 3
 
-; height := 152 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
 ; Objects to hold choices and lines to print.
@@ -24,18 +23,25 @@ nonChoices := Object() ; Lines that will be displayed as titles, extra newlines,
 ; Counts for each array are stored in arr[COUNT].
 choices[COUNT] := 0
 hiddenChoices[COUNT] := 0
-; nonChoices[COUNT] := 0
 
 filePath = %1%
 actionType = %2%
 silentChoice = %3%
 fileName := SubStr(filePath, 1, -4)
 iconFileName := fileName ".ico"
-lastExecutedFileName := fileName "Last.ini"
-; MsgBox, % lastExecutedFileName
+historyFileName := fileName "History.ini"
+; MsgBox, % historyFileName
 ; if(silentChoice != "") {
 	; MsgBox, % silentChoice
 ; }
+
+; Read in the history file.
+historyLines := Object()
+Loop Read, %historyFileName% 
+{
+	historyLines[A_Index] := A_LoopReadLine
+	historyLines[COUNT] := A_Index
+}
 
 ; Set the tray icon based on the input ini filename.
 Menu, Tray, Icon, %iconFileName%
@@ -44,7 +50,7 @@ Menu, Tray, Icon, %iconFileName%
 title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
 
 ; MsgBox, Title: %title%
-; MsgBox, % choices[0] " " hiddenChoices[0] " " nonChoices[0]
+; MsgBox, % choices[COUNT] " " hiddenChoices[COUNT] " " nonChoices[COUNT]
 ; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
 ; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
 ; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
@@ -73,26 +79,23 @@ if(silentChoice != "") {
 ; ExitApp
 
 
-
 ; ----- Parse input to meaningful command. ----- ;
+
 
 dotPos := InStr(userIn, ".")
 ; MsgBox, % dotPos
 
 ; "." gives us the last executed command.
 if(userIn = ".") {
-	FileReadLine, recentRun, %lastExecutedFileName%, 1
-	; MsgBox, %recentRun%
-	
-	if(recentRun) {
-		action := recentRun
+	if(historyLines[COUNT]) {
+		action := historyLines[ historyLines[COUNT] ]
 	} else {
 		MsgBox, No recent item stored!
 		ExitApp
 	}
 
 ; ".yada" passes in "yada" as an arbitrary, meaninful command.
-} else if(subStr(userIn, 1, 1) = ".") {
+} else if(dotPos = 1) {
 	action := SubStr(userIn, 2)
 
 ; Allow concatentation of arbitrary addition with short.yada or #.yada.
@@ -120,10 +123,16 @@ if(userIn = ".") {
 
 ; Don't save star entries or the previous entry (input of ".").
 if(SubStr(userIn, 1, 1) != "*" && userIn != ".") {
-	; Remove the old 'last entered' file and stick this one in as the new one.
-	; MsgBox, % lastExecutedFileName
-	FileDelete, %lastExecutedFileName%
-	FileAppend, %action%, %lastExecutedFileName%
+	; If the histoy file already has 10 entries, trim off the oldest one.
+	if(historyLines[COUNT] = 10) {
+		FileDelete, %historyFileName%
+		Loop, 9 {
+			FileAppend, % historyLines[A_Index + 1] "`n", %historyFileName%
+		}
+	}
+	
+	; Add our latest command to the end.
+	FileAppend, %action%`n, %historyFileName%
 }
 
 ; So now we have something valid - do it and die.
