@@ -7,6 +7,13 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #Include TrayIconToggler.ahk
 #Include ..\Startup\CommonIncludes\trayTools.ahk
 
+
+obj := Object()
+obj[1] := "a"
+MsgBox, % obj[1]
+
+
+
 suspended := 0
 v := Object()
 m := Object()
@@ -32,8 +39,16 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^a::
-
+	asdf(obj)
 return
+
+^b::
+	MsgBox, % obj[1]MsgBox, % obj[1]
+return
+
+asdf(object) {
+	object[1] := "b"
+}
 
 ; #Tab::
 	; MsgBox, asdf

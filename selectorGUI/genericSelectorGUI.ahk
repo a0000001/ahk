@@ -8,27 +8,39 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include HTTPRequest.ahk
 
 ; Constants and such.
+global COUNT := 0
 global NAME := 1
 global ABBREV := 2
 global PATH := 3
 
 ; height := 152 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
-sessionsArr := Object() ; Object to hold all the read-in info.
-global sessionsLen := 1
-; starArr := Object()
-global starLen := -1
-extraLines := Object()
-global extraLen := 1
+
+; Objects to hold choices and lines to print.
+choices := Object() ; Visible choices the user can pick from.
+hiddenChoices := Object() ; Invisible choices the user can pick from.
+nonChoices := Object() ; Lines that will be displayed as titles, extra newlines, etc, but have no other significance.
+
+; Counts for each array are stored in arr[COUNT].
+choices[COUNT] := 0
+hiddenChoices[COUNT] := 0
+nonChoices[COUNT] := 0
+
+; sessionsArr := Object() ; Object to hold all the read-in info.
+; global sessionsLen := 1
+; ; starArr := Object()
+; global starLen := -1
+; extraLines := Object()
+; global extraLen := 1
 
 ; foundNum := 0
-saveEntry := 1
+; saveEntry := true
 
 filePath = %1%
 actionType = %2%
 silentChoice = %3%
 fileName := SubStr(filePath, 1, -4)
-iconName := fileName ".ico"
+iconFileName := fileName ".ico"
 lastExecutedFileName := fileName "Last.ini"
 ; MsgBox, % lastExecutedFileName
 ; if(silentChoice != "") {
@@ -36,59 +48,23 @@ lastExecutedFileName := fileName "Last.ini"
 ; }
 
 ; Set the tray icon based on the input ini filename.
-Menu, Tray, Icon, %iconName%
+Menu, Tray, Icon, %iconFileName%
 
 ; Read in the various paths, names, and abbreviations.
-Loop, Read, %filePath%
-{
-	; MsgBox, %A_LoopReadLine%
-	if(A_Index = 1) {
-		title := A_LoopReadLine
-	; } else if(A_Index = 2) {
-		; prompt := A_LoopReadLine
-	} else if(A_LoopReadLine = "" || SubStr(A_LoopReadLine, 1, 1) = ";") { ; Blank line or comment, ignore it.
-		; MsgBox, blank
-	} else if(SubStr(A_LoopReadLine, 1, 1) = "#") { ; Special: add a title and/or blank row in the list display.
-		; MsgBox, #
-		if(StrLen(A_LoopReadLine) < 3) { ; If title, #{Space}Title.
-			extraLines[sessionsLen] := " "
-		} else {
-			extraLines[sessionsLen] .= SubStr(A_LoopReadLine, 3)
-		}
-		
-		extraLen++
-	} else {
-		if(SubStr(A_LoopReadLine, 1, 1) = "*") {
-			; MsgBox, It's a star row!
-			starRow := true
-			sessionsLen-- ; Don't want to leave an empty space in the visible rows.
-		}
-		
-		Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
-		{
-			if(starRow) { ; Special case: allow matching on this row, but don't show it. (Generally will be treated as row 0).
-				; MsgBox, got a star chunk: %A_LoopField% %starLen%
-				sessionsArr[starLen, A_Index] := A_LoopField
-			} else {
-				; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
-				sessionsArr[sessionsLen, A_Index] := A_LoopField
-			}
-		}
-		
-		if(starRow) {
-			starRow := false
-			starLen--
-		}
-		sessionsLen++
-	}
-}
-; MsgBox, % sessionsLen
-; MsgBox, % sessionsArr[4, PATH]
+title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
 
-; Adjust by one.
-sessionsLen--
-starLen++
-extraLen--
+; MsgBox, Title: %title%
+; MsgBox, % choices[0] " " hiddenChoices[0] " " nonChoices[0]
+; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
+; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
+; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
+
+; ExitApp
+
+; ; Adjust by one.
+; sessionsLen--
+; starLen++
+; extraLen--
 
 
 ; ----- Get choice. ----- ;
@@ -99,19 +75,7 @@ if(silentChoice != "") {
 	userIn := silentChoice
 } else {
 	; Put the above stuff together.
-	displayText := ""
-	Loop, %sessionsLen% {
-		; Extra newline if requested.
-		if(extraLines[A_Index]) {
-			if(extraLines[A_Index] != " " && A_Index != 1) {
-				displayText .= "`n"
-			}
-			
-			displayText .= extraLines[A_Index]"`n"
-		}
-		
-		displayText .= A_Index ") " sessionsArr[A_Index, ABBREV] ":`t" sessionsArr[A_Index, NAME] "`n"
-	}
+	displayText := generateDisplayText(title, choices, nonChoices)
 
 	; Actually prompt the user.
 	height += getTextHeight(displayText)
@@ -121,9 +85,8 @@ if(silentChoice != "") {
 	}
 }
 
-
-
 ; MsgBox, z%userIn%z
+; ExitApp
 
 
 
@@ -136,9 +99,10 @@ dotPos := InStr(userIn, ".")
 if(userIn = ".") {
 	FileReadLine, recentRun, %lastExecutedFileName%, 1
 	; MsgBox, %recentRun%
+	
 	if(recentRun) {
 		action := recentRun
-		saveEntry := 0
+		saveEntry := false
 	} else {
 		MsgBox, No recent item stored!
 		ExitApp
@@ -146,20 +110,19 @@ if(userIn = ".") {
 
 ; ".yada" passes in "yada" as an arbitrary, meaninful command.
 } else if(subStr(userIn, 1, 1) = ".") {
+	saveEntry := true
 	action := SubStr(userIn, 2)
-	; MsgBox, % action
 
 ; Allow concatentation of arbitrary addition with short.yada or #.yada.
 } else if(dotPos > 1) {
 	StringSplit, dotParts, userIn, .
 	; MsgBox, % dotParts1 . "	" dotParts2
-	action := searchTable(sessionsArr, dotParts1)
-	action .= dotParts2
+	action := searchBoth(dotParts1, choices, hiddenChoices, saveEntry) . dotParts2
+	; action .= dotParts2
 	
 ; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
-	action := searchTable(sessionsArr, userIn)
-	
+	action := searchBoth(userIn, choices, hiddenChoices, saveEntry)
 	; MsgBox, % action
 	
 	if(action = "") {
@@ -188,9 +151,92 @@ doAction(action)
 return
 
 
+; Create text to display in popup using data structures from the file.
+generateDisplayText(title, choices, nonChoices) {
+	outText := ""
+	choicesLen := choices[COUNT]
+	Loop, %choicesLen% {
+		; Extra newline if requested.
+		if(nonChoices[A_Index]) {
+			; MsgBox, % A_Index "	" nonChoices[A_Index]
+			
+			if(nonChoices[A_Index] != " " && A_Index != 1) {
+				outText .= "`n"
+			}
+			
+			outText .= nonChoices[A_Index]"`n"
+		}
+		
+		outText .= A_Index ") " choices[A_Index, ABBREV] ":`t" choices[A_Index, NAME] "`n"
+	}
+	
+	return outText
+}
 
-
-
+; Load the choices and other such things from a specially formatted file.
+loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
+	Loop, Read, %filePath%
+	{
+		; MsgBox, %A_LoopReadLine%
+		
+		; Title.
+		if(A_Index = 1) {
+			title := A_LoopReadLine
+		
+		; Blank lines and comments are completely ignored.
+		} else if(A_LoopReadLine = "" || SubStr(A_LoopReadLine, 1, 1) = ";") { ; Blank line or comment, ignore it.
+			; MsgBox, blank
+		
+		; Special: add a title and/or blank row in the list display.
+		} else if(SubStr(A_LoopReadLine, 1, 1) = "#") {
+			; MsgBox, #
+			
+			; Using the choice array's count instead, as this should match up (+1).
+			; nonChoices[COUNT]++
+			
+			if(StrLen(A_LoopReadLine) < 3) { ; If title, #{Space}Title.
+				nonChoices[ choices[COUNT] + 1 ] := " "
+				; extraLines[sessionsLen] := " "
+			} else {
+				nonChoices[ choices[COUNT] + 1 ] := SubStr(A_LoopReadLine, 3)
+				; extraLines[sessionsLen] .= SubStr(A_LoopReadLine, 3)
+			}
+			
+			; extraLen++
+			
+		; Invisible, but viable, choice.
+		} else if(SubStr(A_LoopReadLine, 1, 1) = "*") {
+			; MsgBox, It's a star row!
+			; starRow := true
+			; sessionsLen-- ; Don't want to leave an empty space in the visible rows.
+			
+			hiddenChoices[COUNT]++
+			
+			Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
+			{
+					; MsgBox, got a star chunk: %A_LoopField% %starLen%
+					hiddenChoices[hiddenChoices[COUNT], A_Index] := A_LoopField
+			}
+		
+		; Otherwise, it's a visible, viable choice!
+		} else {
+			choices[COUNT]++
+			Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
+			{
+				; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
+				choices[choices[COUNT], A_Index] := A_LoopField
+			}
+			
+			; if(starRow) {
+				; starRow := false
+				; starLen--
+			; }
+			; sessionsLen++
+		}
+	}
+	
+	return title
+}
 
 ; Gives the height of the given text.
 getTextHeight(text) {
@@ -205,32 +251,31 @@ getTextHeight(text) {
 	return height
 }
 
+; Search both given tables, the visible and the invisible.
+searchBoth(input, table, hiddenTable, ByRef saveEntry) {
+	; Try the visible choices.
+	saveEntry := true
+	out := searchTable(input, table)
+	if(out) {
+		return out
+	}
+	
+	; Try the invisible choices.
+	saveEntry := false
+	return searchTable(input, hiddenTable)
+}
+
 ; Function to search our generated table for a given index/shortcut.
-searchTable(table, input) {
-	global saveEntry
+searchTable(input, table) {
 	; MsgBox, % input . ", " . table[1, NAME] . " " . table[1, PATH]
 	
-	; First try the normal, visible entries.
-	Loop, %sessionsLen% {
+	tableLen := table[COUNT]
+	Loop, %tableLen% {
 		if(input = A_Index || input = table[A_Index, ABBREV] || input = table[A_Index, NAME]) {
 			; MsgBox, Found: %input% at index: %A_Index%
 			; foundNum := A_Index
 			; action := table[A_Index, PATH]
 			return table[A_Index, PATH]
-		}
-	}
-	
-	; Try the star entries if you didn't find it above.
-	tempLen := -starLen
-	Loop, %tempLen% {
-		idx := -A_Index
-		; MsgBox, % input " " idx " " table[idx, ABBREV] " " table[idx, NAME]
-		if(input = idx || input = table[idx, ABBREV] || input = table[idx, NAME]) {
-			; MsgBox, Star Found: %input% at index: %A_Index%
-			; foundNum := idx
-			; action := table[idx, PATH]
-			saveEntry := 0
-			return table[idx, PATH]
 		}
 	}
 	
@@ -243,12 +288,16 @@ doAction(input) {
 	
 	; MsgBox, % input "`n" actionType
 	
+	; Run the action.
 	if(actionType = "RUN") {
 		Run, % input
+	
+	; Just send the text of the action.
 	} else if(actionType = "PASTE") {
 		SendRaw, %input%
+	
+	; Call the action.
 	} else if(actionType = "CALL") {
-		
 		URL := "http://guru/services/Webdialer.asmx/"
 		
 		if(input = "-") {
@@ -256,10 +305,10 @@ doAction(input) {
 			URL .= "HangUpCall?"
 			MsgText = Hanging up current call. `n`nContinue?
 		} else {
-			; MsgBox, Calling %input%...
 			phoneNum := parsePhone(input)
 			
 			if(phoneNum = -1) {
+				MsgBox, Invalid phone number!
 				return
 			}
 			
@@ -270,16 +319,8 @@ doAction(input) {
 		MsgBox, 4,, %MsgText%
 		IfMsgBox No
 			ExitApp
-		
-		; MsgBox, % URL
-		; URL := "http://guru/services/Webdialer.asmx/CallNumber?extension=813015291674"
-		
-		; MsgBox, URL: %URL%
-		
-		; httpQuery(html, URL) ; Utter, miserable failure.
-		; Run, http://guru/services/Webdialer.asmx/CallNumber?extension=813015291674 ; Works, but pops up the response in browser.
+			
 		HTTPRequest(URL, In := "", Out := "")
-		
 		; MsgBox, Response: %html%
 	} else {
 		MsgBox, No action type given, exiting...
