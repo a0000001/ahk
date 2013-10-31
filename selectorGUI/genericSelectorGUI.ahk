@@ -1,9 +1,9 @@
 ; (Semi-) Generic standalone script which launches one of many given choices.
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#SingleInstance, force
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-#SingleInstance, force
 
 #Include HTTPRequest.ahk
 
@@ -24,17 +24,7 @@ nonChoices := Object() ; Lines that will be displayed as titles, extra newlines,
 ; Counts for each array are stored in arr[COUNT].
 choices[COUNT] := 0
 hiddenChoices[COUNT] := 0
-nonChoices[COUNT] := 0
-
-; sessionsArr := Object() ; Object to hold all the read-in info.
-; global sessionsLen := 1
-; ; starArr := Object()
-; global starLen := -1
-; extraLines := Object()
-; global extraLen := 1
-
-; foundNum := 0
-; saveEntry := true
+; nonChoices[COUNT] := 0
 
 filePath = %1%
 actionType = %2%
@@ -58,13 +48,7 @@ title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
 ; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
 ; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
 ; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
-
 ; ExitApp
-
-; ; Adjust by one.
-; sessionsLen--
-; starLen++
-; extraLen--
 
 
 ; ----- Get choice. ----- ;
@@ -102,7 +86,6 @@ if(userIn = ".") {
 	
 	if(recentRun) {
 		action := recentRun
-		saveEntry := false
 	} else {
 		MsgBox, No recent item stored!
 		ExitApp
@@ -110,20 +93,17 @@ if(userIn = ".") {
 
 ; ".yada" passes in "yada" as an arbitrary, meaninful command.
 } else if(subStr(userIn, 1, 1) = ".") {
-	saveEntry := true
 	action := SubStr(userIn, 2)
 
 ; Allow concatentation of arbitrary addition with short.yada or #.yada.
 } else if(dotPos > 1) {
 	StringSplit, dotParts, userIn, .
 	; MsgBox, % dotParts1 . "	" dotParts2
-	action := searchBoth(dotParts1, choices, hiddenChoices, saveEntry) . dotParts2
-	; action .= dotParts2
+	action := searchBoth(dotParts1, choices, hiddenChoices) . dotParts2
 	
 ; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
-	action := searchBoth(userIn, choices, hiddenChoices, saveEntry)
-	; MsgBox, % action
+	action := searchBoth(userIn, choices, hiddenChoices)
 	
 	if(action = "") {
 		MsgBox, No matches found!
@@ -131,7 +111,7 @@ if(userIn = ".") {
 	}
 }
 
-; MsgBox, %action%, %saveEntry%
+; MsgBox, %action%
 ; ExitApp
 
 
@@ -139,7 +119,7 @@ if(userIn = ".") {
 
 
 ; Don't save star entries or the previous entry (input of ".").
-if(saveEntry) {
+if(SubStr(userIn, 1, 1) != "*" && userIn != ".") {
 	; Remove the old 'last entered' file and stick this one in as the new one.
 	; MsgBox, % lastExecutedFileName
 	FileDelete, %lastExecutedFileName%
@@ -252,17 +232,17 @@ getTextHeight(text) {
 }
 
 ; Search both given tables, the visible and the invisible.
-searchBoth(input, table, hiddenTable, ByRef saveEntry) {
+searchBoth(ByRef input, table, hiddenTable) {
 	; Try the visible choices.
-	saveEntry := true
 	out := searchTable(input, table)
 	if(out) {
 		return out
 	}
 	
 	; Try the invisible choices.
-	saveEntry := false
-	return searchTable(input, hiddenTable)
+	out := searchTable(input, hiddenTable)
+	input := "*" . input ; Mark that this is an invisible choice.
+	return out
 }
 
 ; Function to search our generated table for a given index/shortcut.
