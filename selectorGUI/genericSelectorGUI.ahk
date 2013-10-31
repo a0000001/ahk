@@ -19,6 +19,7 @@ height := 105 ; Starting height. Includes prompt, plus extra newline above and b
 choices := Object() ; Visible choices the user can pick from.
 hiddenChoices := Object() ; Invisible choices the user can pick from.
 nonChoices := Object() ; Lines that will be displayed as titles, extra newlines, etc, but have no other significance.
+historyChoices := Object() ; Lines read in from the history file.
 
 ; Counts for each array are stored in arr[COUNT].
 choices[COUNT] := 0
@@ -36,11 +37,10 @@ historyFileName := fileName "History.ini"
 ; }
 
 ; Read in the history file.
-historyLines := Object()
 Loop Read, %historyFileName% 
 {
-	historyLines[A_Index] := A_LoopReadLine
-	historyLines[COUNT] := A_Index
+	historyChoices[A_Index] := A_LoopReadLine
+	historyChoices[COUNT] := A_Index
 }
 
 ; Set the tray icon based on the input ini filename.
@@ -87,8 +87,33 @@ dotPos := InStr(userIn, ".")
 
 ; "." gives us the last executed command.
 if(userIn = ".") {
-	if(historyLines[COUNT]) {
-		action := historyLines[ historyLines[COUNT] ]
+	if(historyChoices[COUNT]) {
+		historyPicked :=  historyChoices[ historyChoices[COUNT] ]
+		
+		; Now treat historyPicked as userIn, and meta-pick what it means.
+		historyDotPos := InStr(historyPicked, ".")
+		; MsgBox, % dotPos
+		
+		; ".yada" passes in "yada" as an arbitrary, meaninful command.
+		if(historyDotPos = 1) {
+			action := SubStr(historyPicked, 2)
+		
+		; Allow concatentation of arbitrary addition with short.yada or #.yada.
+		} else if(historyDotPos > 1) {
+			StringSplit, historyDotParts, historyPicked, .
+			; MsgBox, % historyDotParts1 . "	" historyDotParts2
+			action := searchBoth(historyDotParts1, choices, hiddenChoices) . historyDotParts2
+			
+		; Otherwise, we search through the data structure by both number and shortcut and look for a match.
+		} else {
+			action := searchBoth(historyPicked, choices, hiddenChoices)
+			
+			if(action = "") {
+				MsgBox, No history matches found!
+				ExitApp
+			}
+		}
+		
 	} else {
 		MsgBox, No recent item stored!
 		ExitApp
@@ -103,6 +128,7 @@ if(userIn = ".") {
 	StringSplit, dotParts, userIn, .
 	; MsgBox, % dotParts1 . "	" dotParts2
 	action := searchBoth(dotParts1, choices, hiddenChoices) . dotParts2
+	userIn := dotParts1 "." dotParts2 ; Update userIn so that first half of x.y is the shortcut.
 	
 ; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
@@ -124,15 +150,15 @@ if(userIn = ".") {
 ; Don't save star entries or the previous entry (input of ".").
 if(SubStr(userIn, 1, 1) != "*" && userIn != ".") {
 	; If the histoy file already has 10 entries, trim off the oldest one.
-	if(historyLines[COUNT] = 10) {
+	if(historyChoices[COUNT] = 10) {
 		FileDelete, %historyFileName%
 		Loop, 9 {
-			FileAppend, % historyLines[A_Index + 1] "`n", %historyFileName%
+			FileAppend, % historyChoices[A_Index + 1] "`n", %historyFileName%
 		}
 	}
 	
 	; Add our latest command to the end.
-	FileAppend, %action%`n, %historyFileName%
+	FileAppend, %userIn%`n, %historyFileName%
 }
 
 ; So now we have something valid - do it and die.
@@ -255,7 +281,7 @@ searchBoth(ByRef input, table, hiddenTable) {
 }
 
 ; Function to search our generated table for a given index/shortcut.
-searchTable(input, table) {
+searchTable(ByRef input, table) {
 	; MsgBox, % input . ", " . table[1, NAME] . " " . table[1, PATH]
 	
 	tableLen := table[COUNT]
@@ -264,6 +290,7 @@ searchTable(input, table) {
 			; MsgBox, Found: %input% at index: %A_Index%
 			; foundNum := A_Index
 			; action := table[A_Index, PATH]
+			input := table[A_Index, ABBREV]
 			return table[A_Index, PATH]
 		}
 	}
