@@ -8,9 +8,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include ..\Startup\CommonIncludes\trayTools.ahk
 
 
-obj := Object()
-obj[1] := "a"
-MsgBox, % obj[1]
+; obj := Object()
+; obj[1] := "a"
+; MsgBox, % obj[1]
 
 
 
@@ -39,30 +39,23 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^a::
-	asdf(obj)
+	Click
+	Send, ^{Tab}
+return
+
+^s::
+	Send, ^{Tab}
 return
 
 ^b::
-	MsgBox, % obj[1]MsgBox, % obj[1]
+	
 return
 
-asdf(object) {
-	object[1] := "b"
-}
 
 ; #Tab::
 	; MsgBox, asdf
 ; return
 
-; CapsLock::Pause
-
-; CapsLock::RButton
-	; x = 1
-	; while(x < 5) {
-		; MsgBox, %A_Index%	
-		; x++
-	; }
-	
 	; ; MsgBox, % suspended
 	; ; suspended := !suspended
 	; Send, {Delete 2}
