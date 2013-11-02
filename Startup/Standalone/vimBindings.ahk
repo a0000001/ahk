@@ -28,6 +28,7 @@ setupTrayIcons(v, m)
 global justFound := 0
 global justOmnibox := 0
 global justFeedlySearched := 0
+global justOtherKeyPressed := 0
 
 ; Control classes.
 ChromeSearchboxClass := "Chrome_WidgetWin_11"
@@ -137,12 +138,12 @@ setVimState(toState, super = false) {
 #If
 
 unpauseSpecial() {
-	global superKeysOn, justFeedlySearched, justDoubleQuoted
+	global superKeysOn, justFeedlySearched, justOtherKeyPressed
 	
-	if(superKeysOn || justFeedlySearched || justDoubleQuoted) {
+	if(superKeysOn || justFeedlySearched || justOtherKeyPressed) {
 		setVimState(true)
 		justFeedlySearched := 0
-		justDoubleQuoted := 0
+		justOtherKeyPressed := 0
 	}
 }
 
@@ -171,10 +172,75 @@ unpauseSpecial() {
 		}
 	return
 	
-	+'::
-		justDoubleQuoted := 1
+	~a::
+	~b::
+	~c::
+	~d::
+	~e::
+	~f::
+	~q::
+	~r::
+	~s::
+	~t::
+	~v::
+	~w::
+	~x::
+	~y::
+	~z::
+	~+a::
+	~+b::
+	~+c::
+	~+d::
+	~+e::
+	~+f::
+	~+q::
+	~+r::
+	~+s::
+	~+t::
+	~+v::
+	~+w::
+	~+x::
+	~+y::
+	~+z::
+	
+	~0::
+	~1::
+	~2::
+	~3::
+	~4::
+	~5::
+	~6::
+	~7::
+	~8::
+	~9::
+	~+0::
+	~+1::
+	~+2::
+	~+3::
+	~+4::
+	~+5::
+	~+6::
+	~+7::
+	~+8::
+	~+9::
+	
+	~`::
+	~-::
+	~=::
+	~+`::
+	~+-::
+	~+=::
+	
+	~+'::
 		setVimState(false)
+		justOtherKeyPressed := 1
 	return
+	
+	
+	; +'::
+		; justDoubleQuoted := 1
+		; setVimState(false)
+	; return
 	
 	; General: Double quote will never be a legitimate control input, turn it off.
 	
