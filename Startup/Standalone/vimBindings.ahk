@@ -162,22 +162,24 @@ unpauseSpecial() {
 	return
 
 	; Feedly: if gg, pause script until enter or esc.
-	~g::
-		WinGetTitle, pageTitle, A	
-		; MsgBox, % pageTitle
+	; ~g::
+		; WinGetTitle, pageTitle, A	
+		; ; MsgBox, % pageTitle
 		
-		if(InStr(pageTitle, " - feedly")) {
-			justFeedlySearched := 1
-			setVimState(false)
-		}
-	return
+		; if(InStr(pageTitle, " - feedly")) {
+			; justFeedlySearched := 1
+			; setVimState(false)
+		; }
+	; return
 	
+	; Letters that carry no vim meaning, so are normal typing.
 	~a::
 	~b::
 	~c::
 	~d::
 	~e::
 	~f::
+	~g::
 	~q::
 	~r::
 	~s::
@@ -187,22 +189,36 @@ unpauseSpecial() {
 	~x::
 	~y::
 	~z::
+	
+	; Shifted letters never carry any vim meaning.
 	~+a::
 	~+b::
 	~+c::
 	~+d::
 	~+e::
 	~+f::
+	~+g::
+	~+h::
+	~+i::
+	~+j::
+	~+k::
+	~+l::
+	~+m::
+	~+n::
+	~+o::
+	~+p::
 	~+q::
 	~+r::
 	~+s::
 	~+t::
+	~+u::
 	~+v::
 	~+w::
 	~+x::
 	~+y::
 	~+z::
 	
+	; Numbers and shifted numbers never carry any vim meaning.
 	~0::
 	~1::
 	~2::
@@ -224,6 +240,7 @@ unpauseSpecial() {
 	~+8::
 	~+9::
 	
+	; Symbols that don't carry any vim meaning, plus shifted versions.
 	~`::
 	~-::
 	~=::
@@ -231,7 +248,15 @@ unpauseSpecial() {
 	~+-::
 	~+=::
 	
+	; Symbols that normally carry vim meaning, but don't shifted.
+	~+[::
+	~+]::
+	~+`;::
 	~+'::
+	~+/::
+	~+,::
+	~+.::
+	
 		setVimState(false)
 		justOtherKeyPressed := 1
 	return
