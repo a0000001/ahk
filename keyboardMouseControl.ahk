@@ -39,4 +39,11 @@ return
 	Down::
 		MouseMove, 0, 5, , R
 	return
+	
+	^a::
+		Send, {Click Down}
+	return
+	^+a::
+		Send, {Click Up}
+	return
 #If
