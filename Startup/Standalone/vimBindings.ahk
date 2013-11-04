@@ -44,6 +44,7 @@ ownControlTitles[3] := " - Reddit"
 global excludeTitles := Object()
 excludeTitles[1] := "MightyText"
 excludeTitles[2] := "Login" ; Lastpass
+excludeTitles[3] := " - LogMeIn"
 
 pageHasOwnControls() {
 	WinGetTitle, pageTitle, A
