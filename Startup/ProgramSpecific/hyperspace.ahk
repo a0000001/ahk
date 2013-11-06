@@ -72,3 +72,8 @@
 	return
 
 #IfWinActive
+
+; Activiation for when hyperspace hides from Alt+Tab b/c of a popup.
+#!+h::
+	WinActivate, ahk_class ThunderRT6MDIForm
+return
