@@ -13,6 +13,10 @@ global NAME := 1
 global ABBREV := 2
 global PATH := 3
 
+global HISTORY_CHAR := "."
+global ARBITRARY_CHAR := "+"
+
+
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
 ; Objects to hold choices and lines to print.
@@ -82,24 +86,25 @@ if(silentChoice != "") {
 ; ----- Parse input to meaningful command. ----- ;
 
 
-dotPos := InStr(userIn, ".")
-; MsgBox, % dotPos
+histCharPos := InStr(userIn, HISTORY_CHAR)
+arbCharPos := InStr(userIn, ARBITRARY_CHAR)
+; MsgBox, % histCharPos
 
-; "." gives us the last executed command.
-if(userIn = ".") {
+; HISTORY_CHAR gives us the last executed command.
+if(userIn = HISTORY_CHAR) {
 	if(historyChoices[COUNT]) {
 		historyPicked :=  historyChoices[ historyChoices[COUNT] ]
 		
 		; Now treat historyPicked as userIn, and meta-pick what it means.
-		historyDotPos := InStr(historyPicked, ".")
-		; MsgBox, % dotPos
+		historyhistCharPos := InStr(historyPicked, HISTORY_CHAR)
+		; MsgBox, % histCharPos
 		
 		; ".yada" passes in "yada" as an arbitrary, meaninful command.
-		if(historyDotPos = 1) {
+		if(historyhistCharPos = 1) {
 			action := SubStr(historyPicked, 2)
-		
+			
 		; Allow concatentation of arbitrary addition with short.yada or #.yada.
-		} else if(historyDotPos > 1) {
+		} else if(historyhistCharPos > 1) {
 			StringSplit, historyDotParts, historyPicked, .
 			; MsgBox, % historyDotParts1 . "	" historyDotParts2
 			action := searchBoth(historyDotParts1, choices, hiddenChoices) . historyDotParts2
@@ -119,16 +124,16 @@ if(userIn = ".") {
 		ExitApp
 	}
 
-; ".yada" passes in "yada" as an arbitrary, meaninful command.
-} else if(dotPos = 1) {
+; "+yada" passes in "yada" as an arbitrary, meaninful command.
+} else if(arbCharPos = 1) {
 	action := SubStr(userIn, 2)
 
 ; Allow concatentation of arbitrary addition with short.yada or #.yada.
-} else if(dotPos > 1) {
-	StringSplit, dotParts, userIn, .
-	; MsgBox, % dotParts1 . "	" dotParts2
-	action := searchBoth(dotParts1, choices, hiddenChoices) . dotParts2
-	userIn := dotParts1 "." dotParts2 ; Update userIn so that first half of x.y is the shortcut.
+} else if(arbCharPos > 1) {
+	StringSplit, splitBits, userIn, %ARBITRARY_CHAR%
+	; MsgBox, % splitBits1 . "	" . splitBits2
+	action := searchBoth(splitBits1, choices, hiddenChoices) . splitBits2
+	userIn := splitBits1 . ARBITRARY_CHAR . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
 	
 ; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 } else {
@@ -147,8 +152,8 @@ if(userIn = ".") {
 ; ----- Store what we're about to do, then do it. ----- ;
 
 
-; Don't save star entries or the previous entry (input of ".").
-if(SubStr(userIn, 1, 1) != "*" && userIn != ".") {
+; Don't save star entries or the previous entry (input of HISTORY_CHAR).
+if(SubStr(userIn, 1, 1) != "*" && userIn != HISTORY_CHAR) {
 	; If the histoy file already has 10 entries, trim off the oldest one.
 	if(historyChoices[COUNT] = 10) {
 		FileDelete, %historyFileName%
