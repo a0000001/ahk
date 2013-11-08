@@ -89,30 +89,6 @@
 	return
 #If
 
-ControlGet_Send_Return(fromControl, toControl, retControl = "") {
-	ControlGetText, data, %fromControl%, A
-	; MsgBox, %data%
-	ControlSend_Return(toControl, data, retControl)
-}
-
-ControlSend_Return(toControl, keys, retControl = "") {
-	if(!retControl) {
-		ControlGetFocus, retControl, A
-	}
-	; MsgBox, %retControl%
-	
-	; MsgBox, %toControl%
-	if(toControl) {
-		ControlFocus, %toControl%
-	}
-	
-	; MsgBox, %keys%
-	Sleep, 100
-	Send, %keys%
-	Sleep, 100
-	ControlFocus, %retControl%, A
-}
-
 ; Activiation for when hyperspace hides from Alt+Tab b/c of a popup.
 !+h::
 	WinActivate, ahk_class ThunderRT6MDIForm

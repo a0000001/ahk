@@ -67,3 +67,29 @@ sendTextWithClipboard(text) {
 	Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of Clipboard (not ClipboardAll).
 	ClipSaved =   ; Free the memory in case the clipboard was very large.
 }
+
+; Get text from a control, send it to another, and focus a third.
+ControlGet_Send_Return(fromControl, toControl, retControl = "") {
+	ControlGetText, data, %fromControl%, A
+	; MsgBox, %data%
+	ControlSend_Return(toControl, data, retControl)
+}
+
+; Send text to a particular control, then focus another.
+ControlSend_Return(toControl, keys, retControl = "") {
+	if(!retControl) {
+		ControlGetFocus, retControl, A
+	}
+	; MsgBox, %retControl%
+	
+	; MsgBox, %toControl%
+	if(toControl) {
+		ControlFocus, %toControl%
+	}
+	
+	; MsgBox, %keys%
+	Sleep, 100
+	Send, %keys%
+	Sleep, 100
+	ControlFocus, %retControl%, A
+}
