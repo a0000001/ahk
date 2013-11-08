@@ -36,6 +36,8 @@
 	; Send whitespace character that outlook checks the body of the message for in order to skip delay send.
 	!x::
 		Send, {Enter}2000!x
+		Sleep, 100
+		Send, !s
 	return
 #IfWinActive
 
