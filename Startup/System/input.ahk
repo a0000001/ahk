@@ -5,6 +5,14 @@
 	SetCapsLockState, On
 return
 
+; Numpad comma.
+$NumLock::
+	Send, ,
+return
+^NumLock::
+	Send, {NumLock}
+return
+
 #If borgWhichMachine = EPIC_DESKTOP
 	; For ergonomic keyboard.
 	browser_back up::
