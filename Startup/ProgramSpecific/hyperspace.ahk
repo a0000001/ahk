@@ -1,5 +1,4 @@
 #If WinActive("ahk_class ThunderRT6MDIForm") || WinActive("ahk_class ThunderRT6FormDC")
-
 	; TLG Hotkey.
 	^t::
 		Send, %epicID%
@@ -60,18 +59,59 @@
 	
 	; Allow my save reflex to live on. Return to the field we were in when we finish.
 	^s::
-		ControlGetFocus, currControl, A
-		; MsgBox, %currControl%
+		; ControlGetFocus, currControl, A
+		; ; MsgBox, %currControl%
 		
-		Send, !s
-		Sleep, 100
+		; Send, !s
+		; Sleep, 100
 		
-		; Send, +{Tab}
-		ControlFocus, %currControl%, A
-		; ControlFocus, ThunderRT6TextBox2, A
+		; ; Send, +{Tab}
+		; ControlFocus, %currControl%, A
+		; ; ControlFocus, ThunderRT6TextBox2, A
+		ControlSend_Return("", "!s")
 	return
+	
+	; Fill date in unit charge entry.
+	^+f::
+		ControlGet_Send_Return("ThunderRT6TextBox50", "ThunderRT6TextBox54")
+		; ControlGetFocus, currControl, A
+		; ; MsgBox, %currControl%
+		
+		; if(WinActive("", "Charge Entry - ")) {
+			; ControlGetText, date, ThunderRT6TextBox50, A
+			; ; MsgBox, % date
+			; ControlFocus, ThunderRT6TextBox54
+			; Send, %date%
+			; Sleep, 100
+		; }
+		
+		; ControlFocus, %currControl%, A
+	return
+#If
 
-#IfWinActive
+ControlGet_Send_Return(fromControl, toControl, retControl = "") {
+	ControlGetText, data, %fromControl%, A
+	; MsgBox, %data%
+	ControlSend_Return(toControl, data, retControl)
+}
+
+ControlSend_Return(toControl, keys, retControl = "") {
+	if(!retControl) {
+		ControlGetFocus, retControl, A
+	}
+	; MsgBox, %retControl%
+	
+	; MsgBox, %toControl%
+	if(toControl) {
+		ControlFocus, %toControl%
+	}
+	
+	; MsgBox, %keys%
+	Sleep, 100
+	Send, %keys%
+	Sleep, 100
+	ControlFocus, %retControl%, A
+}
 
 ; Activiation for when hyperspace hides from Alt+Tab b/c of a popup.
 !+h::
