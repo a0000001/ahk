@@ -16,7 +16,6 @@ global PATH := 3
 global HISTORY_CHAR := "."
 global ARBITRARY_CHAR := "+"
 
-
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
 ; Objects to hold choices and lines to print.
@@ -29,6 +28,7 @@ historyChoices := Object() ; Lines read in from the history file.
 choices[COUNT] := 0
 hiddenChoices[COUNT] := 0
 
+; Read in our command line arguments.
 filePath = %1%
 actionType = %2%
 silentChoice = %3%
@@ -62,8 +62,6 @@ title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
 
 
 ; ----- Get choice. ----- ;
-
-
 ; Allow for a command-line-passed input rather than popping up a GUI.
 if(silentChoice != "") {
 	userIn := silentChoice
@@ -84,74 +82,10 @@ if(silentChoice != "") {
 
 
 ; ----- Parse input to meaningful command. ----- ;
-
-
-histCharPos := InStr(userIn, HISTORY_CHAR)
-arbCharPos := InStr(userIn, ARBITRARY_CHAR)
-; MsgBox, % histCharPos
-
-; HISTORY_CHAR gives us the last executed command.
-if(userIn = HISTORY_CHAR) {
-	if(historyChoices[COUNT]) {
-		historyPicked :=  historyChoices[ historyChoices[COUNT] ]
-		
-		; Now treat historyPicked as userIn, and meta-pick what it means.
-		historyhistCharPos := InStr(historyPicked, HISTORY_CHAR)
-		; MsgBox, % histCharPos
-		
-		; ".yada" passes in "yada" as an arbitrary, meaninful command.
-		if(historyhistCharPos = 1) {
-			action := SubStr(historyPicked, 2)
-			
-		; Allow concatentation of arbitrary addition with short.yada or #.yada.
-		} else if(historyhistCharPos > 1) {
-			StringSplit, historyDotParts, historyPicked, .
-			; MsgBox, % historyDotParts1 . "	" historyDotParts2
-			action := searchBoth(historyDotParts1, choices, hiddenChoices) . historyDotParts2
-			
-		; Otherwise, we search through the data structure by both number and shortcut and look for a match.
-		} else {
-			action := searchBoth(historyPicked, choices, hiddenChoices)
-			
-			if(action = "") {
-				MsgBox, No history matches found!
-				ExitApp
-			}
-		}
-	
-	} else {
-		MsgBox, No recent item stored!
-		ExitApp
-	}
-
-; "+yada" passes in "yada" as an arbitrary, meaninful command.
-} else if(arbCharPos = 1) {
-	action := SubStr(userIn, 2)
-
-; Allow concatentation of arbitrary addition with short.yada or #.yada.
-} else if(arbCharPos > 1) {
-	StringSplit, splitBits, userIn, %ARBITRARY_CHAR%
-	; MsgBox, % splitBits1 . "	" . splitBits2
-	action := searchBoth(splitBits1, choices, hiddenChoices) . splitBits2
-	userIn := splitBits1 . ARBITRARY_CHAR . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
-	
-; Otherwise, we search through the data structure by both number and shortcut and look for a match.
-} else {
-	action := searchBoth(userIn, choices, hiddenChoices)
-	
-	if(action = "") {
-		MsgBox, No matches found!
-		ExitApp
-	}
-}
-
-; MsgBox, %action%
-; ExitApp
+action := parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices)
 
 
 ; ----- Store what we're about to do, then do it. ----- ;
-
-
 ; Don't save star entries or the previous entry (input of HISTORY_CHAR).
 if(SubStr(userIn, 1, 1) != "*" && userIn != HISTORY_CHAR) {
 	; If the histoy file already has 10 entries, trim off the oldest one.
@@ -301,6 +235,54 @@ searchTable(ByRef input, table) {
 	}
 	
 	return ""
+}
+
+; Function to turn the input into something useful.
+parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
+	histCharPos := InStr(userIn, HISTORY_CHAR)
+	arbCharPos := InStr(userIn, ARBITRARY_CHAR)
+	; MsgBox, % histCharPos
+
+	; HISTORY_CHAR gives us the last executed command.
+	if(userIn = HISTORY_CHAR) {
+		if(historyChoices[COUNT]) {
+			; historyPicked :=  historyChoices[ historyChoices[COUNT] ]
+			action := parseChoice(historyChoices[ historyChoices[COUNT] ], choices, hiddenChoices)
+		} else {
+			MsgBox, No history available!
+			ExitApp
+		}
+
+	; "+yada" passes in "yada" as an arbitrary, meaninful command.
+	} else if(arbCharPos = 1) {
+		action := SubStr(userIn, 2)
+
+	; Allow concatentation of arbitrary addition with short.yada or #.yada.
+	} else if(arbCharPos > 1) {
+		StringSplit, splitBits, userIn, %ARBITRARY_CHAR%
+		; MsgBox, % splitBits1 . "	" . splitBits2
+		action := searchBoth(splitBits1, choices, hiddenChoices)
+		if(action = "") {
+			MsgBox, No matches found!
+			ExitApp
+		}
+		action .= splitBits2
+		userIn := splitBits1 . ARBITRARY_CHAR . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
+		
+	; Otherwise, we search through the data structure by both number and shortcut and look for a match.
+	} else {
+		action := searchBoth(userIn, choices, hiddenChoices)
+		
+		if(action = "") {
+			MsgBox, No matches found!
+			ExitApp
+		}
+	}
+
+	; MsgBox, %action%
+	; ExitApp
+	
+	return action
 }
 
 ; Function to do what it is we want done, then exit.
