@@ -154,31 +154,22 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 		} else if(SubStr(A_LoopReadLine, 1, 1) = "#") {
 			; MsgBox, #
 			
-			; Using the choice array's count instead, as this should match up (+1).
-			; nonChoices[COUNT]++
-			
-			if(StrLen(A_LoopReadLine) < 3) { ; If title, #{Space}Title.
+			; If title, #{Space}Title.
+			if(StrLen(A_LoopReadLine) < 3) {
 				nonChoices[ choices[COUNT] + 1 ] := " "
-				; extraLines[sessionsLen] := " "
 			} else {
 				nonChoices[ choices[COUNT] + 1 ] := SubStr(A_LoopReadLine, 3)
-				; extraLines[sessionsLen] .= SubStr(A_LoopReadLine, 3)
 			}
-			
-			; extraLen++
 			
 		; Invisible, but viable, choice.
 		} else if(SubStr(A_LoopReadLine, 1, 1) = "*") {
 			; MsgBox, It's a star row!
-			; starRow := true
-			; sessionsLen-- ; Don't want to leave an empty space in the visible rows.
-			
 			hiddenChoices[COUNT]++
 			
 			Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
 			{
-					; MsgBox, got a star chunk: %A_LoopField% %starLen%
-					hiddenChoices[hiddenChoices[COUNT], A_Index] := A_LoopField
+				; MsgBox, got a star chunk: %A_LoopField% %starLen%
+				hiddenChoices[hiddenChoices[COUNT], A_Index] := A_LoopField
 			}
 		
 		; Otherwise, it's a visible, viable choice!
@@ -189,12 +180,6 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 				; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
 				choices[choices[COUNT], A_Index] := A_LoopField
 			}
-			
-			; if(starRow) {
-				; starRow := false
-				; starLen--
-			; }
-			; sessionsLen++
 		}
 	}
 	
@@ -236,8 +221,6 @@ searchTable(ByRef input, table) {
 	Loop, %tableLen% {
 		if(input = A_Index || input = table[A_Index, ABBREV] || input = table[A_Index, NAME]) {
 			; MsgBox, Found: %input% at index: %A_Index%
-			; foundNum := A_Index
-			; action := table[A_Index, PATH]
 			input := table[A_Index, ABBREV]
 			return table[A_Index, PATH]
 		}
