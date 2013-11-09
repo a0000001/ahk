@@ -41,11 +41,8 @@ historyFileName := fileName "History.ini"
 ; }
 
 ; Read in the history file.
-Loop Read, %historyFileName% 
-{
-	historyChoices[A_Index] := A_LoopReadLine
-	historyChoices[COUNT] := A_Index
-}
+historyChoices := fileLinesToArray(historyFileName)
+; MsgBox, % historyChoices[0] . "`n" . historyChoices[1]
 
 ; Set the tray icon based on the input ini filename.
 Menu, Tray, Icon, %iconFileName%
@@ -104,6 +101,18 @@ if(SubStr(userIn, 1, 1) != "*" && userIn != HISTORY_CHAR) {
 doAction(action)
 return
 
+; Read in a file and return it as an array.
+fileLinesToArray(fileName) {
+	lines := Object()
+	
+	Loop Read, %fileName% 
+	{
+		lines[A_Index] := A_LoopReadLine
+		lines[0] := A_Index
+	}
+	
+	return lines
+}
 
 ; Create text to display in popup using data structures from the file.
 generateDisplayText(title, choices, nonChoices) {
