@@ -120,11 +120,12 @@ return
 :*:seriuosly::seriously
 :*:.ocm::.com
 
-; ; url extensions
+; url extensions
 ; ; :*:treetab::about:treestyletab-group?
 ; :*:shome::
 	; Send, % shodorHomeURL
 ; return
+:*:lpv::chrome-extension://hdokiejnpimakedhajhdlcegeplioahd/homelocal2.html
 
 ; extensions
 :*:btw::by the way
