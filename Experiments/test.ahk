@@ -5,8 +5,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force
 
 ; #Include TrayIconToggler.ahk
-#Include ..\Startup\CommonIncludes\tray.ahk
-#Include ..\Startup\CommonIncludes\io.ahk
+; #Include ..\Startup\CommonIncludes\tray.ahk
+; #Include ..\Startup\CommonIncludes\io.ahk
+; #Include test2\test2.ahk
+#Include ..\Startup\commonIncludesStandalone.ahk
 
 suspended := 0
 v := Object()
@@ -18,26 +20,37 @@ setupTrayIcons(v, m)
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
-a::
-	; Get user input.
-	FileSelectFile, fileName
+; iniPath := "..\Startup"
+; IniRead, machineName, ..\Startup\..\Startup\borg.ini, Main, MachineName
+; MsgBox, %machineName%
 
-	; Read in the list of names.
-	referenceLines := fileLinesToArray(fileName)
+; a::
+	; ; Get user input.
+	; FileSelectFile, fileName
 
-	; Parse the list into nice, uniform reference lines.
-	references := cleanParseList(referenceLines)
+	; ; Read in the list of names.
+	; referenceLines := fileLinesToArray(fileName)
 
-	textOut := ""
-	refsLen := references.MaxIndex()
-	Loop, %refsLen% {
-		textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
-		; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
-		findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
-	}
+	; ; Parse the list into nice, uniform reference lines.
+	; references := cleanParseList(referenceLines)
 
-	MsgBox, Selected References: `n`n%textOut%
-return
+	; textOut := ""
+	; refsLen := references.MaxIndex()
+	; Loop, %refsLen% {
+		; textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
+		; ; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
+		; findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
+	; }
+
+	; MsgBox, Selected References: `n`n%textOut%
+; return
+
+; b::
+	; ; Send, {Esc}
+	; ; MsgBox, asdf
+	; Send, f
+	; KeyWait, Esc, T1
+; return
 
 ; global ITEM := 1
 ; global NUM := 2

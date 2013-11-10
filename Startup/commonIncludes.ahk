@@ -1,7 +1,9 @@
 ﻿; === Various functions and libraries. === ;
 
-; #Include G:\Documents\Autohotkey\Lib\AHKHID.ahk
+borgPathINI := "borg.ini"
+
 #Include CommonIncludes\AHKHID.ahk
+#Include CommonIncludes\borgReadINI.ahk
 #Include CommonIncludes\commonVariables.ahk
 #Include CommonIncludes\graphics.ahk
 #Include CommonIncludes\io.ahk

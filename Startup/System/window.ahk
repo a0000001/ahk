@@ -25,4 +25,5 @@ return
 ; Special closing hotkey
 ~Escape::
 	closeWindowSpecial(0)
+	KeyWait, Esc, T1 ; Ensures that we don't have fall-through window closing.
 return

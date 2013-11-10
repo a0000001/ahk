@@ -1,25 +1,9 @@
 ﻿; ===== Inclusion of all AHK scripts for Borg. ===== ;
 
-
-; Constants for machines.
-THINKPAD := 1
-EPIC_DESKTOP := 2
-
-; Get the argument that says which computer we're on, and run certain things accordingly.
-IniRead, machineName, borg.ini, Main, MachineName
-if(machineName = "THINKPAD") {
-	borgWhichMachine := THINKPAD
-} else if(machineName = "EPIC_DESKTOP") {
-	borgWhichMachine := EPIC_DESKTOP
-}
-; borgWhichMachine := THINKPAD
-; MsgBox, % machineName
-; MsgBox, % borgWhichMachine
-
-
 ; Common functions, hotkeys, and other such setup. 
 #Include commonIncludes.ahk
-; Standalone scripts. Must be first to execute.
+
+; Standalone scripts. Must be first to execute so it can spin off and be on its own.
 #Include standalone.ahk
 
 ; Setup for this script.
