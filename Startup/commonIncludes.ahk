@@ -4,6 +4,7 @@
 #Include CommonIncludes\AHKHID.ahk
 #Include CommonIncludes\commonVariables.ahk
 #Include CommonIncludes\graphics.ahk
+#Include CommonIncludes\io.ahk
 #Include CommonIncludes\privateVariables.ahk
 #Include CommonIncludes\runAsAdmin.ahk
 #Include CommonIncludes\stringTools.ahk

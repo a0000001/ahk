@@ -6,6 +6,7 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 #Include HTTPRequest.ahk
+#Include ..\Startup\CommonIncludes\io.ahk
 
 ; Constants and such.
 global COUNT := 0
@@ -100,19 +101,6 @@ if(SubStr(userIn, 1, 1) != "*" && userIn != HISTORY_CHAR) {
 ; So now we have something valid - do it and die.
 doAction(action)
 return
-
-; Read in a file and return it as an array.
-fileLinesToArray(fileName) {
-	lines := Object()
-	
-	Loop Read, %fileName% 
-	{
-		lines[A_Index] := A_LoopReadLine
-		lines[0] := A_Index
-	}
-	
-	return lines
-}
 
 ; Create text to display in popup using data structures from the file.
 generateDisplayText(title, choices, nonChoices) {

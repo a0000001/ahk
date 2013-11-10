@@ -47,22 +47,20 @@ return
 
 ^a::
 	SAME_THRESHOLD := 10
-	
 	currPrepend := ""
 	currPostpend := ""
-	
-	prevRow := ""
-	prevLine := ""
-	numSame := 1
-	
 	textOut := ""
+	references := Object()
+	REF := 1
+	NUM := 2
 	
+	; Get user input.
 	FileSelectFile, fileName
 	
 	; Read in the list of names.
 	Loop, Read, %fileName%
 	{
-		notFoundYet := true
+		; notFoundYet := true
 		
 		; Clean off leading tab if it exists.
 		cleanLine := A_LoopReadLine
@@ -105,14 +103,13 @@ return
 				}
 			
 			; Special end block line.
-			} else if(SubStr(cleanLine,1,1) = "]") {
+			} else if(SubStr(cleanLine, 1, 1) = "]") {
 				currPrepend := ""
 				currPostpend := ""
 				; MsgBox, wiped.
 			
-			; A true line to do things to! Yay!
+			; A true line to eventually things to! Yay!
 			} else {
-				
 				; MsgBox, Pre: %currPrepend%z `nPost: %currPostpend%
 			
 				; Clean lineArr2 in case it isn't in next line.
@@ -121,66 +118,39 @@ return
 				; MsgBox, %cleanLine%
 				StringSplit, lineArr, cleanLine, %A_Tab%
 				
-				; currLine := convertStarToES(lineArr1)
 				currLine := expandReferenceLine(lineArr1, currPrepend, currPostpend)
-				num := lineArr2
+				whichNum := lineArr2
 				
-				; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%num%
+				; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%whichNum%
 				textOut := textOut . currLine . "`n"
 				
-				firstChar := SubStr(currLine, 1, 1)
-				; MsgBox, First Char: %firstChar%
+				; MsgBox, Found: `n%prevSearch% `n`nNext: `n%currLine%
 				
-;					MsgBox, Found: `n%prevSearch% `n`nNext: `n%currLine%
-				
-				if(currLine < currRow) {
-					Send, {Home}
-				}
-				
-				; Loop downwards through lines.
-				While, notFoundYet {
-					SendRaw, %firstChar%
-					
-					Sleep, 1
-					ControlGetText, currRow, Button5, A
-					; MsgBox, %currRow%
-					
-					; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
-					if(currRow = prevRow) {
-						numSame++
-					} else {
-						numSame := 1
-					}
-					; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
-					if(numSame = SAME_THRESHOLD) { ; Pretty sure we're at the end now, finish.
-						notFoundYet := false
-					}
-					
-					prevRow := currRow
-					
-					; If it matches our input, check it.
-					if(currRow = currLine) {
-						; If we've got the additional argument, push down a few more before selecting.
-						if(num) {
-							num--
-							Send, {Down %num%}
-						}
-						
-						Send, {Space}
-						notFoundYet := false
-					}
-					
-				}
-				notFoundYet := true
-				prevLine := currLine
+				currRef := Object()
+				currRef[REF] := currLine
+				currRef[NUM] := whichNum
+				references.Insert(currRef)
+				; findReferenceLine(currLine, whichNum)
 				
 				prevSearch := currLine
 			}
 		}
 	}
 	
-	MsgBox, % textOut
+	; refsLen := references.MaxIndex()
+	; Loop, %refsLen%
+	; {
+		; ; MsgBox, % references[A_Index, REF] . "	" . references[A_Index, NUM]
+		; findReferenceLine(references[A_Index, REF], references[A_Index, NUM])
+	; }
+	
+	MsgBox, Selected References: `n`n%textOut%
 return
+
+expandReferenceLine(input, prepend = "", postpend = "") {
+	; MsgBox, Expanding `nPre: %prepend% `nInput: %input% `nApp: %postpend%
+	return prepend . input . postpend
+}
 
 ; ^a::
 	

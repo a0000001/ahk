@@ -1,6 +1,7 @@
 [ bEpic Systems |e (8.1)
 	ApplCore Common Record Interfaces
 	ApplCore Services Interfaces
+	Data Engine
 	Desktop Classes
 	Desktop Interfaces	2
 	Foundations Data Objects
