@@ -6,7 +6,7 @@
 #Include iniReadStandalone.ahk
 
 #Include ..\CommonIncludes\commonVariables.ahk
-#Include ..\CommonIncludes\windowTools.ahk
+#Include ..\CommonIncludes\window.ahk
 
 programToLaunch = %1%
 

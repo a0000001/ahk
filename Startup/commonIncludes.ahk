@@ -7,6 +7,6 @@
 #Include CommonIncludes\io.ahk
 #Include CommonIncludes\privateVariables.ahk
 #Include CommonIncludes\runAsAdmin.ahk
-#Include CommonIncludes\stringTools.ahk
-#Include CommonIncludes\trayTools.ahk
-#Include CommonIncludes\windowTools.ahk
+#Include CommonIncludes\string.ahk
+#Include CommonIncludes\tray.ahk
+#Include CommonIncludes\window.ahk

@@ -165,3 +165,7 @@ iSearchClass_vbPropertiesSidebar := "wndclass_pbrs1"
 iSearchClass_vbToolbarPalette := "ToolsPalette1"
 
 
+; ----- Other Constants. ----- ;
+LIST_ITEM := 1
+LIST_NUM := 2
+
