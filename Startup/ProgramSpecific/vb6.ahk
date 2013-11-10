@@ -439,7 +439,6 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 	Loop {
 		; Take a step down.
 		if(!foundPage) {
-			; SendRaw, %firstChar%
 			Send, {PgDn}
 		} else {
 			Send, {Down}
@@ -454,7 +453,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		currRow := SubStr(currRow, 1, StrLen(lineToFind))
 		; MsgBox, %currRow%
 		
-		; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
+		; Just in case we hit the end of the listbox: if we see the same row SAME_THRESHOLD times, finish.
 		if(currRow = prevRow) {
 			numSame++
 		} else {
@@ -464,7 +463,6 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		if(numSame = SAME_THRESHOLD) {
 			return false
 		}
-		
 		prevRow := currRow
 		
 		; If it matches our input, finish.
@@ -509,8 +507,6 @@ convertStarToES(string) {
 ; References window.
 #IfWinActive, References - 
 	^f::
-		; SAME_THRESHOLD := 10
-		
 		; Get user input.
 		InputBox, userIn, Partial Search, Please enter the first portion of the row to find. You may replace "Epic Systems " with "* "
 		if(ErrorLevel) {
@@ -520,56 +516,10 @@ convertStarToES(string) {
 		; Expand it as needed.
 		userIn := convertStarToES(userIn)
 		
-		; prevRow := ""
-		; prevLine := ""
-		; numSame := 1
-		; notFoundYet := true
-		
-		; currLine := userIn
-		; currLen := StrLen(userIn)
-		; MsgBox, % currLen
-		
-		; ControlGetText, currRow, Button5, A
-		; if(currLine < currRow) {
-			; Send, {Home}
-		; }
-		
-		; firstChar := SubStr(currLine, 1, 1)
-		; ; MsgBox, % firstChar . "`n" . currLine
-		
 		; Crawl the list and check it.
 		if(!findReferenceLine(userIn)) {
 			MsgBox, Reference not found in list!
 		}
-		
-		; ; Loop downwards through lines.
-		; While, notFoundYet {
-			; ; Take a step down.
-			; SendRaw, %firstChar%
-			
-			; ; Grab current item's identity.
-			; Sleep, 1
-			; ControlGetText, currRow, Button5, A
-			; ; MsgBox, %currRow%
-			
-			; ; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
-			; if(currRow = prevRow) {
-				; numSame++
-			; } else {
-				; numSame := 1
-			; }
-			; ; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
-			; if(numSame = SAME_THRESHOLD) {
-				; notFoundYet := false
-			; }
-			; prevRow := currRow
-			
-			; ; If it matches our input, finish.
-			; if(SubStr(currRow, 1, currLen) = currLine) {
-				; notFoundYet := false
-			; }
-		; }
-		
 	return
 
 	^a::
