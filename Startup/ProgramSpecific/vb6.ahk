@@ -453,6 +453,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		
 		; Trim it down to size to allow partial matching.
 		currRow := SubStr(currRow, 1, StrLen(lineToFind))
+		MsgBox, %currRow%
 		
 		; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
 		if(currRow = prevRow) {
