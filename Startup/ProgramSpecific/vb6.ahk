@@ -469,7 +469,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		if(lineToFind = currRow) {
 			; If we've got the additional argument, push down a few more before selecting.
 			if(numToMatch) {
-				numToMatch--
+				numToMatch-- ; We're given the index, not the number of times we need to go down.
 				Send, {Down %numToMatch%}
 			}
 			
@@ -525,16 +525,11 @@ convertStarToES(string) {
 
 	^a::
 		SAME_THRESHOLD := 10
-		
 		currPrepend := ""
 		currPostpend := ""
-		
-		prevRow := ""
-		prevLine := ""
-		numSame := 1
-		
 		textOut := ""
 		
+		; Get user input.
 		FileSelectFile, fileName
 		
 		; Read in the list of names.
@@ -583,7 +578,7 @@ convertStarToES(string) {
 					}
 				
 				; Special end block line.
-				} else if(SubStr(cleanLine,1,1) = "]") {
+				} else if(SubStr(cleanLine, 1, 1) = "]") {
 					currPrepend := ""
 					currPostpend := ""
 					; MsgBox, wiped.
