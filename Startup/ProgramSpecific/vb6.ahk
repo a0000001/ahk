@@ -586,9 +586,8 @@ convertStarToES(string) {
 					currPostpend := ""
 					; MsgBox, wiped.
 				
-				; A true line to do things to! Yay!
+				; A true line to eventually things to! Yay!
 				} else {
-					
 					; MsgBox, Pre: %currPrepend%z `nPost: %currPostpend%
 				
 					; Clean lineArr2 in case it isn't in next line.
@@ -598,9 +597,9 @@ convertStarToES(string) {
 					StringSplit, lineArr, cleanLine, %A_Tab%
 					
 					currLine := expandReferenceLine(lineArr1, currPrepend, currPostpend)
-					num := lineArr2
+					whichNum := lineArr2
 					
-					; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%num%
+					; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%whichNum%
 					textOut := textOut . currLine . "`n"
 					
 					; firstChar := SubStr(currLine, 1, 1)
@@ -614,57 +613,21 @@ convertStarToES(string) {
 					
 					currRef := Object()
 					currRef[REF] := currLine
-					currRef[NUM] := num
+					currRef[NUM] := whichNum
 					references.Insert(currRef)
-					; findReferenceLine(currLine, num)
-					
-					; ; Loop downwards through lines.
-					; While, notFoundYet {
-						; SendRaw, %firstChar%
-						
-						; Sleep, 1
-						; ControlGetText, currRow, Button5, A
-						; ; MsgBox, %currRow%
-						
-						; ; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
-						; if(currRow = prevRow) {
-							; numSame++
-						; } else {
-							; numSame := 1
-						; }
-						; ; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
-						; if(numSame = SAME_THRESHOLD) { ; Pretty sure we're at the end now, finish.
-							; notFoundYet := false
-						; }
-						
-						; prevRow := currRow
-						
-						; ; If it matches our input, check it.
-						; if(currRow = currLine) {
-							; ; If we've got the additional argument, push down a few more before selecting.
-							; if(num) {
-								; num--
-								; Send, {Down %num%}
-							; }
-							
-							; Send, {Space}
-							; notFoundYet := false
-						; }
-						
-					; }
-					; notFoundYet := true
-					; prevLine := currLine
+					; findReferenceLine(currLine, whichNum)
 					
 					prevSearch := currLine
 				}
 			}
 		}
 		
-		MsgBox, % textOut
 		refsLen := references.MaxIndex()
 		Loop, %refsLen%
 		{
-			MsgBox, % references[A_Index, REF] . "	" . references[A_Index, NUM]
+			; MsgBox, % references[A_Index, REF] . "	" . references[A_Index, NUM]
 		}
+		
+		MsgBox, Selected References: `n`n%textOut%
 	return
 #IfWinActive
