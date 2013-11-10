@@ -469,6 +469,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		if(lineToFind = currRow) {
 			; If we've got the additional argument, push down a few more before selecting.
 			if(numToMatch) {
+				numToMatch--
 				Send, {Down %numToMatch%}
 			}
 			
