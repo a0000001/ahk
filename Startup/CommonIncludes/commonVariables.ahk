@@ -166,6 +166,7 @@ iSearchClass_vbToolbarPalette := "ToolsPalette1"
 
 
 ; ----- Other Constants. ----- ;
-LIST_ITEM := 1
-LIST_NUM := 2
+global LIST_ITEM := 1
+global LIST_NUM := 2
+global VB_REF_SAME_THRESHOLD := 10
 

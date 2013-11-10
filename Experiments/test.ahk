@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force
 
 ; #Include TrayIconToggler.ahk
-#Include ..\Startup\CommonIncludes\trayTools.ahk
+#Include ..\Startup\CommonIncludes\tray.ahk
 #Include ..\Startup\CommonIncludes\io.ahk
 
 suspended := 0
@@ -38,7 +38,7 @@ setupTrayIcons(v, m)
 	; Loop, %refsLen% {
 		; textOut .= references[A_Index, ITEM] . "	" . references[A_Index, NUM] . "`n"
 		; ; MsgBox, % references[A_Index, ITEM] . "	" . references[A_Index, NUM]
-		; findReferenceLine(references[A_Index, ITEM], references[A_Index, NUM])
+		; ; findReferenceLine(references[A_Index, ITEM], references[A_Index, NUM])
 	; }
 	
 	; MsgBox, Selected References: `n`n%textOut%

@@ -25,6 +25,8 @@ cleanParseList(lines) {
 	currPostpend := ""
 	list := Object()
 	
+	; MsgBox, % lines[1] . "`n" . LIST_ITEM . "`n" . iSearch_imageSpacingTolerance
+	
 	; Loop through and do work on them.
 	linesLen := lines.MaxIndex()
 	Loop, %linesLen% {

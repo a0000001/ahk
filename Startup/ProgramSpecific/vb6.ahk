@@ -418,7 +418,6 @@
 
 ; Finds and checks a single reference.
 findReferenceLine(lineToFind, numToMatch = 0) {
-	SAME_THRESHOLD := 10
 	prevRow := ""
 	numSame := 1
 	foundPage := false
@@ -453,14 +452,14 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		currRow := SubStr(currRow, 1, StrLen(lineToFind))
 		; MsgBox, %currRow%
 		
-		; Just in case we hit the end of the listbox: if we see the same row SAME_THRESHOLD times, finish.
+		; Just in case we hit the end of the listbox: if we see the same row VB_REF_SAME_THRESHOLD times, finish.
 		if(currRow = prevRow) {
 			numSame++
 		} else {
 			numSame := 1
 		}
 		; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
-		if(numSame = SAME_THRESHOLD) {
+		if(numSame = VB_REF_SAME_THRESHOLD) {
 			return false
 		}
 		prevRow := currRow
@@ -527,7 +526,6 @@ convertStarToES(string) {
 		
 		; Parse the list into nice, uniform reference lines.
 		references := cleanParseList(referenceLines)
-		
 		
 		textOut := ""
 		refsLen := references.MaxIndex()
