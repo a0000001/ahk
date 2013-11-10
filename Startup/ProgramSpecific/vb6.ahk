@@ -619,6 +619,7 @@ convertStarToES(string) {
 		Loop, %refsLen%
 		{
 			; MsgBox, % references[A_Index, REF] . "	" . references[A_Index, NUM]
+			findReferenceLine(references[A_Index, REF], references[A_Index, NUM])
 		}
 		
 		MsgBox, Selected References: `n`n%textOut%
