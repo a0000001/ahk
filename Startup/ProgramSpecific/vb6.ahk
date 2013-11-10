@@ -419,7 +419,6 @@
 ; Finds and checks a single reference.
 findReferenceLine(lineToFind, numToMatch = 0) {
 	SAME_THRESHOLD := 10
-	notFoundYet := true
 	prevRow := ""
 	numSame := 1
 	foundPage := false
@@ -437,7 +436,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 	SendRaw, %firstChar%
 	
 	; Loop downwards over the listbox - first by page, then by line.
-	While, notFoundYet {
+	Loop {
 		; Take a step down.
 		if(!foundPage) {
 			; SendRaw, %firstChar%
@@ -453,7 +452,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		
 		; Trim it down to size to allow partial matching.
 		currRow := SubStr(currRow, 1, StrLen(lineToFind))
-		MsgBox, %currRow%
+		; MsgBox, %currRow%
 		
 		; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
 		if(currRow = prevRow) {
@@ -463,7 +462,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		}
 		; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
 		if(numSame = SAME_THRESHOLD) {
-			notFoundYet := false
+			return false
 		}
 		
 		prevRow := currRow
@@ -477,19 +476,20 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 			
 			; Check and finish.
 			Send, {Space}
-			notFoundYet := false
+			return true
 		
 		; If we overshot it, back up a page and start going by single rows.
-		} else if(lineToFind > currRow) {
+		} else if(currRow > lineToFind) {
+			; MsgBox, %currRow% %lineToFind%
 			
 			; If we overshot it for the first time, go back a page and go by rows.
 			if(!foundPage) {
 				Send, {PgUp}
 				foundPage := true
 			
-			; If we overshot once already, it's not here. Return blank.
+			; If we overshot once already, it's not here.
 			} else {
-				return ""
+				return false
 			}
 		}
 	}
@@ -538,7 +538,7 @@ convertStarToES(string) {
 		; ; MsgBox, % firstChar . "`n" . currLine
 		
 		; Crawl the list and check it.
-		if(findReferenceLine(userIn) = "") {
+		if(!findReferenceLine(userIn)) {
 			MsgBox, Reference not found in list!
 		}
 		
