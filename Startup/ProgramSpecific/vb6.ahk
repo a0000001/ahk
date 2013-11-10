@@ -429,7 +429,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 	
 	; If what we're currently on is after what we want, start at the top.
 	ControlGetText, currRow, Button5, A
-	if(lineToFind < currRow, 1, StrLen(lineToFind))) {
+	if(lineToFind < currRow, 1, StrLen(lineToFind)) {
 		Send, {Home}
 	}
 	
