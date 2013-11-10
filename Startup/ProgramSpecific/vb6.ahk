@@ -602,14 +602,7 @@ convertStarToES(string) {
 					; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%whichNum%
 					textOut := textOut . currLine . "`n"
 					
-					; firstChar := SubStr(currLine, 1, 1)
-					; MsgBox, First Char: %firstChar%
-					
 					; MsgBox, Found: `n%prevSearch% `n`nNext: `n%currLine%
-					
-					; if(currLine < currRow) {
-						; Send, {Home}
-					; }
 					
 					currRef := Object()
 					currRef[REF] := currLine
