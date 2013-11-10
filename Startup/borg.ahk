@@ -16,11 +16,11 @@ if(machineName = "THINKPAD") {
 ; MsgBox, % machineName
 ; MsgBox, % borgWhichMachine
 
-; Standalone scripts. Must be first to execute.
-#Include standalone.ahk
 
 ; Common functions, hotkeys, and other such setup. 
 #Include commonIncludes.ahk
+; Standalone scripts. Must be first to execute.
+#Include standalone.ahk
 
 ; Setup for this script.
 #Include borgSetup.ahk

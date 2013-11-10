@@ -8,6 +8,7 @@ DetectHiddenWindows, On
 
 ; Tray icon setup.
 ; #NoTrayIcon
+
 ; State flags.
 global suspended := 0
 

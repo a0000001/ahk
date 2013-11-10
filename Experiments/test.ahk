@@ -18,6 +18,26 @@ setupTrayIcons(v, m)
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
+a::
+	; Get user input.
+	FileSelectFile, fileName
+
+	; Read in the list of names.
+	referenceLines := fileLinesToArray(fileName)
+
+	; Parse the list into nice, uniform reference lines.
+	references := cleanParseList(referenceLines)
+
+	textOut := ""
+	refsLen := references.MaxIndex()
+	Loop, %refsLen% {
+		textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
+		; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
+		findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
+	}
+
+	MsgBox, Selected References: `n`n%textOut%
+return
 
 ; global ITEM := 1
 ; global NUM := 2
