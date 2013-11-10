@@ -446,7 +446,6 @@ expandReferenceLine(input, prepend = "", postpend = "") {
 		
 		currLine := userIn
 		currLen := StrLen(userIn)
-		
 		; MsgBox, % currLen
 		
 		ControlGetText, currRow, Button5, A
@@ -455,14 +454,14 @@ expandReferenceLine(input, prepend = "", postpend = "") {
 		}
 		
 		firstChar := SubStr(currLine, 1, 1)
-		; MsgBox, % firstChar
-		
-		; MsgBox, % currLine
+		; MsgBox, % firstChar . "`n" . currLine
 		
 		; Loop downwards through lines.
 		While, notFoundYet {
+			; Take a step down.
 			SendRaw, %firstChar%
 			
+			; Grab current item's identity.
 			Sleep, 1
 			ControlGetText, currRow, Button5, A
 			; MsgBox, %currRow%
@@ -474,10 +473,9 @@ expandReferenceLine(input, prepend = "", postpend = "") {
 				numSame := 1
 			}
 			; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
-			if(numSame = SAME_THRESHOLD) { ; Pretty sure we're at the end now, finish.
+			if(numSame = SAME_THRESHOLD) {
 				notFoundYet := false
 			}
-			
 			prevRow := currRow
 			
 			; If it matches our input, finish.
