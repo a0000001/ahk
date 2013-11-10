@@ -539,7 +539,7 @@ convertStarToES(string) {
 		; Read in the list of names.
 		Loop, Read, %fileName%
 		{
-			notFoundYet := true
+			; notFoundYet := true
 			
 			; Clean off leading tab if it exists.
 			cleanLine := A_LoopReadLine
@@ -598,58 +598,59 @@ convertStarToES(string) {
 					; MsgBox, %cleanLine%
 					StringSplit, lineArr, cleanLine, %A_Tab%
 					
-					; currLine := convertStarToES(lineArr1)
 					currLine := expandReferenceLine(lineArr1, currPrepend, currPostpend)
 					num := lineArr2
 					
 					; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%num%
 					textOut := textOut . currLine . "`n"
 					
-					firstChar := SubStr(currLine, 1, 1)
+					; firstChar := SubStr(currLine, 1, 1)
 					; MsgBox, First Char: %firstChar%
 					
-;					MsgBox, Found: `n%prevSearch% `n`nNext: `n%currLine%
+					; MsgBox, Found: `n%prevSearch% `n`nNext: `n%currLine%
 					
-					if(currLine < currRow) {
-						Send, {Home}
-					}
+					; if(currLine < currRow) {
+						; Send, {Home}
+					; }
 					
-					; Loop downwards through lines.
-					While, notFoundYet {
-						SendRaw, %firstChar%
+					findReferenceLine(currLine, num)
+					
+					; ; Loop downwards through lines.
+					; While, notFoundYet {
+						; SendRaw, %firstChar%
 						
-						Sleep, 1
-						ControlGetText, currRow, Button5, A
-						; MsgBox, %currRow%
+						; Sleep, 1
+						; ControlGetText, currRow, Button5, A
+						; ; MsgBox, %currRow%
 						
-						; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
-						if(currRow = prevRow) {
-							numSame++
-						} else {
-							numSame := 1
-						}
-						; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
-						if(numSame = SAME_THRESHOLD) { ; Pretty sure we're at the end now, finish.
-							notFoundYet := false
-						}
+						; ; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
+						; if(currRow = prevRow) {
+							; numSame++
+						; } else {
+							; numSame := 1
+						; }
+						; ; MsgBox, Row: %currRow% `nPrevious: %prevRow% `nnumSame: %numSame%
+						; if(numSame = SAME_THRESHOLD) { ; Pretty sure we're at the end now, finish.
+							; notFoundYet := false
+						; }
 						
-						prevRow := currRow
+						; prevRow := currRow
 						
-						; If it matches our input, check it.
-						if(currRow = currLine) {
-							; If we've got the additional argument, push down a few more before selecting.
-							if(num) {
-								num--
-								Send, {Down %num%}
-							}
+						; ; If it matches our input, check it.
+						; if(currRow = currLine) {
+							; ; If we've got the additional argument, push down a few more before selecting.
+							; if(num) {
+								; num--
+								; Send, {Down %num%}
+							; }
 							
-							Send, {Space}
-							notFoundYet := false
-						}
+							; Send, {Space}
+							; notFoundYet := false
+						; }
 						
-					}
-					notFoundYet := true
-					prevLine := currLine
+					; }
+					; notFoundYet := true
+					; prevLine := currLine
 					
 					prevSearch := currLine
 				}
