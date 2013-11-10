@@ -422,25 +422,37 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 	notFoundYet := true
 	prevRow := ""
 	numSame := 1
+	foundPage := false
 	
 	firstChar := SubStr(lineToFind, 1, 1)
 	; MsgBox, % firstChar . "`n" . lineToFind
 	
 	; If what we're currently on is after what we want, start at the top.
 	ControlGetText, currRow, Button5, A
-	if(lineToFind < currRow) {
+	if(lineToFind < currRow, 1, StrLen(lineToFind))) {
 		Send, {Home}
 	}
 	
-	; Loop downwards over the lines of the listbox.
+	; Start with the first letter of the given input.
+	SendRaw, %firstChar%
+	
+	; Loop downwards over the listbox - first by page, then by line.
 	While, notFoundYet {
 		; Take a step down.
-		SendRaw, %firstChar%
+		if(!foundPage) {
+			; SendRaw, %firstChar%
+			Send, {PgDn}
+		} else {
+			Send, {Down}
+		}
 		
 		; Grab current item's identity.
 		Sleep, 1
 		ControlGetText, currRow, Button5, A
 		; MsgBox, %currRow%
+		
+		; Trim it down to size to allow partial matching.
+		currRow := SubStr(currRow, 1, StrLen(lineToFind))
 		
 		; This block controls for the end of the listbox, it stops when the last SAME_THRESHOLD rows are the same.
 		if(currRow = prevRow) {
@@ -456,7 +468,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		prevRow := currRow
 		
 		; If it matches our input, finish.
-		if(SubStr(currRow, 1, StrLen(lineToFind)) = lineToFind) {
+		if(lineToFind = currRow) {
 			; If we've got the additional argument, push down a few more before selecting.
 			if(numToMatch) {
 				Send, {Down %numToMatch%}
@@ -465,8 +477,20 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 			; Check and finish.
 			Send, {Space}
 			notFoundYet := false
-		}
 		
+		; If we overshot it, back up a page and start going by single rows.
+		} else if(lineToFind > currRow) {
+			
+			; If we overshot it for the first time, go back a page and go by rows.
+			if(!foundPage) {
+				Send, {PgUp}
+				foundPage := true
+			
+			; If we overshot once already, it's not here. Return blank.
+			} else {
+				return ""
+			}
+		}
 	}
 }
 
@@ -513,7 +537,9 @@ convertStarToES(string) {
 		; ; MsgBox, % firstChar . "`n" . currLine
 		
 		; Crawl the list and check it.
-		findReferenceLine(userIn)
+		if(findReferenceLine(userIn) = "") {
+			MsgBox, Reference not found in list!
+		}
 		
 		; ; Loop downwards through lines.
 		; While, notFoundYet {
