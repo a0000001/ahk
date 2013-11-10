@@ -528,6 +528,9 @@ convertStarToES(string) {
 		currPrepend := ""
 		currPostpend := ""
 		textOut := ""
+		references := Object()
+		REF := 1
+		NUM := 2
 		
 		; Get user input.
 		FileSelectFile, fileName
@@ -609,7 +612,11 @@ convertStarToES(string) {
 						; Send, {Home}
 					; }
 					
-					findReferenceLine(currLine, num)
+					currRef := Object()
+					currRef[REF] := currLine
+					currRef[NUM] := num
+					references.Insert(currRef)
+					; findReferenceLine(currLine, num)
 					
 					; ; Loop downwards through lines.
 					; While, notFoundYet {
@@ -654,5 +661,10 @@ convertStarToES(string) {
 		}
 		
 		MsgBox, % textOut
+		refsLen := references.MaxIndex()
+		Loop, %refsLen%
+		{
+			MsgBox, % references[A_Index, REF] . "	" . references[A_Index, NUM]
+		}
 	return
 #IfWinActive
