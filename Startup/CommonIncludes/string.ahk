@@ -64,87 +64,184 @@ expandLine(input, prepend = "", postpend = "") {
 }
 
 ; Parses and cleans the given list into single-line items.
-cleanParseList(lines) {
-	currPrepend := ""
-	currPostpend := ""
+cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
+	currMods := "[]"
 	list := Object()
+	currItem := Object()
 	
 	; MsgBox, % lines[1] . "`n" . LIST_ITEM . "`n" . iSearch_imageSpacingTolerance
 	
 	; Loop through and do work on them.
 	linesLen := lines.MaxIndex()
 	Loop, %linesLen% {
-		; Clean off leading tab if it exists.
-		cleanLine := lines[A_Index]
-		if(SubStr(cleanLine, 1, 1) = A_Tab) {
-			StringTrimLeft, cleanLine, cleanLine, 1
+		currRow := lines[A_Index]
+		; MsgBox, %currRow%
+		
+		; Strip off any leading whitespace.
+		Loop {
+			firstChar := SubStr(currRow, 1, 1)
+			; MsgBox, First char: z%firstChar%z
+		
+			if(firstChar != A_Tab && firstChar != A_Space) {
+				; MsgBox, Break
+				Break
+			}
+			; MsgBox, trimming
+			StringTrimLeft, currRow, currRow, 1
+			; MsgBox, trimmed: z%currRow%z
 		}
 		
-		; Ignore blank and 'commented' lines.
-		if(cleanLine != "" && Substr(cleanLine, 1, 2) != "//") {
-			; MsgBox, %cleanLine%
+		; Ignore it entirely if it's an empty line or beings with ; (a comment).
+		firstChar := SubStr(currRow, 1, 1)
+		; MsgBox, First char: z%firstChar%z
+		if(firstChar = ";" || firstChar = "") {
+			; MsgBox, Comment or blank, ignoring!
 			
-			; Special begin prepend/postpend block line.
-			if(SubStr(cleanLine, 1, 2) = "[ ") {
-				currPrepend := ""
-				currPostpend := ""
-				params1 := ""
-				params2 := ""
-				
-				tempLine := lines[A_Index]
-				StringSplit, params, tempLine, |
-				
-				; First parameter.
-				paramChar := SubStr(params1, 3, 1) ; Starting at 3 and 4 to cut out the "[ "
-				paramValue := SubStr(params1, 4)
-				if(paramChar = "b") {
-					currPrepend := paramValue
-				} else if(paramChar = "e") {
-					currPostpend := paramValue
-				}
-				
-				; Second parameter.
-				if(params2) {
-					paramChar := SubStr(params2, 1, 1)
-					paramValue := SubStr(params2, 2)
-					if(paramChar = "b") {
-						currPrepend := paramValue
-					} else if(paramChar = "e") {
-						currPostpend := paramValue
-					}
-				}
+		; Special row for modifying the current stringmod.
+		} else if(firstChar = "[") {
+			; MsgBox, Modifier line: %currRow%
+			currMods := updateModifierString(currMods, currRow)
+		
+		; Special row for label/title later on, leave it unmolested.
+		} else if(firstChar = "#") {
+			; MsgBox, Hash line: %currRow%
+			currItem := Object()
+			currItem.Insert(currRow)
+			list.Insert(currItem)
+		
+		; Your everyday line, the average Joe-Billy-Bob-Jacob.
+		} else {
+			; MsgBox, % currRow
 			
-			; Special end block line.
-			} else if(SubStr(cleanLine, 1, 1) = "]") {
-				currPrepend := ""
-				currPostpend := ""
-				; MsgBox, wiped.
+			; Apply any active modifications.
+			; MsgBox, Row before: %currRow% `nMods: %currMods%
+			currItem := applyMods(currRow, currMods, escapeChar, defaultBit)
+			; MsgBox, % "Row after: " . currRow[1] . " " . currRow[2] . " " . currRow[3] . "`nMods: " . currMods
 			
-			; A true line to eventually things to! Yay!
-			} else {
-				; MsgBox, Pre: %currPrepend%z `nPost: %currPostpend%
 			
-				; Clean lineArr2 in case it isn't in next line.
-				lineArr2 := 0
-				
-				; MsgBox, %cleanLine%
-				StringSplit, lineArr, cleanLine, %A_Tab%
-				
-				currLine := expandLine(lineArr1, currPrepend, currPostpend)
-				whichNum := lineArr2
-				
-				; MsgBox, Pre: `n%currPrepend% `n`nPost: `n%currPostpend% `n`nIn: `n%cleanLine% `n`nOut: `n%currLine% `n`nNum: `n%whichNum%
-				; MsgBox, Found: `n%prevSearch% `n`nNext: `n%currLine%
-				
-				currItem := Object()
-				currItem[LIST_ITEM] := currLine
-				currItem[LIST_NUM] := whichNum
-				list.Insert(currItem)
-				
-				prevSearch := currLine
-			}
+			list.Insert(currItem)
 		}
+		
 	}
 	
 	return list
 }
+
+; Update the given modifier string given the new one.
+updateModifierString(current, new) {
+	; MsgBox, Current: %current% `nNew: %new%
+	
+	; If it's just [], all previous mods are wiped clean.
+	if(new = "[]") {
+		return "[]"
+	} else {
+		if(current = "[]") {
+			return new
+		} else {
+			; Allow backwards stacking - that is, a later mod can go first on string.
+			if(SubStr(new, 2, 1) = "/") {
+				StringTrimRight, new, new, 1
+				StringTrimLeft, current, current, 1
+				return "[" . SubStr(new, 3) . "|" . current
+			} else {
+				StringTrimRight, current, current, 1
+				StringTrimLeft, new, new, 1
+				return current . "|" . new
+			}
+		}
+	}
+}
+
+; Apply given string modifications to given row.
+applyMods(row, mods, escapeChar = "\", defaultBit = 1) {
+	; MsgBox, Modification to apply: %mods% `nOn String: %row%
+	whichBit := defaultBit
+	
+	; If there's no mods, we're done.
+	if(mods = "[]") {
+		return specialSplit(row, A_Tab, escapeChar)
+		
+	; Otherwise, we actually have work to do - time to get to work!
+	} else {
+		; First, strip off the beginning and ending brackets.
+		StringTrimLeft, mods, mods, 1
+		StringTrimRight, mods, mods, 1
+		
+		; Split up the mods by pipes, and the row by tabs.
+		modsSplit := specialSplit(mods, "|", escapeChar)
+		rowBits := specialSplit(row, A_Tab, escapeChar)
+		
+		; Now apply those split properties to the string.
+		modsLen := modsSplit.MaxIndex()
+		Loop, %modsLen% {
+			currMod := modsSplit[A_Index]
+			; MsgBox, % currMod
+			
+			; Next, check if we're dealing with anything but the first bit of the given row.
+			firstChar := SubStr(currMod, 1, 1)
+			; MsgBox, First char: %firstChar%
+			if(firstChar = "{") {
+				closeCurlyPos := InStr(currMod, "}")
+				whichBit := SubStr(currMod, 2, closeCurlyPos - 2)
+				; MsgBox, % "Full Row: " . row . "`nWhich Bit: " . whichBit . "`nRow bit: " . rowBits[whichBit]
+				
+				currMod := SubStr(currMod, closeCurlyPos + 1)
+				; MsgBox, % "Trimmed current mod: " . currMod
+				
+				firstChar := SubStr(currMod, 1, 1)
+			}
+			
+			
+			; Beginning: prepend.
+			if(firstChar = "b") {
+				rowBits[whichBit] := SubStr(currMod, 3) . rowBits[whichBit]
+			
+			; End: postpend.
+			} else if(firstChar = "e") {
+				rowBits[whichBit] := rowBits[whichBit] . SubStr(currMod, 3)
+			
+			; Middle: insert/delete somewhere else.
+			} else {
+				; Assuming form: m:(x, y)abc
+				;	x: +/- number, indicates where to start and from which direction to count it.
+				;	y: +/- number, indicates which direction and how far to delete before inserting.
+				;		Optional if abc present.
+				;	abc is the text to insert at the point given after deleting any specified ranges. 
+				;		Optional if y present.
+				currMod := SubStr(currMod, 3)
+				
+				modLen := StrLen(currMod)
+				commaPos := InStr(currMod, ",")
+				closeParenPos := InStr(currMod, ")")
+				
+				; Snag the given information.
+				insertString := SubStr(currMod, closeParenPos + 1)
+				if(commaPos) {
+					startPos := SubStr(currMod, 2, commaPos - 2)
+					deleteLen := SubStr(currMod, commaPos + 1, closeParenPos - (commaPos + 1))
+				} else {
+					startPos := SubStr(currMod, 2, closeParenPos - 2)
+					deleteLen := 0
+				}
+				
+				; MsgBox, Mod: %currMod% `nModLen: %modLen% `nComma: %commaPos% `nCloseParenPos: %closeParenPos% `nStart: %startPos% `nLength: %deleteLen% `nInsert: %insertString%
+				
+				; Do the operation on the given row.
+				
+				; Delete the range where we're supposed to (if we are), and shove the given string in the space.
+				if(deleteLen > 0) {
+					rowBits[whichBit] := SubStr(rowBits[whichBit], 1, startPos) . insertString . SubStr(rowBits[whichBit], startPos + deleteLen + 1)
+				} else if(deleteLen < 0) {
+					rowBits[whichBit] := SubStr(rowBits[whichBit], 1, startPos + deleteLen) . insertString . SubStr(rowBits[whichBit], startPos + 1)
+				}
+			}
+			
+			; MsgBox, % "Row now: " . rowBits[whichBit]
+		}
+		
+		; MsgBox, Row bit finished: %rowBits[whichBit]%
+		
+		return rowBits
+	}
+}
+

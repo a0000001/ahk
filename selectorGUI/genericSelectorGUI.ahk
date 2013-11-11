@@ -125,24 +125,40 @@ generateDisplayText(title, choices, nonChoices) {
 
 ; Load the choices and other such things from a specially formatted file.
 loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
-	Loop, Read, %filePath%
-	{
-		; MsgBox, %A_LoopReadLine%
+	; Read in the list.
+	lines := fileLinesToArray(filePath)
+	; linesLen := lines.MaxIndex()
+	; outStr2 := "Lines In: `n"
+	; Loop, %linesLen% {
+		; outStr2 .= lines[A_Index] . "`n"
+	; }
+	; MsgBox, % outStr2
+	
+	; Parse those lines into a uniform, one-line-per-item list.
+	list := cleanParseList(lines, "")
+	; listLen := list.MaxIndex()
+	; outStr2 := "`nLines Parsed: `n"
+	; Loop, %listLen% {
+		; outStr2 .= list[A_Index, NAME] . A_Tab . list[A_Index, ABBREV] . A_Tab . list[A_Index, PATH] . "`n"
+	; }	
+	; MsgBox, % outStr2
+	
+	; Loop, Read, %filePath%
+	listLen := list.MaxIndex()
+	Loop, %listLen% {
+		currItem := list[A_Index]
+		; MsgBox, % currItem[NAME]
 		
 		; Title.
 		if(A_Index = 1) {
-			title := A_LoopReadLine
-		
-		; Blank lines and comments are completely ignored.
-		} else if(A_LoopReadLine = "" || SubStr(A_LoopReadLine, 1, 1) = ";") { ; Blank line or comment, ignore it.
-			; MsgBox, blank
+			title := currItem[NAME]
 		
 		; Special: add a title and/or blank row in the list display.
-		} else if(SubStr(A_LoopReadLine, 1, 1) = "#") {
-			; MsgBox, % "#" A_LoopReadLine
+		} else if(SubStr(currItem[NAME], 1, 1) = "#") {
+			; MsgBox, % "#" currItem
 			
 			; If blank, extra newline.
-			if(StrLen(A_LoopReadLine) < 3) {
+			if(StrLen(currItem[NAME]) < 3) {
 				nonChoices.Insert(" ")
 			
 			; If title, #{Space}Title.
@@ -152,18 +168,20 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 					idx := choices.MaxIndex()
 				}
 				
-				nonChoices.Insert(idx + 1, SubStr(A_LoopReadLine, 3))
+				nonChoices.Insert(idx + 1, SubStr(currItem[NAME], 3))
 				; MsgBox, % "Just added: " . nonChoices[nonChoices.MaxIndex()] . " at index: " . idx+1
 			}
 			
 		; Invisible, but viable, choice.
-		} else if(SubStr(A_LoopReadLine, 1, 1) = "*") {
+		} else if(SubStr(currItem[NAME], 1, 1) = "*") {
 			; MsgBox, It's a star row!
-			hiddenChoices.Insert(specialSplit(A_LoopReadLine, A_Tab, ""))
+			; hiddenChoices.Insert(specialSplit(currItem, A_Tab, ""))
+			hiddenChoices.Insert(currItem)
 		
 		; Otherwise, it's a visible, viable choice!
 		} else {
-			choices.Insert(specialSplit(A_LoopReadLine, A_Tab, ""))
+			; choices.Insert(specialSplit(currItem, A_Tab, ""))
+			choices.Insert(currItem)
 		}
 	}
 	
@@ -233,7 +251,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 	} else if(arbCharPos = 1) {
 		action := SubStr(userIn, 2)
 
-	; Allow concatentation of arbitrary addition with short.yada or #.yada.
+	; Allow concatentation of arbitrary addition with short+yada or #+yada.
 	} else if(arbCharPos > 1) {
 		StringSplit, splitBits, userIn, %ARBITRARY_CHAR%
 		; MsgBox, % splitBits1 . "	" . splitBits2
