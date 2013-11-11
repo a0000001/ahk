@@ -7,6 +7,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; #Include %A_ScriptDir%\..\CommonIncludes\runAsAdmin.ahk
 #Include commonIncludesStandalone.ahk
+; #Include ..\commonIncludesStandalone.ahk
 
 RunAsAdmin()
 

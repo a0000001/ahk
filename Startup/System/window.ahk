@@ -4,8 +4,8 @@ $!q::minimizeWindowSpecial()
 ; Sets current window to stay on top
 #SPACE::Winset, Alwaysontop, , A
 
-; Minimize to tray. (Via minToTray.)
-^!q::WinTraymin()
+; ; Minimize to tray. (Via minToTray.)
+; ^!q::WinTraymin()
 
 ; Enable any window mouse is currently over.
 #c::
