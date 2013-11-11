@@ -22,9 +22,11 @@ setupTrayIcons(v, m)
 
 ^+y::
 	MsgBox, % applyMods("thisIsAString	2", "[{1}b:asdf|e:here'sJohnny!|b:more|m:(5,2)ggggg]")
-	; MsgBox, % applyMods("thisIsAString	2", "[{1}b:asdf|e:here'sJohnny!|b:more|m:(5,-2)ggggg]")
+	MsgBox, % applyMods("thisIsAString	2", "[{2}b:asdf|e:here'sJohnny!|b:more|m:(5,2)ggggg]")
+	MsgBox, % applyMods("thisIsAString	2", "[{2}b:asdf|e:here'sJohnny!|{1}b:more|m:(5,2)ggggg]")
+	MsgBox, % applyMods("thisIsAString	2", "[{1}b:asdf|e:here'sJohnny!|b:more|m:(5,-2)ggggg]")
 	; MsgBox, % applyMods("thisIsAString	2", "[{30}b:asdf|e:here'sJohnny!|b:more|m:(-5,2)ggggg]")
-	; MsgBox, % applyMods("thisIsAString	2", "[b:asdf|e:here'sJohnny!|b:more|m:(-5,-2)ggggg]")
+	MsgBox, % applyMods("thisIsAString	2", "[b:asdf|e:here'sJohnny!|b:more|m:(-5,-2)ggggg]")
 return
 
 ^a::
@@ -64,6 +66,9 @@ return
 	; Parse the list into nice, uniform reference lines.
 	references := cleanParseList2(referenceLines)
 	
+	; MsgBox, % references[1]
+	; MsgBox, % references[2]
+	
 	textOut := ""
 	refsLen := references.MaxIndex()
 	Loop, %refsLen% {
@@ -75,7 +80,7 @@ return
 	MsgBox, Selected References: `n`n%textOut%
 return
 
-cleanParseList2(lines) {
+cleanParseList2(lines, defaultBit = 1) {
 	currMods := "[]"
 	list := Object()
 	
@@ -117,15 +122,18 @@ cleanParseList2(lines) {
 			; MsgBox, % currRow
 			
 			; Apply any active modifications.
-			MsgBox, Row before: %currRow% `nMods: %currMods%
-			currRow := applyMods(currRow, currMods)
-			MsgBox, Row after: %currRow% `nMods: %currMods%
+			; MsgBox, Row before: %currRow% `nMods: %currMods%
+			; currRow := applyMods(currRow, currMods, defaultBit)
+			; MsgBox, Row after: %currRow% `nMods: %currMods%
+			currItem := applyMods(currRow, currMods, defaultBit)
 			
-			currItem := Object()
-			currItem[LIST_ITEM] := currRow
-			currItem[LIST_NUM] := 0
+			; currItem := Object()
+			; currItem[LIST_ITEM] := currRow
+			; currItem[LIST_NUM] := 0
+			; itemLen := 
+			; currItem[LIST_ITEM] := currRowSplit[
+			; currItem[LIST_NUM] := 0
 			list.Insert(currItem)
-			
 		}
 		
 		; ; A true line to eventually things to! Yay!
@@ -152,7 +160,6 @@ cleanParseList2(lines) {
 			; prevSearch := currLine
 		; }
 		
-		
 	}
 	
 	return list
@@ -160,7 +167,7 @@ cleanParseList2(lines) {
 
 ; Update the given modifier string given the new one.
 updateModifierString(current, new) {
-	MsgBox, Current: %current% `nNew: %new%
+	; MsgBox, Current: %current% `nNew: %new%
 	
 	; If it's just [], all previous mods are wiped clean.
 	if(new = "[]") {
@@ -177,13 +184,13 @@ updateModifierString(current, new) {
 }
 
 ; Apply given string modifications to given row.
-applyMods(row, mods) {
+applyMods(row, mods, defaultBit = 1) {
 	; MsgBox, Modification to apply: %mods% `nOn String: %row%
-	whichBit := 1
+	whichBit := defaultBit
 	
 	; If there's no mods, we're done.
 	if(mods = "[]") {
-		return row
+		return specialSplit(row, A_Tab)
 		
 	; Otherwise, we actually have work to do - time to get to work!
 	} else {
@@ -191,49 +198,41 @@ applyMods(row, mods) {
 		StringTrimLeft, mods, mods, 1
 		StringTrimRight, mods, mods, 1
 		
-		; Next, check if we're dealing with anything but the first bit of the given row.
-		firstChar := SubStr(mods, 1, 1)
-		if(firstChar = "{") {
-			whichBit := SubStr(mods, 2, InStr(mods, "}") - 2)
-		}
-		; MsgBox, % whichBit
-		
-		; Split up the mods by the pipes.
-		modsSplit := specialSplit(mods)
-		
-		; Pull out the piece of the row we're dealing with here.
-		RegExReplace(row, A_Tab, "", rowPieceCount)
-		rowPieceCount++
-		; MsgBox, % rowPieceCount
-		StringSplit, rowArr, row, %A_Tab%
-		currRow := rowArr%whichBit%
-		; MsgBox, Row: %row% `nRow bit: %currRow%
-		
-		; MsgBox, % modsSplit[1]
-		; MsgBox, % modsSplit[2]
+		; Split up the mods by pipes, and the row by tabs.
+		modsSplit := specialSplit(mods, "|")
+		rowBits := specialSplit(row, A_Tab)
 		
 		; Now apply those split properties to the string.
 		modsLen := modsSplit.MaxIndex()
 		Loop, %modsLen% {
 			; MsgBox, % modsSplit[A_Index]
 			
+			; Next, check if we're dealing with anything but the first bit of the given row.
 			firstChar := SubStr(modsSplit[A_Index], 1, 1)
 			; MsgBox, First char: %firstChar%
+			if(firstChar = "{") {
+				whichBit := SubStr(modsSplit[A_Index], 2, InStr(modsSplit[A_Index], "}") - 2)
+				currRow := rowBits[whichBit]
+				; MsgBox, Full Row: %row% `nWhich Bit: %whichBit% `nRow bit: %currRow%
+			}
+			
 			
 			; Beginning: prepend.
 			if(firstChar = "b") {
-				currRow := SubStr(modsSplit[A_Index], 3) . currRow
+				rowBits[whichBit] := SubStr(modsSplit[A_Index], 3) . rowBits[whichBit]
 			
 			; End: postpend.
 			} else if(firstChar = "e") {
-				currRow := currRow . SubStr(modsSplit[A_Index], 3)
+				rowBits[whichBit] := rowBits[whichBit] . SubStr(modsSplit[A_Index], 3)
 			
 			; Middle: insert/delete somewhere else.
 			} else {
 				; Assuming form: m:(x, y)abc
-				;	x is positive/negative number that indicates where to start and from which direction to count it.
-				;	y is positive/negative number that indicates which direction and how far to delete before inserting. Optional if abc present.
-				;	abc is the text to insert at the point given after deleting any specified ranges. Optional if y present.
+				;	x: +/- number, indicates where to start and from which direction to count it.
+				;	y: +/- number, indicates which direction and how far to delete before inserting.
+				;		Optional if abc present.
+				;	abc is the text to insert at the point given after deleting any specified ranges. 
+				;		Optional if y present.
 				currentMod := SubStr(modsSplit[A_Index], 3)
 				
 				modLen := StrLen(currentMod)
@@ -256,29 +255,36 @@ applyMods(row, mods) {
 				
 				; Delete the range where we're supposed to (if we are), and shove the given string in the space.
 				if(deleteLen > 0) {
-					currRow := SubStr(currRow, 1, startPos) . insertString . SubStr(currRow, startPos + deleteLen + 1)
+					rowBits[whichBit] := SubStr(rowBits[whichBit], 1, startPos) . insertString . SubStr(rowBits[whichBit], startPos + deleteLen + 1)
 				} else if(deleteLen < 0) {
-					currRow := SubStr(currRow, 1, startPos + deleteLen) . insertString . SubStr(currRow, startPos + 1)
+					rowBits[whichBit] := SubStr(rowBits[whichBit], 1, startPos + deleteLen) . insertString . SubStr(rowBits[whichBit], startPos + 1)
 				}
 			}
 			
-			; MsgBox, Row now: %row%
+			; currRow := rowBits[whichBit]
+			; MsgBox, Row now: %currRow%
 		}
 		
-		; Piece row back together now.
-		row := ""
-		Loop, %rowPieceCount% {
-			if(A_Index != whichBit) {
-				row .= rowArr%A_Index%
-			}
-		}
+		; MsgBox, Row bit finished: %rowBits[whichBit]%
 		
-		return row
+		return rowBits
+		
+		; ; Piece row back together now.
+		; row := ""
+		; rowBitLen := rowBits.MaxIndex()
+		; Loop, %rowBitLen% {
+			; row .= rowBits[A_Index]
+			; if(A_Index != rowBitLen) {
+				; row .= A_Tab
+			; }
+		; }
+		
+		; return row
 	}
 }
 
-; Splits a string on pipes, but ignores escaped pipes and replaces other escaped characters with their equivalents.
-specialSplit(string) {
+; Splits a string on given delimeter, but ignores escaped delimeters.
+specialSplit(string, delimeter, escapeChar = "\") {
 	outArr := Object()
 	escapeNext := false
 	currStr := ""
@@ -299,11 +305,11 @@ specialSplit(string) {
 			currStr .= A_LoopField
 		
 		; The next character is escaped, so we won't add this one in.
-		} else if(A_LoopField = "\") {
+		} else if(A_LoopField = escapeChar) {
 			escapeNext := true
 		
 		; Stick this group into the array, move onto the next.
-		} else if(A_LoopField = "|") {
+		} else if(A_LoopField = delimeter) {
 			; MsgBox, Current string going in: %currStr%
 			outArr.Insert(currStr)
 			currStr := ""
