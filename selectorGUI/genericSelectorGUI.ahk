@@ -10,7 +10,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include ..\Startup\commonIncludesStandalone.ahk
 
 ; Constants and such.
-; global COUNT := 0
 global NAME := 1
 global ABBREV := 2
 global PATH := 3
@@ -25,10 +24,6 @@ choices := Object() ; Visible choices the user can pick from.
 hiddenChoices := Object() ; Invisible choices the user can pick from.
 nonChoices := Object() ; Lines that will be displayed as titles, extra newlines, etc, but have no other significance.
 historyChoices := Object() ; Lines read in from the history file.
-
-; Counts for each array are stored in arr[COUNT].
-; choices[COUNT] := 0
-; hiddenChoices[COUNT] := 0
 
 ; Read in our command line arguments.
 filePath = %1%
@@ -148,13 +143,10 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 			
 			; If blank, extra newline.
 			if(StrLen(A_LoopReadLine) < 3) {
-				; nonChoices[ choices[COUNT] + 1 ] := " "
 				nonChoices.Insert(" ")
 			
 			; If title, #{Space}Title.
 			} else {
-				; nonChoices[ choices[COUNT] + 1 ] := SubStr(A_LoopReadLine, 3)
-				
 				idx := 0
 				if(choices.MaxIndex()) {
 					idx := choices.MaxIndex()
@@ -167,27 +159,11 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 		; Invisible, but viable, choice.
 		} else if(SubStr(A_LoopReadLine, 1, 1) = "*") {
 			; MsgBox, It's a star row!
-			; hiddenChoices[COUNT]++
-			
 			hiddenChoices.Insert(specialSplit(A_LoopReadLine, A_Tab, ""))
-			
-			; Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
-			; {
-				; ; MsgBox, got a star chunk: %A_LoopField% %starLen%
-				; hiddenChoices[hiddenChoices[COUNT], A_Index] := A_LoopField
-			; }
 		
 		; Otherwise, it's a visible, viable choice!
 		} else {
-			
 			choices.Insert(specialSplit(A_LoopReadLine, A_Tab, ""))
-			
-			; choices[COUNT]++
-			; Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
-			; {
-				; ; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
-				; choices[choices[COUNT], A_Index] := A_LoopField
-			; }
 		}
 	}
 	
