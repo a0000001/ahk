@@ -6,10 +6,11 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 #Include HTTPRequest.ahk
-#Include ..\Startup\CommonIncludes\io.ahk
+; #Include ..\Startup\CommonIncludes\io.ahk
+#Include ..\Startup\commonIncludesStandalone.ahk
 
 ; Constants and such.
-global COUNT := 0
+; global COUNT := 0
 global NAME := 1
 global ABBREV := 2
 global PATH := 3
@@ -26,8 +27,8 @@ nonChoices := Object() ; Lines that will be displayed as titles, extra newlines,
 historyChoices := Object() ; Lines read in from the history file.
 
 ; Counts for each array are stored in arr[COUNT].
-choices[COUNT] := 0
-hiddenChoices[COUNT] := 0
+; choices[COUNT] := 0
+; hiddenChoices[COUNT] := 0
 
 ; Read in our command line arguments.
 filePath = %1%
@@ -52,10 +53,13 @@ Menu, Tray, Icon, %iconFileName%
 title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
 
 ; MsgBox, Title: %title%
-; MsgBox, % choices[COUNT] " " hiddenChoices[COUNT] " " nonChoices[COUNT]
+; MsgBox, % "c" choices.MaxIndex() " h" hiddenChoices.MaxIndex() " n" nonChoices.MaxIndex()
 ; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
 ; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
 ; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
+; MsgBox, % nonChoices[1]
+; MsgBox, % nonChoices[10]
+
 ; ExitApp
 
 
@@ -87,7 +91,7 @@ action := parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices)
 ; Don't save star entries or the previous entry (input of HISTORY_CHAR).
 if(SubStr(userIn, 1, 1) != "*" && userIn != HISTORY_CHAR) {
 	; If the histoy file already has 10 entries, trim off the oldest one.
-	if(historyChoices[COUNT] = 10) {
+	if(historyChoices.MaxIndex() = 10) {
 		FileDelete, %historyFileName%
 		Loop, 9 {
 			FileAppend, % historyChoices[A_Index + 1] "`n", %historyFileName%
@@ -105,7 +109,7 @@ return
 ; Create text to display in popup using data structures from the file.
 generateDisplayText(title, choices, nonChoices) {
 	outText := ""
-	choicesLen := choices[COUNT]
+	choicesLen := choices.MaxIndex()
 	Loop, %choicesLen% {
 		; Extra newline if requested.
 		if(nonChoices[A_Index]) {
@@ -140,34 +144,50 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 		
 		; Special: add a title and/or blank row in the list display.
 		} else if(SubStr(A_LoopReadLine, 1, 1) = "#") {
-			; MsgBox, #
+			; MsgBox, % "#" A_LoopReadLine
+			
+			; If blank, extra newline.
+			if(StrLen(A_LoopReadLine) < 3) {
+				; nonChoices[ choices[COUNT] + 1 ] := " "
+				nonChoices.Insert(" ")
 			
 			; If title, #{Space}Title.
-			if(StrLen(A_LoopReadLine) < 3) {
-				nonChoices[ choices[COUNT] + 1 ] := " "
 			} else {
-				nonChoices[ choices[COUNT] + 1 ] := SubStr(A_LoopReadLine, 3)
+				; nonChoices[ choices[COUNT] + 1 ] := SubStr(A_LoopReadLine, 3)
+				
+				idx := 0
+				if(choices.MaxIndex()) {
+					idx := choices.MaxIndex()
+				}
+				
+				nonChoices.Insert(idx + 1, SubStr(A_LoopReadLine, 3))
+				; MsgBox, % "Just added: " . nonChoices[nonChoices.MaxIndex()] . " at index: " . idx+1
 			}
 			
 		; Invisible, but viable, choice.
 		} else if(SubStr(A_LoopReadLine, 1, 1) = "*") {
 			; MsgBox, It's a star row!
-			hiddenChoices[COUNT]++
+			; hiddenChoices[COUNT]++
 			
-			Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
-			{
-				; MsgBox, got a star chunk: %A_LoopField% %starLen%
-				hiddenChoices[hiddenChoices[COUNT], A_Index] := A_LoopField
-			}
+			hiddenChoices.Insert(specialSplit(A_LoopReadLine, A_Tab, ""))
+			
+			; Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
+			; {
+				; ; MsgBox, got a star chunk: %A_LoopField% %starLen%
+				; hiddenChoices[hiddenChoices[COUNT], A_Index] := A_LoopField
+			; }
 		
 		; Otherwise, it's a visible, viable choice!
 		} else {
-			choices[COUNT]++
-			Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
-			{
-				; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
-				choices[choices[COUNT], A_Index] := A_LoopField
-			}
+			
+			choices.Insert(specialSplit(A_LoopReadLine, A_Tab, ""))
+			
+			; choices[COUNT]++
+			; Loop, Parse, A_LoopReadLine, %A_Tab% ; Parse the string based on the tab character.
+			; {
+				; ; MsgBox, Line contains: %A_LoopReadLine% with field %A_Index% : %A_LoopField%
+				; choices[choices[COUNT], A_Index] := A_LoopField
+			; }
 		}
 	}
 	
@@ -205,7 +225,7 @@ searchBoth(ByRef input, table, hiddenTable) {
 searchTable(ByRef input, table) {
 	; MsgBox, % input . ", " . table[1, NAME] . " " . table[1, PATH]
 	
-	tableLen := table[COUNT]
+	tableLen := table.MaxIndex()
 	Loop, %tableLen% {
 		if(input = A_Index || input = table[A_Index, ABBREV] || input = table[A_Index, NAME]) {
 			; MsgBox, Found: %input% at index: %A_Index%
@@ -225,9 +245,9 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 
 	; HISTORY_CHAR gives us the last executed command.
 	if(userIn = HISTORY_CHAR) {
-		if(historyChoices[COUNT]) {
+		if(historyChoices.MaxIndex()) {
 			; historyPicked :=  historyChoices[ historyChoices[COUNT] ]
-			action := parseChoice(historyChoices[ historyChoices[COUNT] ], choices, hiddenChoices)
+			action := parseChoice(historyChoices[ historyChoices.MaxIndex() ], choices, hiddenChoices)
 		} else {
 			MsgBox, No history available!
 			ExitApp

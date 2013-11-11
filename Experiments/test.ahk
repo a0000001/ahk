@@ -283,49 +283,6 @@ applyMods(row, mods, defaultBit = 1) {
 	}
 }
 
-; Splits a string on given delimeter, but ignores escaped delimeters.
-specialSplit(string, delimeter, escapeChar = "\") {
-	outArr := Object()
-	escapeNext := false
-	currStr := ""
-	
-	; MsgBox, Splitting string: %string%
-	
-	; Loop, one character at a time.
-	Loop, Parse, string
-	{
-		; MsgBox, % A_LoopField
-		
-		; If the last character was the escape character, replace this escaped sequence with the real thing.
-		if(escapeNext) {
-			; Reset this.
-			escapeNext := false
-			
-			; Escaped character becomes what it was previously, sans slash.
-			currStr .= A_LoopField
-		
-		; The next character is escaped, so we won't add this one in.
-		} else if(A_LoopField = escapeChar) {
-			escapeNext := true
-		
-		; Stick this group into the array, move onto the next.
-		} else if(A_LoopField = delimeter) {
-			; MsgBox, Current string going in: %currStr%
-			outArr.Insert(currStr)
-			currStr := ""
-		
-		; Normal case.
-		} else {
-			currStr .= A_LoopField
-		}
-	}
-	
-	; Shove the last string in there, too.
-	outArr.Insert(currStr)
-	
-	return outArr
-}
-
 ; ^a::
 	; ; Get user input.
 	; FileSelectFile, fileName
