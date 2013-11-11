@@ -1,23 +1,26 @@
 ; Sites to open with a global hotkey.
 
 ^+!a::
-	; if(borgWhichMachine = THINKPAD) {	
-		howManySites := 4
-		Run, https://mail.google.com/
-		Sleep, 100
-		Run, http://www.facebook.com/
-		Sleep, 100
-		Run, http://www.reddit.com/
-		Sleep, 100
-		Run, http://cloud.feedly.com/#my
-		Sleep, 100
-	; } else if(borgWhichMachine = EPIC_DESKTOP) {
-		; ; Betelgeuse
-	; }
+	sites := Object()
+	if(borgWhichMachine = THINKPAD) {	
+		sites.Insert("https://mail.google.com/")
+		sites.Insert("http://www.facebook.com/")
+		sites.Insert("http://www.reddit.com/")
+		sites.Insert("http://cloud.feedly.com/#my")
+	} else if(borgWhichMachine = EPIC_DESKTOP) {
+		sites.Insert("https://mail.google.com/")
+		sites.Insert("http://www.facebook.com/")
+		sites.Insert("http://cloud.feedly.com/#my")
+	}
 	
-	howManySites--
+	sitesLen := sites.MaxIndex()
+	Loop, %sitesLen% {
+		Run, % sites[A_Index]
+		Sleep, 100
+	}
+	sitesLen--
 	
 	Send, {Ctrl Down}{Shift Down}
-	Send, {Tab %howManySites%}
+	Send, {Tab %sitesLen%}
 	Send, {Shift Up}{Ctrl Up}
 return
