@@ -130,9 +130,17 @@ setVimState(toState, super = false) {
 	~$Enter::
 		unpauseSpecial()
 	return
-	
+
+#If chromeOrFirefoxActive() && borgWhichMachine = THINKPAD
 	; Close Tab. Here because F9 is not a typically-pressed key.
 	F9::
+		Send, ^w
+	~^w::
+		setVimState(true)
+	return
+#If chromeOrFirefoxActive() && borgWhichMachine = EPIC_DESKTOP
+	; Close Tab. Here because F9 is not a typically-pressed key.
+	F6::
 		Send, ^w
 	~^w::
 		setVimState(true)
