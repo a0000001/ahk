@@ -175,12 +175,10 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 		; Invisible, but viable, choice.
 		} else if(SubStr(currItem[NAME], 1, 1) = "*") {
 			; MsgBox, It's a star row!
-			; hiddenChoices.Insert(specialSplit(currItem, A_Tab, ""))
 			hiddenChoices.Insert(currItem)
 		
 		; Otherwise, it's a visible, viable choice!
 		} else {
-			; choices.Insert(specialSplit(currItem, A_Tab, ""))
 			choices.Insert(currItem)
 		}
 	}
@@ -240,7 +238,6 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 	; HISTORY_CHAR gives us the last executed command.
 	if(userIn = HISTORY_CHAR) {
 		if(historyChoices.MaxIndex()) {
-			; historyPicked :=  historyChoices[ historyChoices[COUNT] ]
 			action := parseChoice(historyChoices[ historyChoices.MaxIndex() ], choices, hiddenChoices)
 		} else {
 			MsgBox, No history available!
