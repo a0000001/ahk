@@ -34,7 +34,84 @@ setupTrayIcons(v, m)
 	; MsgBox, % str5[1] . A_Tab . str5[2]
 ; return
 
-; ^a::
+; ; Constants.
+; global LIST_BIT := 1
+; global LIST_OP = 2
+; global LIST_START = 3
+; global LIST_LEN = 4
+; global LIST_TEXT = 5
+
+^a::
+	; modStripped := "b:(3)asdf"
+	; mods := parseModLine(modStripped)
+	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	
+	; modStripped := "{2}b:(3)asdf"
+	; mods := parseModLine(modStripped)
+	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	
+	; modStripped := "{2}e:(3)asdf"
+	; mods := parseModLine(modStripped)
+	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	
+	; modStripped := "{3}m:(3)asdf"
+	; mods := parseModLine(modStripped)
+	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	
+	; modStripped := "{3}m:(3, 1)asdf"
+	; mods := parseModLine(modStripped)
+	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	
+	; modStripped := "{3}m:(-3, -1)asdf"
+	; mods := parseModLine(modStripped)
+	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+; return
+	
+	; start := 4
+	; ; start := -4
+	; len := 3
+	; ; len := -3
+	; ; len := 0
+	
+	; ; MsgBox, % SubStr("abcdefghij", 1, start + len) . "zzzzz" . SubStr("abcdefghij", (start + 1) + len)
+; ; return
+	
+	; ; MsgBox, % SubStr("asdf", 0)
+	
+	; ; mod := parseModLine("b:(1)x")
+	; ; mod := parseModLine("m:(1,1)x")
+	; ; mod := parseModLine("e:(-1)x")
+	; ; mod := parseModLine("m:(-1,-1)x")
+	; mod := parseModLine("m:(0)x")
+	row := "whee	second	third"
+	; MsgBox, % doMod(rowBit, mod)
+; return
+	mods := Object()
+	; updateMods(mods, SubStr("[b:test]", 2, -1))
+	; updateMods(mods, SubStr("[/e:x]", 2, -1))
+	; updateMods(mods, SubStr("[/{2}m:(-3, -1)asdf]", 2, -1))
+	updateMods(mods, "[{3}b:C:\Program Files (x86)\Epic\v7.9\Shared Files\EpicD79.exe EDAppServers79.EpicApp]")
+	
+	Loop, 1 {
+		MsgBox, % "Mod: " mods[A_Index, LIST_MOD] "`nBit: " mods[A_Index, LIST_BIT] "`nStart: " mods[A_Index, LIST_START] "`nLen: " mods[A_Index, LIST_LEN] "`nText: " mods[A_Index, LIST_TEXT]
+	}
+	
+	; doneRow := applyMods(row, mods)
+	doneRow := applyMods(row, mods)
+	MsgBox, % doneRow[1] "`n" doneRow[2] "`n" doneRow[3]
+return
+
+	; ; MsgBox, % SubStr("[asdf]", 2, -1)
+	; test := Object()
+	; test.Insert("asdf")
+	
+	; MsgBox, % test[1]
+	
+	; insertFront(test, "jkl;")
+	
+	; MsgBox, % test[1]
+	; MsgBox, % test[2]
+; return
 	; ; m := "-0"
 	; ; g := m + 1
 	; ; MsgBox, % g

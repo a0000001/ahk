@@ -1,5 +1,12 @@
 ; String manipulation functions.
 
+; Constants.
+global LIST_MOD := 1
+global LIST_BIT := 2
+global LIST_START = 3
+global LIST_LEN = 4
+global LIST_TEXT = 5
+
 ; Strips the dollar sign/asterisk off of the front of hotkeys if it's there.
 stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 	if(!leaveDollarSign && InStr(hotkeyString, "$")) {
@@ -65,7 +72,8 @@ expandLine(input, prepend = "", postpend = "") {
 
 ; Parses and cleans the given list into single-line items.
 cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
-	currMods := "[]"
+	; currMods := "[]"
+	mods := Object()
 	list := Object()
 	currItem := Object()
 	
@@ -74,12 +82,12 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 	; Loop through and do work on them.
 	linesLen := lines.MaxIndex()
 	Loop, %linesLen% {
-		currRow := lines[A_Index]
-		; MsgBox, %currRow%
+		row := lines[A_Index]
+		; MsgBox, %row%
 		
 		; Strip off any leading whitespace.
 		Loop {
-			firstChar := SubStr(currRow, 1, 1)
+			firstChar := SubStr(row, 1, 1)
 			; MsgBox, First char: z%firstChar%z
 		
 			if(firstChar != A_Tab && firstChar != A_Space) {
@@ -87,36 +95,38 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 				Break
 			}
 			; MsgBox, trimming
-			StringTrimLeft, currRow, currRow, 1
-			; MsgBox, trimmed: z%currRow%z
+			StringTrimLeft, row, row, 1
+			; MsgBox, trimmed: z%row%z
 		}
 		
 		; Ignore it entirely if it's an empty line or beings with ; (a comment).
-		firstChar := SubStr(currRow, 1, 1)
+		firstChar := SubStr(row, 1, 1)
 		; MsgBox, First char: z%firstChar%z
 		if(firstChar = ";" || firstChar = "") {
 			; MsgBox, Comment or blank, ignoring!
 			
 		; Special row for modifying the current stringmod.
 		} else if(firstChar = "[") {
-			; MsgBox, Modifier line: %currRow%
-			currMods := updateModifierString(currMods, currRow)
+			; MsgBox, Modifier line: %row%
+			; currMods := updateModifierString(currMods, row)
+			updateMods(mods, row, defaultBit)
 		
 		; Special row for label/title later on, leave it unmolested.
 		} else if(firstChar = "#") {
-			; MsgBox, Hash line: %currRow%
+			; MsgBox, Hash line: %row%
 			currItem := Object()
-			currItem.Insert(currRow)
+			currItem.Insert(row)
 			list.Insert(currItem)
 		
 		; Your everyday line, the average Joe-Billy-Bob-Jacob.
 		} else {
-			; MsgBox, % currRow
+			; MsgBox, % row
 			
 			; Apply any active modifications.
-			; MsgBox, Row before: %currRow% `nMods: %currMods%
-			currItem := applyMods(currRow, currMods, escapeChar, defaultBit)
-			; MsgBox, % "Row after: " . currRow[1] . " " . currRow[2] . " " . currRow[3] . "`nMods: " . currMods
+			; MsgBox, Row before: %row% `nMods: %currMods%
+			; currItem := applyMods(row, currMods, escapeChar, defaultBit)
+			currItem := applyMods(row, mods, escapeChar)
+			; MsgBox, % "Row after: " . row[1] . " " . row[2] . " " . row[3]
 			
 			
 			list.Insert(currItem)
@@ -128,118 +138,148 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 }
 
 ; Update the given modifier string given the new one.
-updateModifierString(current, new) {
-	; MsgBox, Current: %current% `nNew: %new%
+updateMods(ByRef mods, new, defaultBit = 1) {
+	; MsgBox, New Mod: %new%
 	
-	; If it's just [], all previous mods are wiped clean.
-	if(new = "[]") {
-		return "[]"
+	; Strip off the square brackets.
+	new := SubStr(new, 2, -1)
+	
+	; If it's just blank, all previous mods are wiped clean.
+	if(new = "") {
+		mods := Object()
 	} else {
-		if(current = "[]") {
-			return new
-		} else {
-			; Allow backwards stacking - that is, a later mod can go first on string.
-			if(SubStr(new, 2, 1) = "/") {
-				StringTrimRight, new, new, 1
-				StringTrimLeft, current, current, 1
-				return "[" . SubStr(new, 3) . "|" . current
+		; Split new into individual mods.
+		newSplit := specialSplit(new, "|", "")
+		newCount := newSplit.MaxIndex()
+		Loop, %newCount% {
+			currMod := newSplit[A_Index]
+			; MsgBox, % "New split: " currMod
+			
+			; Allow backwards stacking - that is, a later mod can go first in mod order.
+			if(SubStr(currMod, 1, 1) = "/") {
+				insertFront(mods, parseModLine(SubStr(currMod, 2), defaultBit))
 			} else {
-				StringTrimRight, current, current, 1
-				StringTrimLeft, new, new, 1
-				return current . "|" . new
+				mods.Insert(parseModLine(currMod, defaultBit))
 			}
 		}
 	}
 }
 
-; Apply given string modifications to given row.
-applyMods(row, mods, escapeChar = "\", defaultBit = 1) {
-	; MsgBox, Modification to apply: %mods% `nOn String: %row%
-	whichBit := defaultBit
+; Takes a modifier string and spits out the mod object/array. Assumes no [] around it, and no / at start.
+parseModLine(modLine, defaultBit = 1) {
+	; MsgBox, ModLine: %modLine%
 	
-	; If there's no mods, we're done.
-	if(mods = "[]") {
-		return specialSplit(row, A_Tab, escapeChar)
+	mod := Object()
+	mod[LIST_MOD] := modLine
+	mod[LIST_BIT] := defaultBit
+	mod[LIST_START] := 1
+	mod[LIST_LEN] := 0
+	mod[LIST_TEXT] := ""
+	
+	; First, check to see whether we have an explicit bit. Syntax: starts with {#}
+	if(SubStr(modLine, 1, 1) = "{") {
+		closeCurlyPos := InStr(modLine, "}")
+		mod[LIST_BIT] := SubStr(modLine, 2, closeCurlyPos - 2)
+		; MsgBox, % "Which Bit: " . whichBit
+		
+		modLine := SubStr(modLine, closeCurlyPos + 1)
+		; MsgBox, % "Trimmed current mod: " . modLine
+	}
+	
+	; First character of remaining string indicates what sort of operation we're dealing with: b, e, or m.
+	op := Substr(modLine, 1, 1)
+	if(op = "b") {
+		mod[LIST_START] := 1
+	} else if(op = "e") {
+		mod[LIST_START] := -1
+	}
+	
+	; Shave that off too.
+	StringTrimLeft, modLine, modLine, 2
+	
+	; Figure out the rest of the innards: parentheses and string.
+	commaPos := InStr(modLine, ",")
+	closeParenPos := InStr(modLine, ")")
+	
+	; Snag the rest of the info.
+	if(SubStr(modLine, 1, 1) = "(") {
+		mod[LIST_TEXT] := SubStr(modLine, closeParenPos + 1)
+			if(commaPos) { ; m: operation, two arguments in parens.
+				mod[LIST_START] := SubStr(modLine, 2, commaPos - 2)
+				mod[LIST_LEN] := SubStr(modLine, commaPos + 1, closeParenPos - (commaPos + 1))
+			} else {
+				if(op = "m") {
+					mod[LIST_START] := SubStr(modLine, 2, closeParenPos - 2)
+					mod[LIST_LEN] := 0
+				} else {
+					mod[LIST_LEN] := SubStr(modLine, 2, closeParenPos - 2)
+				}
+			}
+	} else {
+		mod[LIST_TEXT] := modLine
+	}
+	
+	; MsgBox, % "Mod: " modLine "`nComma: " commaPos "`nCloseParenPos: " closeParenPos "`nStart: " mod[LIST_START] "`nLength: " mod[LIST_LEN] "`nInsert: " mod[LIST_TEXT]
+	
+	return mod
+}
+
+; Apply a single mod to the given bit of a row.
+doMod(rowBit, mod) {
+	; MsgBox, % "Modification to apply: " mod[LIST_MOD] "`nOn String: " rowBit
+	
+	rowBitLen := StrLen(rowBit)
+	
+	startOffset := endOffset := 0
+	if(mod[LIST_LEN] > 0) {
+		endOffset := mod[LIST_LEN]
+	} else if(mod[LIST_LEN] < 0) {
+		startOffset := mod[LIST_LEN]
+	}
+	
+	if(mod[LIST_START] > 0) {
+		startLen := mod[LIST_START] - 1
+	} else if(mod[LIST_START] < 0) {
+		startLen := rowBitLen + mod[LIST_START] + 1
+	} else {
+		startLen := rowBitLen // 2
+	}
+	
+	; MsgBox, % startLen " " startOffset " " startLen + 1 " " endOffset
+	
+	outRow := SubStr(rowBit, 1, startLen + startOffset) . mod[LIST_TEXT] . SubStr(rowBit, (startLen + 1) + endOffset)
+	; MsgBox, % "Row bit now: " . outRow
+	
+	return outRow
+}
+
+; Apply given string modifications to given row.
+applyMods(row, mods, escapeChar = "\") {
+	; MsgBox, Row to apply mods to: %row%
+	
+	; Split up the row by tabs.
+	rowBits := specialSplit(row, A_Tab, escapeChar)
+	
+	; MsgBox, % rowBits[1] "`n" rowBits[2]
+	
+	; If there aren't any mods, just split the row and send it on.
+	if(mods.MaxIndex() = "") {
+		return rowBits
 		
 	; Otherwise, we actually have work to do - time to get to work!
 	} else {
-		; First, strip off the beginning and ending brackets.
-		StringTrimLeft, mods, mods, 1
-		StringTrimRight, mods, mods, 1
-		
-		; Split up the mods by pipes, and the row by tabs.
-		modsSplit := specialSplit(mods, "|", escapeChar)
-		rowBits := specialSplit(row, A_Tab, escapeChar)
-		
-		; Now apply those split properties to the string.
-		modsLen := modsSplit.MaxIndex()
+		; Apply the mods.
+		modsLen := mods.MaxIndex()
 		Loop, %modsLen% {
-			currMod := modsSplit[A_Index]
-			; MsgBox, % currMod
+			currMod := mods[A_Index]
+			whichBit := currMod[LIST_BIT]
 			
-			; Next, check if we're dealing with anything but the first bit of the given row.
-			firstChar := SubStr(currMod, 1, 1)
-			; MsgBox, First char: %firstChar%
-			if(firstChar = "{") {
-				closeCurlyPos := InStr(currMod, "}")
-				whichBit := SubStr(currMod, 2, closeCurlyPos - 2)
-				; MsgBox, % "Full Row: " . row . "`nWhich Bit: " . whichBit . "`nRow bit: " . rowBits[whichBit]
-				
-				currMod := SubStr(currMod, closeCurlyPos + 1)
-				; MsgBox, % "Trimmed current mod: " . currMod
-				
-				firstChar := SubStr(currMod, 1, 1)
-			}
+			; MsgBox, % "Mod: " currMod[LIST_MOD] "`nWhichBit: " currMod[LIST_BIT] "`nRowBit: " rowBits[whichBit]
 			
-			
-			; Beginning: prepend.
-			if(firstChar = "b") {
-				rowBits[whichBit] := SubStr(currMod, 3) . rowBits[whichBit]
-			
-			; End: postpend.
-			} else if(firstChar = "e") {
-				rowBits[whichBit] := rowBits[whichBit] . SubStr(currMod, 3)
-			
-			; Middle: insert/delete somewhere else.
-			} else {
-				; Assuming form: m:(x, y)abc
-				;	x: +/- number, indicates where to start and from which direction to count it.
-				;	y: +/- number, indicates which direction and how far to delete before inserting.
-				;		Optional if abc present.
-				;	abc is the text to insert at the point given after deleting any specified ranges. 
-				;		Optional if y present.
-				currMod := SubStr(currMod, 3)
-				
-				modLen := StrLen(currMod)
-				commaPos := InStr(currMod, ",")
-				closeParenPos := InStr(currMod, ")")
-				
-				; Snag the given information.
-				insertString := SubStr(currMod, closeParenPos + 1)
-				if(commaPos) {
-					startPos := SubStr(currMod, 2, commaPos - 2)
-					deleteLen := SubStr(currMod, commaPos + 1, closeParenPos - (commaPos + 1))
-				} else {
-					startPos := SubStr(currMod, 2, closeParenPos - 2)
-					deleteLen := 0
-				}
-				
-				; MsgBox, Mod: %currMod% `nModLen: %modLen% `nComma: %commaPos% `nCloseParenPos: %closeParenPos% `nStart: %startPos% `nLength: %deleteLen% `nInsert: %insertString%
-				
-				; Do the operation on the given row.
-				
-				; Delete the range where we're supposed to (if we are), and shove the given string in the space.
-				if(deleteLen > 0) {
-					rowBits[whichBit] := SubStr(rowBits[whichBit], 1, startPos) . insertString . SubStr(rowBits[whichBit], startPos + deleteLen + 1)
-				} else if(deleteLen < 0) {
-					rowBits[whichBit] := SubStr(rowBits[whichBit], 1, startPos + deleteLen) . insertString . SubStr(rowBits[whichBit], startPos + 1)
-				}
-			}
-			
-			; MsgBox, % "Row now: " . rowBits[whichBit]
+			rowBits[whichBit] := doMod(rowBits[whichBit], currMod)
 		}
 		
-		; MsgBox, Row bit finished: %rowBits[whichBit]%
+		; MsgBox, % "Row bit finished: " rowBits[whichBit]
 		
 		return rowBits
 	}

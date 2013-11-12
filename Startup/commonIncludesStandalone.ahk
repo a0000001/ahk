@@ -5,6 +5,7 @@ borgPathINI := "A:\Startup\borg.ini"
 #Include A:\Startup\CommonIncludes\AHKHID.ahk
 #Include A:\Startup\CommonIncludes\borgReadINI.ahk
 #Include A:\Startup\CommonIncludes\commonVariables.ahk
+#Include A:\Startup\CommonIncludes\data.ahk
 #Include A:\Startup\CommonIncludes\graphics.ahk
 #Include A:\Startup\CommonIncludes\io.ahk
 #Include A:\Startup\CommonIncludes\privateVariables.ahk
