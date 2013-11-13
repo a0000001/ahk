@@ -1,9 +1,13 @@
 ﻿; Startup, auto-execute sections for all scripts.
 
 
-; @Capslock fixing.
+; @Lock fixing.
 	SetCapsLockState, AlwaysOff
-; @End Capslock fixing.
+	if(borgWhichMachine = EPIC_DESKTOP) {
+		SetNumLockState, AlwaysOn
+	}
+	
+; @End Lock fixing.
 
 
 ; @KDE Mover-Sizer.
