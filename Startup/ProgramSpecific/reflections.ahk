@@ -77,6 +77,8 @@
 	F1::
 		Send, {Home}
 		Send, {F9}
+		Sleep, 100
+		Send, t{Enter}
 	return
 	
 	; Allow reverse field navigation.

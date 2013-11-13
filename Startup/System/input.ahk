@@ -10,6 +10,7 @@ $NumLock::
 	Send, ,
 return
 ^NumLock::
++NumLock::
 	Send, {NumLock}
 return
 
