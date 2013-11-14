@@ -149,7 +149,7 @@ updateMods(ByRef mods, new, defaultBit = 1) {
 		mods := Object()
 	} else {
 		; Split new into individual mods.
-		newSplit := specialSplit(new, "|", "")
+		newSplit := specialSplit(new, "|", "\")
 		newCount := newSplit.MaxIndex()
 		Loop, %newCount% {
 			currMod := newSplit[A_Index]

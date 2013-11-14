@@ -83,7 +83,14 @@ setupTrayIcons(v, m)
 	; ; mod := parseModLine("e:(-1)x")
 	; ; mod := parseModLine("m:(-1,-1)x")
 	; mod := parseModLine("m:(0)x")
-	row := "whee	second	third"
+	row := "whee	second	third	4"
+	rowSplit := specialSplit(row, A_Tab)
+	
+	rowSplitLen := rowSplit.MaxIndex()
+	Loop, %rowSplitLen% {
+		MsgBox, % rowSplit[A_Index]
+	}
+return
 	; MsgBox, % doMod(rowBit, mod)
 ; return
 	mods := Object()

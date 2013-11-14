@@ -134,7 +134,7 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 	; MsgBox, % outStr2
 	
 	; Parse those lines into a uniform, one-line-per-item list.
-	list := cleanParseList(lines, "")
+	list := cleanParseList(lines, "\")
 	; listLen := list.MaxIndex()
 	; outStr2 := "`nLines Parsed: `n"
 	; Loop, %listLen% {
@@ -288,6 +288,15 @@ doAction(input) {
 	; Just send the text of the action.
 	} else if(actionType = "PASTE") {
 		SendRaw, %input%
+	
+	; Mainly for debug: pop up a message box with the path.
+	} else if(actionType = "POPUP") {
+		MsgBox, %input%
+	
+	; Testing: parse and display the given file.
+	} else if(actionType = "TEST") {
+		; Run given file with a POPUP action. Yes, this is getting rather meta.
+		Run, genericSelectorGUI.ahk %input% POPUP
 	
 	; Call the action.
 	} else if(actionType = "CALL") {
