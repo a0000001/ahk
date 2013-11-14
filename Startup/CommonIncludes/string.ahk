@@ -6,6 +6,7 @@ global LIST_BIT := 2
 global LIST_START = 3
 global LIST_LEN = 4
 global LIST_TEXT = 5
+global LIST_LABEL = 6
 
 ; Strips the dollar sign/asterisk off of the front of hotkeys if it's there.
 stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
@@ -21,7 +22,7 @@ stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 }
 
 ; Splits a string on given delimeter, but ignores escaped delimeters.
-specialSplit(string, delimeter = A_Tab, escapeChar = "\") {
+specialSplit(string, delimeter, escapeChar = "\") {
 	outArr := Object()
 	escapeNext := false
 	currStr := ""
@@ -38,8 +39,11 @@ specialSplit(string, delimeter = A_Tab, escapeChar = "\") {
 			; Reset this.
 			escapeNext := false
 			
-			; Escaped character becomes what it was previously, sans slash.
-			currStr .= A_LoopField
+			; Special ignore: \x is treated as blank, a placeholder for the start of the string if needed.
+			if(A_LoopField != "x") {
+				; Escaped character becomes what it was previously, sans slash.
+				currStr .= A_LoopField
+			}
 		
 		; The next character is escaped, so we won't add this one in.
 		} else if(A_LoopField = escapeChar) {
@@ -124,7 +128,6 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 			
 			; Apply any active modifications.
 			; MsgBox, Row before: %row% `nMods: %currMods%
-			; currItem := applyMods(row, currMods, escapeChar, defaultBit)
 			currItem := applyMods(row, mods, escapeChar)
 			; MsgBox, % "Row after: " . row[1] . " " . row[2] . " " . row[3]
 			
@@ -137,9 +140,27 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 	return list
 }
 
+; Kill mods with the given label.
+killMods(ByRef mods, label = 0) {
+	; MsgBox, Killing mods with label: %label%
+	
+	modsLen := mods.MaxIndex()
+	i := 1
+	Loop, %modsLen% {
+		if(mods[i, LIST_LABEL] = label) {
+			; MsgBox, % "Removing mod: " mods[i, LIST_MOD]
+			mods.Remove(i)
+			i--
+		}
+		i++
+	}
+}
+
 ; Update the given modifier string given the new one.
 updateMods(ByRef mods, new, escapeChar = "\", defaultBit = 1) {
 	; MsgBox, New Mod: %new%
+	
+	label = 0
 	
 	; Strip off the square brackets.
 	new := SubStr(new, 2, -1)
@@ -148,6 +169,16 @@ updateMods(ByRef mods, new, escapeChar = "\", defaultBit = 1) {
 	if(new = "") {
 		mods := Object()
 	} else {
+		; Check for an remove row label.
+		if(SubStr(new, 1, 1) = "-") {
+			remLabel := SubStr(new, 2)
+			; MsgBox, % "Remove Label: " remLabel
+			killMods(mods, remLabel)
+			label := 0
+			
+			return
+		}
+		
 		; Split new into individual mods.
 		newSplit := specialSplit(new, "|", escapeChar)
 		newCount := newSplit.MaxIndex()
@@ -155,18 +186,24 @@ updateMods(ByRef mods, new, escapeChar = "\", defaultBit = 1) {
 			currMod := newSplit[A_Index]
 			; MsgBox, % "New split: " currMod
 			
-			; Allow backwards stacking - that is, a later mod can go first in mod order.
-			if(SubStr(currMod, 1, 1) = "/") {
-				insertFront(mods, parseModLine(SubStr(currMod, 2), defaultBit))
+			; Check for an add row label.
+			if(A_Index = 1 && SubStr(currMod, 1, 1) = "+") {
+				label := SubStr(currMod, 2)
+				; MsgBox, % "Add Label: " label
 			} else {
-				mods.Insert(parseModLine(currMod, defaultBit))
+				; Allow backwards stacking - that is, a later mod can go first in mod order.
+				if(SubStr(currMod, 1, 1) = "/") {
+					insertFront(mods, parseModLine(SubStr(currMod, 2), label, defaultBit))
+				} else {
+					mods.Insert(parseModLine(currMod, label, defaultBit))
+				}
 			}
 		}
 	}
 }
 
 ; Takes a modifier string and spits out the mod object/array. Assumes no [] around it, and no / at start.
-parseModLine(modLine, defaultBit = 1) {
+parseModLine(modLine, label = 0, defaultBit = 1) {
 	; MsgBox, ModLine: %modLine%
 	
 	mod := Object()
@@ -175,9 +212,11 @@ parseModLine(modLine, defaultBit = 1) {
 	mod[LIST_START] := 1
 	mod[LIST_LEN] := 0
 	mod[LIST_TEXT] := ""
+	mod[LIST_LABEL] := label
 	
-	; First, check to see whether we have an explicit bit. Syntax: starts with {#}
-	if(SubStr(modLine, 1, 1) = "{") {
+	; Next, check to see whether we have an explicit bit. Syntax: starts with {#}
+	firstChar := SubStr(modLine, 1, 1)
+	if(firstChar = "{") {
 		closeCurlyPos := InStr(modLine, "}")
 		mod[LIST_BIT] := SubStr(modLine, 2, closeCurlyPos - 2)
 		; MsgBox, % "Which Bit: " . whichBit
@@ -219,7 +258,7 @@ parseModLine(modLine, defaultBit = 1) {
 		mod[LIST_TEXT] := modLine
 	}
 	
-	; MsgBox, % "Mod: " modLine "`nComma: " commaPos "`nCloseParenPos: " closeParenPos "`nStart: " mod[LIST_START] "`nLength: " mod[LIST_LEN] "`nInsert: " mod[LIST_TEXT]
+	; MsgBox, % "Mod: " modLine "`nComma: " commaPos "`nCloseParenPos: " closeParenPos "`nStart: " mod[LIST_START] "`nLength: " mod[LIST_LEN] "`nInsert: " mod[LIST_TEXT] "`nLabel: " mod[LIST_LABEL]
 	
 	return mod
 }
