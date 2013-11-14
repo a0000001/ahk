@@ -21,7 +21,7 @@ stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 }
 
 ; Splits a string on given delimeter, but ignores escaped delimeters.
-specialSplit(string, delimeter, escapeChar = "\") {
+specialSplit(string, delimeter = A_Tab, escapeChar = "\") {
 	outArr := Object()
 	escapeNext := false
 	currStr := ""
@@ -109,7 +109,7 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 		} else if(firstChar = "[") {
 			; MsgBox, Modifier line: %row%
 			; currMods := updateModifierString(currMods, row)
-			updateMods(mods, row, defaultBit)
+			updateMods(mods, row, escapeChar, defaultBit)
 		
 		; Special row for label/title later on, leave it unmolested.
 		} else if(firstChar = "#") {
@@ -138,7 +138,7 @@ cleanParseList(lines, escapeChar = "\", defaultBit = 1) {
 }
 
 ; Update the given modifier string given the new one.
-updateMods(ByRef mods, new, defaultBit = 1) {
+updateMods(ByRef mods, new, escapeChar = "\", defaultBit = 1) {
 	; MsgBox, New Mod: %new%
 	
 	; Strip off the square brackets.
@@ -149,7 +149,7 @@ updateMods(ByRef mods, new, defaultBit = 1) {
 		mods := Object()
 	} else {
 		; Split new into individual mods.
-		newSplit := specialSplit(new, "|", "\")
+		newSplit := specialSplit(new, "|", escapeChar)
 		newCount := newSplit.MaxIndex()
 		Loop, %newCount% {
 			currMod := newSplit[A_Index]
