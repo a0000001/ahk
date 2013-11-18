@@ -92,15 +92,15 @@
 	
 #If
 
-; Quick TLG Reference Popup.
-^#!t::
-	; Gui, +Left
-	Gui, Font,, Courier New
-	Gui, Add, Text,, %tlgQuickRefText%
-	Gui, Add, Button, Default, OK
-	Gui, Show,, TLG Codes	
-return
+; ; Quick TLG Reference Popup.
+; ^#!t::
+	; ; Gui, +Left
+	; Gui, Font,, Courier New
+	; Gui, Add, Text,, %tlgQuickRefText%
+	; Gui, Add, Button, Default, OK
+	; Gui, Show,, TLG Codes	
+; return
 
-ButtonOK:
-	Gui, Hide
-return
+; ButtonOK:
+	; Gui, Hide
+; return
