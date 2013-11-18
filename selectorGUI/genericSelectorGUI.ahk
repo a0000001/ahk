@@ -13,8 +13,10 @@ global NAME := 1
 global ABBREV := 2
 global PATH := 3
 
-global HISTORY_CHAR := "."
-global ARBITRARY_CHAR := "+"
+; global HISTORY_CHAR := "."
+global HISTORY_CHAR := "+"
+; global ARBITRARY_CHAR := "+"
+global ARBITRARY_CHAR := "."
 
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
