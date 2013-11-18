@@ -153,6 +153,7 @@ return
 :*:pos'd::positioned
 :*:imp't::implement
 :*:imp'n::implementation
+:*:add'l::additional
 
 ; Healthcare-specific expansions.
 :*:Med'c::Medicare
