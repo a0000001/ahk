@@ -13,10 +13,9 @@ global NAME := 1
 global ABBREV := 2
 global PATH := 3
 
-; global HISTORY_CHAR := "."
 global HISTORY_CHAR := "+"
-; global ARBITRARY_CHAR := "+"
 global ARBITRARY_CHAR := "."
+global HIDDEN_CHAR := "*"
 
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
@@ -85,7 +84,7 @@ action := parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices)
 
 ; ----- Store what we're about to do, then do it. ----- ;
 ; Don't save star entries or the previous entry (input of HISTORY_CHAR).
-if(SubStr(userIn, 1, 1) != "*" && userIn != HISTORY_CHAR) {
+if(SubStr(userIn, 1, 1) != HIDDEN_CHAR && userIn != HISTORY_CHAR) {
 	; If the histoy file already has 10 entries, trim off the oldest one.
 	if(historyChoices.MaxIndex() = 10) {
 		FileDelete, %historyFileName%
@@ -183,7 +182,7 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 			}
 			
 		; Invisible, but viable, choice.
-		} else if(SubStr(currItem[NAME], 1, 1) = "*") {
+		} else if(SubStr(currItem[NAME], 1, 1) = HIDDEN_CHAR) {
 			; MsgBox, It's a star row!
 			hiddenChoices.Insert(currItem)
 		
@@ -219,7 +218,7 @@ searchBoth(ByRef input, table, hiddenTable) {
 	
 	; Try the invisible choices.
 	out := searchTable(input, hiddenTable)
-	input := "*" . input ; Mark that this is an invisible choice.
+	input := HIDDEN_CHAR . input ; Mark that this is an invisible choice.
 	return out
 }
 
