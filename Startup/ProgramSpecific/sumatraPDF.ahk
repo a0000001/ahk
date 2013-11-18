@@ -55,4 +55,8 @@
 
 	; Kill unconventional hotkey to quit.
 	^q::Return
+	
+	; Find forward/back.
+	^g::F3
+	^+g::+F3
 #IfWinActive
