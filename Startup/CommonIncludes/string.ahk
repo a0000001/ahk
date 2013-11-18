@@ -8,6 +8,13 @@ global LIST_LEN = 4
 global LIST_TEXT = 5
 global LIST_LABEL = 6
 
+global LIST_ESC_CHAR := 1
+global LIST_PASS_ROW_CHARS := 2
+global LIST_COMMENT_CHAR := 3
+global LIST_PRE_CHAR := 4
+global LIST_ADD_LABEL_CHAR := 5
+global LIST_REMOVE_LABEL_CHAR := 6
+
 ; Strips the dollar sign/asterisk off of the front of hotkeys if it's there.
 stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 	if(!leaveDollarSign && InStr(hotkeyString, "$")) {

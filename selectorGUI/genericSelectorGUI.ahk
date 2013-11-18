@@ -134,6 +134,15 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 	; MsgBox, % outStr2
 	
 	; Parse those lines into a uniform, one-line-per-item list.
+	; chars := Object()
+	; chars[LIST_ESC_CHAR] := "\"
+	; chars[LIST_PASS_ROW_CHARS] := "#"
+	; chars[LIST_COMMENT_CHAR] := ";"
+	; chars[LIST_PRE_CHAR] := ","
+	; chars[LIST_ADD_LABEL_CHAR] := "+"
+	; chars[LIST_REMOVE_LABEL_CHAR] := "-"
+	; list := cleanParseList(lines, ["\", "#", ";", ",", "+", "-"])
+	; list := cleanParseList(lines, chars)
 	list := cleanParseList(lines)
 	; listLen := list.MaxIndex()
 	; outStr2 := "`nLines Parsed: `n"
