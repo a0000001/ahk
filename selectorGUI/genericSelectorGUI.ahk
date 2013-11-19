@@ -299,6 +299,11 @@ doAction(input) {
 	} else if(actionType = "PASTE") {
 		SendRaw, %input%
 	
+	; Send the text of the action and press enter.
+	} else if(actionType = "PASTE_SUBMIT") {
+		SendRaw, %input%
+		Send, {Enter}
+	
 	; Mainly for debug: pop up a message box with the path.
 	} else if(actionType = "POPUP") {
 		MsgBox, %input%
