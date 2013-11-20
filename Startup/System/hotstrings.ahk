@@ -29,6 +29,9 @@ return
 :*:uname::
 	Send, % userName
 return
+:*:.unixpass::
+	Send, % epicDefaultUnixPass
+return
 
 ; ::sig::
 	; Send, %fullName%`n%wfuEmailAddress%`n%phoneNumberFormatted%`n
