@@ -16,24 +16,24 @@
 
 	; Duplicate Line.
 	^d::
-		ClipSave := Clipboard
 		Send, {End}{Shift Down}{Home}{Shift Up}
-		Send, ^c
-		Sleep, 100
+		; Send, ^c
+		; Sleep, 100
+		line := getSelectedText()
+		
 		Send, {End}{Enter}
-		SendRaw, %clipboard%
+		SendRaw, %line%
 		Send, {Up}{End}
-		Clipboard := ClipSave
-		ClipSave := ""
 	return
 		
 	; Toggle comment. 
 	^+c::
 		Send, {End}{Shift Down}{Home}{Shift Up}
-		Send, ^c
-		Sleep, 100
-		line := clipboard
+		; Send, ^c
+		; Sleep, 100
+		; line := clipboard
 		; MsgBox, % line
+		line := getSelectedText()
 		
 		; Determine if the line is currenly commented.
 		commented = false
