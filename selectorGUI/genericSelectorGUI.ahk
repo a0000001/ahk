@@ -16,6 +16,7 @@ global PATH := 3
 global HISTORY_CHAR := "+"
 global ARBITRARY_CHAR := "."
 global HIDDEN_CHAR := "*"
+global LABEL_CHAR := "#"
 
 height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
@@ -79,11 +80,10 @@ if(silentChoice != "") {
 
 
 ; ----- Parse input to meaningful command. ----- ;
-action := parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices)
-
+action := parseChoice(userIn, choices, hiddenChoices, historyChoices)
 
 ; ----- Store what we're about to do, then do it. ----- ;
-; Don't save star entries or the previous entry (input of HISTORY_CHAR).
+; Don't save hidden entries or the previous entry (input of HISTORY_CHAR).
 if(SubStr(userIn, 1, 1) != HIDDEN_CHAR && userIn != HISTORY_CHAR) {
 	; If the histoy file already has 10 entries, trim off the oldest one.
 	if(historyChoices.MaxIndex() = 10) {
@@ -163,8 +163,8 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 			title := currItem[NAME]
 		
 		; Special: add a title and/or blank row in the list display.
-		} else if(SubStr(currItem[NAME], 1, 1) = "#") {
-			; MsgBox, % "#" currItem
+		} else if(SubStr(currItem[NAME], 1, 1) = LABEL_CHAR) {
+			; MsgBox, % LABEL_CHAR currItem
 			
 			; If blank, extra newline.
 			if(StrLen(currItem[NAME]) < 3) {
