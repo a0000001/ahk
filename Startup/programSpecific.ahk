@@ -20,6 +20,7 @@
 #Include ProgramSpecific\pidgin.ahk
 #Include ProgramSpecific\powerpoint.ahk
 ; #Include ProgramSpecific\processExplorer.ahk
+#Include ProgramSpecific\project64.ahk
 #Include ProgramSpecific\reflections.ahk
 #Include ProgramSpecific\remoteDesktop.ahk
 #Include ProgramSpecific\sites.ahk
