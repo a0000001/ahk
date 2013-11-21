@@ -58,6 +58,11 @@
 		Send, {Enter}
 	return
 	
+	$!e::
+		SendRaw, d ^EPIC
+		Send, {Enter}
+	return
+	
 	^a::
 		SendRaw, d ^`%ZeADMIN
 		Send, {Enter}
