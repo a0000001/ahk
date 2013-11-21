@@ -7,12 +7,19 @@ return
 
 ; Numpad comma.
 $NumLock::
-	Send, ,
+	if(GetKeyState("NumLock", "T")) {
+		Send, ,
+	} else {
+		SetNumLockState, On
+	}
 return
-^NumLock::
-+NumLock::
-	Send, {NumLock}
-return
+
+; Reflections/text don't play nice with this.
+#IfWinNotActive, ahk_class r2Window	
+	+NumLock::
+		SetNumLockState, Off
+	return
+#IfWinNotActive
 
 #If borgWhichMachine = EPIC_DESKTOP
 	; For ergonomic keyboard.

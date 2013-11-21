@@ -3,9 +3,9 @@
 
 ; @Lock fixing.
 	SetCapsLockState, AlwaysOff
-	if(borgWhichMachine = EPIC_DESKTOP) {
-		SetNumLockState, AlwaysOn
-	}
+	; if(borgWhichMachine = EPIC_DESKTOP) {
+		; SetNumLockState, AlwaysOn
+	; }
 	
 ; @End Lock fixing.
 

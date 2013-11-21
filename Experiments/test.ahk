@@ -42,71 +42,77 @@ setupTrayIcons(v, m)
 ; global LIST_TEXT = 5
 
 ^a::
-	; modStripped := "b:(3)asdf"
-	; mods := parseModLine(modStripped)
-	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	SetNumLockState, On
+return
+
+^b::
+	SetNumLockState, Off
+return
+	; ; modStripped := "b:(3)asdf"
+	; ; mods := parseModLine(modStripped)
+	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
 	
-	; modStripped := "{2}b:(3)asdf"
-	; mods := parseModLine(modStripped)
-	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	; ; modStripped := "{2}b:(3)asdf"
+	; ; mods := parseModLine(modStripped)
+	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
 	
-	; modStripped := "{2}e:(3)asdf"
-	; mods := parseModLine(modStripped)
-	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	; ; modStripped := "{2}e:(3)asdf"
+	; ; mods := parseModLine(modStripped)
+	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
 	
-	; modStripped := "{3}m:(3)asdf"
-	; mods := parseModLine(modStripped)
-	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	; ; modStripped := "{3}m:(3)asdf"
+	; ; mods := parseModLine(modStripped)
+	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
 	
-	; modStripped := "{3}m:(3, 1)asdf"
-	; mods := parseModLine(modStripped)
-	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
+	; ; modStripped := "{3}m:(3, 1)asdf"
+	; ; mods := parseModLine(modStripped)
+	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
 	
-	; modStripped := "{3}m:(-3, -1)asdf"
-	; mods := parseModLine(modStripped)
-	; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
-; return
-	
-	; start := 4
-	; ; start := -4
-	; len := 3
-	; ; len := -3
-	; ; len := 0
-	
-	; ; MsgBox, % SubStr("abcdefghij", 1, start + len) . "zzzzz" . SubStr("abcdefghij", (start + 1) + len)
+	; ; modStripped := "{3}m:(-3, -1)asdf"
+	; ; mods := parseModLine(modStripped)
+	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
 ; ; return
 	
-	; ; MsgBox, % SubStr("asdf", 0)
+	; ; start := 4
+	; ; ; start := -4
+	; ; len := 3
+	; ; ; len := -3
+	; ; ; len := 0
 	
-	; ; mod := parseModLine("b:(1)x")
-	; ; mod := parseModLine("m:(1,1)x")
-	; ; mod := parseModLine("e:(-1)x")
-	; ; mod := parseModLine("m:(-1,-1)x")
-	; mod := parseModLine("m:(0)x")
-	row := "whee	second	third	4"
-	rowSplit := specialSplit(row, A_Tab)
+	; ; ; MsgBox, % SubStr("abcdefghij", 1, start + len) . "zzzzz" . SubStr("abcdefghij", (start + 1) + len)
+; ; ; return
 	
-	rowSplitLen := rowSplit.MaxIndex()
-	Loop, %rowSplitLen% {
-		MsgBox, % rowSplit[A_Index]
-	}
-return
-	; MsgBox, % doMod(rowBit, mod)
+	; ; ; MsgBox, % SubStr("asdf", 0)
+	
+	; ; ; mod := parseModLine("b:(1)x")
+	; ; ; mod := parseModLine("m:(1,1)x")
+	; ; ; mod := parseModLine("e:(-1)x")
+	; ; ; mod := parseModLine("m:(-1,-1)x")
+	; ; mod := parseModLine("m:(0)x")
+	; row := "whee	second	third	4"
+	; rowSplit := specialSplit(row, A_Tab)
+	
+	; rowSplitLen := rowSplit.MaxIndex()
+	; Loop, %rowSplitLen% {
+		; MsgBox, % rowSplit[A_Index]
+	; }
 ; return
-	mods := Object()
-	; updateMods(mods, SubStr("[b:test]", 2, -1))
-	; updateMods(mods, SubStr("[/e:x]", 2, -1))
-	; updateMods(mods, SubStr("[/{2}m:(-3, -1)asdf]", 2, -1))
-	updateMods(mods, "[{3}b:C:\Program Files (x86)\Epic\v7.9\Shared Files\EpicD79.exe EDAppServers79.EpicApp]")
+	; ; MsgBox, % doMod(rowBit, mod)
+; ; return
+	; mods := Object()
+	; ; updateMods(mods, SubStr("[b:test]", 2, -1))
+	; ; updateMods(mods, SubStr("[/e:x]", 2, -1))
+	; ; updateMods(mods, SubStr("[/{2}m:(-3, -1)asdf]", 2, -1))
+	; updateMods(mods, "[{3}b:C:\Program Files (x86)\Epic\v7.9\Shared Files\EpicD79.exe EDAppServers79.EpicApp]")
 	
-	Loop, 1 {
-		MsgBox, % "Mod: " mods[A_Index, LIST_MOD] "`nBit: " mods[A_Index, LIST_BIT] "`nStart: " mods[A_Index, LIST_START] "`nLen: " mods[A_Index, LIST_LEN] "`nText: " mods[A_Index, LIST_TEXT]
-	}
+	; Loop, 1 {
+		; MsgBox, % "Mod: " mods[A_Index, LIST_MOD] "`nBit: " mods[A_Index, LIST_BIT] "`nStart: " mods[A_Index, LIST_START] "`nLen: " mods[A_Index, LIST_LEN] "`nText: " mods[A_Index, LIST_TEXT]
+	; }
 	
+	; ; doneRow := applyMods(row, mods)
 	; doneRow := applyMods(row, mods)
-	doneRow := applyMods(row, mods)
-	MsgBox, % doneRow[1] "`n" doneRow[2] "`n" doneRow[3]
-return
+	; MsgBox, % doneRow[1] "`n" doneRow[2] "`n" doneRow[3]
+; return
 
 	; ; MsgBox, % SubStr("[asdf]", 2, -1)
 	; test := Object()
@@ -144,30 +150,30 @@ return
 	; MsgBox, Selected References: `n`n%textOut%
 ; return
 
-^b::
-	; Get user input.
-	; FileSelectFile, fileName
-	fileName := "J:\vbHyperspaceRefsModded.ini"
+; ^b::
+	; ; Get user input.
+	; ; FileSelectFile, fileName
+	; fileName := "J:\vbHyperspaceRefsModded.ini"
 	
-	; Read in the list of names.
-	referenceLines := fileLinesToArray(fileName)
+	; ; Read in the list of names.
+	; referenceLines := fileLinesToArray(fileName)
 	
-	; Parse the list into nice, uniform reference lines.
-	references := cleanParseList(referenceLines)
+	; ; Parse the list into nice, uniform reference lines.
+	; references := cleanParseList(referenceLines)
 	
-	; MsgBox, % references[1]
-	; MsgBox, % references[2]
+	; ; MsgBox, % references[1]
+	; ; MsgBox, % references[2]
 	
-	textOut := ""
-	refsLen := references.MaxIndex()
-	Loop, %refsLen% {
-		textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
-		; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
-		; findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
-	}
+	; textOut := ""
+	; refsLen := references.MaxIndex()
+	; Loop, %refsLen% {
+		; textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
+		; ; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
+		; ; findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
+	; }
 	
-	MsgBox, Selected References: `n`n%textOut%
-return
+	; MsgBox, Selected References: `n`n%textOut%
+; return
 
 ; ^a::
 	; ; Get user input.
