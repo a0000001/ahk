@@ -1,0 +1,15 @@
+﻿; === Various functions and libraries. === ;
+
+borgPathINI := "<ROOT>\Startup\borg.ini"
+
+#Include <ROOT>\Startup\CommonIncludes\AHKHID.ahk
+#Include <ROOT>\Startup\CommonIncludes\borgReadINI.ahk
+#Include <ROOT>\Startup\CommonIncludes\commonVariables.ahk
+#Include <ROOT>\Startup\CommonIncludes\data.ahk
+#Include <ROOT>\Startup\CommonIncludes\graphics.ahk
+#Include <ROOT>\Startup\CommonIncludes\io.ahk
+#Include <ROOT>\Startup\CommonIncludes\privateVariables.ahk
+#Include <ROOT>\Startup\CommonIncludes\runAsAdmin.ahk
+#Include <ROOT>\Startup\CommonIncludes\string.ahk
+#Include <ROOT>\Startup\CommonIncludes\tray.ahk
+#Include <ROOT>\Startup\CommonIncludes\window.ahk
