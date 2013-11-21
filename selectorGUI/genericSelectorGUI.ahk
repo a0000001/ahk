@@ -244,8 +244,8 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 	arbCharPos := InStr(userIn, ARBITRARY_CHAR)
 	; MsgBox, % histCharPos
 
-	; HISTORY_CHAR gives us the last executed command.
-	if(userIn = HISTORY_CHAR) {
+	; HISTORY_CHAR gives us the last executed command. ARBITRARY_CHAR on its own does the same.
+	if(userIn = HISTORY_CHAR || userIn = ARBITRARY_CHAR) {
 		if(historyChoices.MaxIndex()) {
 			action := parseChoice(historyChoices[ historyChoices.MaxIndex() ], choices, hiddenChoices)
 		} else {
