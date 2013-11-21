@@ -73,6 +73,11 @@
 		Send, {Enter}
 	return
 	
+	^h::
+		SendRaw, d ^HB
+		Send, {Enter}
+	return
+	
 	; Fast Forward.
 	F1::
 		Send, {Home}
