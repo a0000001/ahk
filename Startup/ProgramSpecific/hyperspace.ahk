@@ -6,7 +6,8 @@
 	
 	; Login hotkey.
 	^+t::		
-		Send, %epicID%{Tab}%epicUnixPass%{Enter}
+		Send, %epicID%{Tab}
+		Send, %epicHyperspacePass%{Enter}
 		Sleep, 250
 		if(hyperspaceNotLoadedYet()) {
 			Send, {Enter}
