@@ -135,8 +135,6 @@ Gui, Add, Text, x%guiMargin% y10 w%tmpWidth% h50 vTimerText, 00:00:00
 
 ; Show it. (and hide it)
 Gui, Show, W%guiWidth% H75 X%showX% Y%showY%
-; showHideTimer()
-; SetTimer, showHideLabel, -1000
 
 ; Activate previous window.
 WinActivate %prevWin%
@@ -276,9 +274,15 @@ ExitApp
 
 ; ------------------------------------------------------------------------------------------ ;
 
-
+; Show time left hotkeys.
 ~browser_back::
 ~browser_forward::
+	showHideTimer()
+return
+
+; Pause/resume hotkey.
+^browser_forward::
+	paused := !paused
 	showHideTimer()
 return
 
@@ -337,11 +341,6 @@ showTimer() {
    WinSet, Transparent, %transShown%, ahk_id %guiID%
    ; shown = 1
 }
-
-^browser_forward::
-	paused := !paused
-	showHideTimer()
-return
 
 
 ;Shift+Alt+X = Exit + warning, in case closing other scripts and this one unintentionally.
