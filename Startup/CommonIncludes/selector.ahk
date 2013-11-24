@@ -187,7 +187,26 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 		
 		; Otherwise, it's a visible, viable choice!
 		} else {
-			choices.Insert(currItem)
+			; Allow piped-together entries, but only show the first one.
+			if(inStr(currItem[SELECTOR_ABBREV], "|")) {
+				; MsgBox, % "pipe: " currItem[SELECTOR_ABBREV]
+				splitAbbrev := specialSplit(currItem[SELECTOR_ABBREV], "|")
+				splitAbbrevLen := splitAbbrev.MaxIndex()
+				Loop, %splitAbbrevLen% {
+					tempItem := Object()
+					tempItem[SELECTOR_NAME] := currItem[SELECTOR_NAME]
+					tempItem[SELECTOR_ABBREV] := splitAbbrev[A_Index]
+					tempItem[SELECTOR_PATH] := currItem[SELECTOR_PATH]
+					
+					if(A_Index = 1) {
+						choices.Insert(tempItem)
+					} else {
+						hiddenChoices.Insert(tempItem)
+					}
+				}
+			} else {
+				choices.Insert(currItem)
+			}
 		}
 	}
 	

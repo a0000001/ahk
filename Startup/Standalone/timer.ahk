@@ -99,13 +99,13 @@ if(cPos > -1 || pPos > -1 || aPos > -1){
 	StringLeft, hs, commandTime, hPos
 	timeLeft += hs * 60 * 60
 	StringTrimLeft, commandTime, commandTime, hPos + 1
-
+	
 	; Minutes.
 	StringGetPos, mPos, commandTime, m
 	StringLeft, ms, commandTime, mPos
 	timeLeft += ms * 60
 	StringTrimLeft, commandTime, commandTime, mPos + 1
-
+	
 	; Seconds.
 	StringGetPos, sPos, commandTime, s
 	StringLeft, ss, commandTime, sPos
