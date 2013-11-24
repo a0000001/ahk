@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; Prompt the user for which computer this is.
 ;;; Call guiSelector as a function here, get it to return value as action?
 ;;; INI for computer list in this folder, then.
-whichMachine := "EPIC_DESKTOP"
+whichMachine := "THINKPAD"
 
 ;; FileRead this in instead of hard-coding?
 ; Generate ..\borg.ini.
@@ -31,7 +31,7 @@ rootPath := ""
 
 
 ; Unzip all zipped files using .bat file.
-Run, % rootPath "\selectorGUI\zipAll.bat"
+Run, % rootPath "\selectorGUI\unZipAll.bat"
 
 
 ExitApp
