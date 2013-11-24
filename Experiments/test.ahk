@@ -42,11 +42,12 @@ setupTrayIcons(v, m)
 ; global LIST_TEXT = 5
 
 ^a::
-	SetNumLockState, On
+	; SetNumLockState, On
+	MsgBox, % Substr("asdf", -1, 1)
 return
 
 ^b::
-	SetNumLockState, Off
+	; SetNumLockState, Off
 return
 	; ; modStripped := "b:(3)asdf"
 	; ; mods := parseModLine(modStripped)
