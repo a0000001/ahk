@@ -1,21 +1,20 @@
 ; (Semi-) Generic standalone script which launches one of many given choices based on their number or shortcut.
-#Include HTTPRequest.ahk
-#Include ..\Startup\commonIncludesStandalone.ahk
+; #Include ..\Startup\commonIncludesStandalone.ahk
 
 ; Constants and such.
-global NAME := 1
-global ABBREV := 2
-global PATH := 3
+global SELECTOR_NAME := 1
+global SELECTOR_ABBREV := 2
+global SELECTOR_PATH := 3
 
-global HISTORY_CHAR := "+"
-global ARBITRARY_CHAR := "."
-global HIDDEN_CHAR := "*"
-global LABEL_CHAR := "#"
+global SELECTOR_HISTORY_CHAR := "+"
+global SELECTOR_ARBITRARY_CHAR := "."
+global SELECTOR_HIDDEN_CHAR := "*"
+global SELECTOR_LABEL_CHAR := "#"
 
 global startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
 ; Main function. Sets up and displays the selector gui, processes the choice, etc.
-launchSelector(filePath, actionType, silentChoice) {
+launchSelector(filePath, actionType, silentChoice = "") {
 	; Objects to hold choices and lines to print.
 	choices := Object() ; Visible choices the user can pick from.
 	hiddenChoices := Object() ; Invisible choices the user can pick from.
@@ -26,9 +25,13 @@ launchSelector(filePath, actionType, silentChoice) {
 	; filePath = %1%
 	; actionType = %2%
 	; silentChoice = %3%
+	
+	; MsgBox, % filePath "`n" actionType "`n" silentChoice
+	
 	fileName := SubStr(filePath, 1, -4)
 	iconFileName := fileName ".ico"
 	historyFileName := fileName "History.ini"
+	
 	; MsgBox, % historyFileName
 	; if(silentChoice != "") {
 		; MsgBox, % silentChoice
@@ -46,9 +49,9 @@ launchSelector(filePath, actionType, silentChoice) {
 
 	; MsgBox, Title: %title%
 	; MsgBox, % "c" choices.MaxIndex() " h" hiddenChoices.MaxIndex() " n" nonChoices.MaxIndex()
-	; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
-	; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
-	; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
+	; MsgBox, % choices[1, SELECTOR_NAME] " " hiddenChoices[1, SELECTOR_NAME] " " nonChoices[1]
+	; MsgBox, % choices[2, SELECTOR_NAME] " " hiddenChoices[2, SELECTOR_NAME] " " nonChoices[2]
+	; MsgBox, % choices[3, SELECTOR_NAME] " " hiddenChoices[3, SELECTOR_NAME] " " nonChoices[3]
 	; MsgBox, % nonChoices[1]
 	; MsgBox, % nonChoices[10]
 
@@ -67,7 +70,7 @@ launchSelector(filePath, actionType, silentChoice) {
 		height := startHeight + getTextHeight(displayText)
 		InputBox, userIn, %title%, %displayText%, , 400, %height%
 		if(ErrorLevel || userIn = "") {
-			ExitApp
+			return
 		}
 	}
 
@@ -79,8 +82,8 @@ launchSelector(filePath, actionType, silentChoice) {
 	action := parseChoice(userIn, choices, hiddenChoices, historyChoices)
 
 	; ----- Store what we're about to do, then do it. ----- ;
-	; Don't save hidden entries or the previous entry (input of HISTORY_CHAR).
-	if(SubStr(userIn, 1, 1) != HIDDEN_CHAR && userIn != HISTORY_CHAR) {
+	; Don't save hidden entries or the previous entry (input of SELECTOR_HISTORY_CHAR).
+	if(SubStr(userIn, 1, 1) != SELECTOR_HIDDEN_CHAR && userIn != SELECTOR_HISTORY_CHAR) {
 		; If the histoy file already has 10 entries, trim off the oldest one.
 		if(historyChoices.MaxIndex() = 10) {
 			FileDelete, %historyFileName%
@@ -94,8 +97,7 @@ launchSelector(filePath, actionType, silentChoice) {
 	}
 
 	; So now we have something valid - do it and die.
-	doAction(action)
-	return
+	return doAction(action, actionType)
 }
 
 ; Create text to display in popup using data structures from the file.
@@ -114,7 +116,7 @@ generateDisplayText(title, choices, nonChoices) {
 			outText .= nonChoices[A_Index]"`n"
 		}
 		
-		outText .= A_Index ") " choices[A_Index, ABBREV] ":`t" choices[A_Index, NAME] "`n"
+		outText .= A_Index ") " choices[A_Index, SELECTOR_ABBREV] ":`t" choices[A_Index, SELECTOR_NAME] "`n"
 	}
 	
 	return outText
@@ -137,15 +139,15 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 	; chars[LIST_PASS_ROW_CHARS] := "#"
 	; chars[LIST_COMMENT_CHAR] := ";"
 	; chars[LIST_PRE_CHAR] := ","
-	; chars[LIST_ADD_LABEL_CHAR] := "+"
-	; chars[LIST_REMOVE_LABEL_CHAR] := "-"
+	; chars[LIST_ADD_SELECTOR_LABEL_CHAR] := "+"
+	; chars[LIST_REMOVE_SELECTOR_LABEL_CHAR] := "-"
 	; list := cleanParseList(lines, ["\", "#", ";", ",", "+", "-"])
 	; list := cleanParseList(lines, chars)
 	list := cleanParseList(lines)
 	; listLen := list.MaxIndex()
 	; outStr2 := "`nLines Parsed: `n"
 	; Loop, %listLen% {
-		; outStr2 .= list[A_Index, NAME] . A_Tab . list[A_Index, ABBREV] . A_Tab . list[A_Index, PATH] . "`n"
+		; outStr2 .= list[A_Index, SELECTOR_NAME] . A_Tab . list[A_Index, SELECTOR_ABBREV] . A_Tab . list[A_Index, SELECTOR_PATH] . "`n"
 	; }	
 	; MsgBox, % outStr2
 	
@@ -153,18 +155,18 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 	listLen := list.MaxIndex()
 	Loop, %listLen% {
 		currItem := list[A_Index]
-		; MsgBox, % currItem[NAME]
+		; MsgBox, % currItem[SELECTOR_NAME]
 		
 		; Title.
 		if(A_Index = 1) {
-			title := currItem[NAME]
+			title := currItem[SELECTOR_NAME]
 		
 		; Special: add a title and/or blank row in the list display.
-		} else if(SubStr(currItem[NAME], 1, 1) = LABEL_CHAR) {
-			; MsgBox, % LABEL_CHAR currItem
+		} else if(SubStr(currItem[SELECTOR_NAME], 1, 1) = SELECTOR_LABEL_CHAR) {
+			; MsgBox, % SELECTOR_LABEL_CHAR currItem
 			
 			; If blank, extra newline.
-			if(StrLen(currItem[NAME]) < 3) {
+			if(StrLen(currItem[SELECTOR_NAME]) < 3) {
 				nonChoices.Insert(" ")
 			
 			; If title, #{Space}Title.
@@ -174,12 +176,12 @@ loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices) {
 					idx := choices.MaxIndex()
 				}
 				
-				nonChoices.Insert(idx + 1, SubStr(currItem[NAME], 3))
+				nonChoices.Insert(idx + 1, SubStr(currItem[SELECTOR_NAME], 3))
 				; MsgBox, % "Just added: " . nonChoices[nonChoices.MaxIndex()] . " at index: " . idx+1
 			}
 			
 		; Invisible, but viable, choice.
-		} else if(SubStr(currItem[NAME], 1, 1) = HIDDEN_CHAR) {
+		} else if(SubStr(currItem[SELECTOR_NAME], 1, 1) = SELECTOR_HIDDEN_CHAR) {
 			; MsgBox, It's a star row!
 			hiddenChoices.Insert(currItem)
 		
@@ -215,20 +217,20 @@ searchBoth(ByRef input, table, hiddenTable) {
 	
 	; Try the invisible choices.
 	out := searchTable(input, hiddenTable)
-	input := HIDDEN_CHAR . input ; Mark that this is an invisible choice.
+	input := SELECTOR_HIDDEN_CHAR . input ; Mark that this is an invisible choice.
 	return out
 }
 
 ; Function to search our generated table for a given index/shortcut.
 searchTable(ByRef input, table) {
-	; MsgBox, % input . ", " . table[1, NAME] . " " . table[1, PATH]
+	; MsgBox, % input . ", " . table[1, SELECTOR_NAME] . " " . table[1, SELECTOR_PATH]
 	
 	tableLen := table.MaxIndex()
 	Loop, %tableLen% {
-		if(input = A_Index || input = table[A_Index, ABBREV] || input = table[A_Index, NAME]) {
+		if(input = A_Index || input = table[A_Index, SELECTOR_ABBREV] || input = table[A_Index, SELECTOR_NAME]) {
 			; MsgBox, Found: %input% at index: %A_Index%
-			input := table[A_Index, ABBREV]
-			return table[A_Index, PATH]
+			input := table[A_Index, SELECTOR_ABBREV]
+			return table[A_Index, SELECTOR_PATH]
 		}
 	}
 	
@@ -237,12 +239,12 @@ searchTable(ByRef input, table) {
 
 ; Function to turn the input into something useful.
 parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
-	histCharPos := InStr(userIn, HISTORY_CHAR)
-	arbCharPos := InStr(userIn, ARBITRARY_CHAR)
+	histCharPos := InStr(userIn, SELECTOR_HISTORY_CHAR)
+	arbCharPos := InStr(userIn, SELECTOR_ARBITRARY_CHAR)
 	; MsgBox, % histCharPos
 
-	; HISTORY_CHAR gives us the last executed command. ARBITRARY_CHAR on its own does the same.
-	if(userIn = HISTORY_CHAR || userIn = ARBITRARY_CHAR) {
+	; SELECTOR_HISTORY_CHAR gives us the last executed command. SELECTOR_ARBITRARY_CHAR on its own does the same.
+	if(userIn = SELECTOR_HISTORY_CHAR || userIn = SELECTOR_ARBITRARY_CHAR) {
 		if(historyChoices.MaxIndex()) {
 			action := parseChoice(historyChoices[ historyChoices.MaxIndex() ], choices, hiddenChoices)
 		} else {
@@ -256,7 +258,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 
 	; Allow concatentation of arbitrary addition with short+yada or #+yada.
 	} else if(arbCharPos > 1) {
-		StringSplit, splitBits, userIn, %ARBITRARY_CHAR%
+		StringSplit, splitBits, userIn, %SELECTOR_ARBITRARY_CHAR%
 		; MsgBox, % splitBits1 . "	" . splitBits2
 		action := searchBoth(splitBits1, choices, hiddenChoices)
 		if(action = "") {
@@ -264,7 +266,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 			ExitApp
 		}
 		action .= splitBits2
-		userIn := splitBits1 . ARBITRARY_CHAR . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
+		userIn := splitBits1 . SELECTOR_ARBITRARY_CHAR . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
 		
 	; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 	} else {
@@ -283,9 +285,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 }
 
 ; Function to do what it is we want done, then exit.
-doAction(input) {
-	global actionType
-	
+doAction(input, actionType) {
 	; MsgBox, % input "`n" actionType
 	
 	; Run the action.
@@ -304,6 +304,10 @@ doAction(input) {
 	; Mainly for debug: pop up a message box with the path.
 	} else if(actionType = "POPUP") {
 		MsgBox, %input%
+	
+	; For functional use: return what we've decided.
+	} else if(actionType = "RETURN") {
+		return input
 	
 	; Testing: parse and display the given file.
 	} else if(actionType = "TEST") {

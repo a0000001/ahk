@@ -1,4 +1,2 @@
 [Main]
-MachineName=THINKPAD
-; MachineName=EPIC_DESKTOP
-
+MachineName=<WHICHMACHINE>

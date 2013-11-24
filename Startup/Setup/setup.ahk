@@ -4,34 +4,70 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force  ; Ensures that if this script is running, running it again replaces the first instance.
 ; #NoTrayIcon  ; Uncomment to hide the tray icon.
 
+#Include ..\CommonIncludes\io.ahk
+#Include ..\CommonIncludes\data.ahk
+#Include ..\CommonIncludes\HTTPRequest.ahk
+#Include ..\CommonIncludes\string.ahk
+
+#Include ..\CommonIncludes\selector.ahk
+
+
+iniPath := "..\borg.ini"
+iniSetupPath := "..\CommonIncludes\SelectorFiles\setup.ini"
+commonPath := "..\commonIncludesStandalone.ahk"
+zipPath := "..\CommonIncludes\SelectorFiles\zipAll.bat"
+unZipPath := "..\CommonIncludes\SelectorFiles\unZipAll.bat"
+rootTag := "<ROOT>"
+machineTag := "<WHICHMACHINE>"
+
+
+; Get current absolute path use to get ahk root folder.
+StringTrimRight, rootPath, A_ScriptDir, 14 ; Length of path back to root for this particular file: \Startup\Setup.
+; MsgBox, % rootPath
+
+
 ; Prompt the user for which computer this is.
-;;; Call guiSelector as a function here, get it to return value as action?
-;;; INI for computer list in this folder, then.
-whichMachine := "THINKPAD"
-
-;; FileRead this in instead of hard-coding?
-; Generate ..\borg.ini.
-borgINI = 
-(
-[Main]
-MachineName=
-)
-borgINI .= whichMachine
-; MsgBox, z%borgINI%z
-
-; Write borg.ini.
-FileDelete, ..\borg.ini
-FileAppend, %borgINI%, ..\borg.ini
+whichMachine := launchSelector(iniSetupPath, "RETURN")
+if(whichMachine = "") {
+	MsgBox, No machine given, exiting setup...
+	ExitApp
+}
+; MsgBox, % whichMachine
 
 
-; Using current absolute path, generate standalone common includes.
-rootPath := ""
+; Generate borg.ini from user input.
+FileRead, borgINI, borg.ini.master
+; MsgBox, % borgINI
+StringReplace, borgINI, borgINI, %machineTag%, %whichMachine%, A
+; MsgBox, % borgINI
+FileDelete, %iniPath%
+FileAppend, %borgINI%, %iniPath%
 
 
+; Generate standalone standard includes, since it needs absolute paths.
+FileRead, commonIncludesStandlone, commonIncludesStandalone.ahk.master
+; MsgBox, % commonIncludesStandlone
+StringReplace, commonIncludesStandlone, commonIncludesStandlone, %rootTag%, %rootPath%, A
+; MsgBox, % commonIncludesStandlone
+FileDelete, %commonPath%
+FileAppend, %commonIncludesStandlone%, %commonPath%
+
+
+; Generate zip/unzip batch files, since they need absolute paths.
+FileRead, zipAll, zipAll.bat.master
+FileRead, unZipAll, unZipAll.bat.master
+; MsgBox, % zipAll "`n`n" unZipAll
+StringReplace, zipAll, zipAll, %rootTag%, %rootPath%, A
+StringReplace, unZipAll, unZipAll, %rootTag%, %rootPath%, A
+; MsgBox, % zipAll "`n`n" unZipAll
+FileDelete, %zipPath%
+FileDelete, %unZipPath%
+FileAppend, %zipAll%, %zipPath%
+FileAppend, %unZipAll%, %unZipPath%
 
 
 ; Unzip all zipped files using .bat file.
-Run, % rootPath "\selectorGUI\unZipAll.bat"
+Run, % "..\CommonIncludes\SelectorFiles\unZipAll.bat"
 
 
 ExitApp
