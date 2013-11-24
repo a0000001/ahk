@@ -19,6 +19,7 @@ zipPath := "..\CommonIncludes\SelectorFiles\zipAll.bat"
 unZipPath := "..\CommonIncludes\SelectorFiles\unZipAll.bat"
 rootTag := "<ROOT>"
 machineTag := "<WHICHMACHINE>"
+versionTag := "<VERSION>"
 
 
 ; Get current absolute path use to get ahk root folder.
@@ -27,12 +28,16 @@ StringTrimRight, rootPath, A_ScriptDir, 14 ; Length of path back to root for thi
 
 
 ; Prompt the user for which computer this is.
-whichMachine := launchSelector(iniSetupPath, "RETURN")
-if(whichMachine = "") {
+machineInfo := launchSelector(iniSetupPath, "RETURN")
+if(machineInfo = "") {
 	MsgBox, No machine given, exiting setup...
 	ExitApp
 }
-; MsgBox, % whichMachine
+; MsgBox, % machineInfo
+machineInfoSplit := specialSplit(machineInfo, "^")
+whichMachine := machineInfoSplit[1]
+editVersion := machineInfoSplit[2]
+; MsgBox, % "Machine: " whichMachine "`nVersion: " editVersion
 
 
 ; Generate borg.ini from user input.
@@ -59,6 +64,8 @@ FileRead, unZipAll, unZipAll.bat.master
 ; MsgBox, % zipAll "`n`n" unZipAll
 StringReplace, zipAll, zipAll, %rootTag%, %rootPath%, A
 StringReplace, unZipAll, unZipAll, %rootTag%, %rootPath%, A
+StringReplace, zipAll, zipAll, %versionTag%, %editVersion%, A
+StringReplace, unZipAll, unZipAll, %versionTag%, %editVersion%, A
 ; MsgBox, % zipAll "`n`n" unZipAll
 FileDelete, %zipPath%
 FileDelete, %unZipPath%

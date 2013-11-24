@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM Prompt user for password.
-"<ROOT>\Outside Utilities\editv22\EditV32.exe" -m -p "Enter password to use for archives: " pass
+"<ROOT>\Outside Utilities\editv22\EditV<VERSION>.exe" -m -p "Enter password to use for archives: " pass
 
 REM Unzip the lot of them.
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\privateVariables.7z -o<ROOT>\Startup\CommonIncludes\ -aoa -p%pass%
