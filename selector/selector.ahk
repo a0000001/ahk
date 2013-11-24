@@ -18,88 +18,91 @@ global ARBITRARY_CHAR := "."
 global HIDDEN_CHAR := "*"
 global LABEL_CHAR := "#"
 
-height := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
+global startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
-; Objects to hold choices and lines to print.
-choices := Object() ; Visible choices the user can pick from.
-hiddenChoices := Object() ; Invisible choices the user can pick from.
-nonChoices := Object() ; Lines that will be displayed as titles, extra newlines, etc, but have no other significance.
-historyChoices := Object() ; Lines read in from the history file.
+; Main function. Sets up and displays the selector gui, processes the choice, etc.
+launchSelector(filePath, actionType, silentChoice) {
+	; Objects to hold choices and lines to print.
+	choices := Object() ; Visible choices the user can pick from.
+	hiddenChoices := Object() ; Invisible choices the user can pick from.
+	nonChoices := Object() ; Lines that will be displayed as titles, extra newlines, etc, but have no other significance.
+	historyChoices := Object() ; Lines read in from the history file.
 
-; Read in our command line arguments.
-filePath = %1%
-actionType = %2%
-silentChoice = %3%
-fileName := SubStr(filePath, 1, -4)
-iconFileName := fileName ".ico"
-historyFileName := fileName "History.ini"
-; MsgBox, % historyFileName
-; if(silentChoice != "") {
-	; MsgBox, % silentChoice
-; }
+	; Read in our command line arguments.
+	; filePath = %1%
+	; actionType = %2%
+	; silentChoice = %3%
+	fileName := SubStr(filePath, 1, -4)
+	iconFileName := fileName ".ico"
+	historyFileName := fileName "History.ini"
+	; MsgBox, % historyFileName
+	; if(silentChoice != "") {
+		; MsgBox, % silentChoice
+	; }
 
-; Read in the history file.
-historyChoices := fileLinesToArray(historyFileName)
-; MsgBox, % historyChoices[0] . "`n" . historyChoices[1]
+	; Read in the history file.
+	historyChoices := fileLinesToArray(historyFileName)
+	; MsgBox, % historyChoices[0] . "`n" . historyChoices[1]
 
-; Set the tray icon based on the input ini filename.
-Menu, Tray, Icon, %iconFileName%
+	; Set the tray icon based on the input ini filename.
+	Menu, Tray, Icon, %iconFileName%
 
-; Read in the various paths, names, and abbreviations.
-title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
+	; Read in the various paths, names, and abbreviations.
+	title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
 
-; MsgBox, Title: %title%
-; MsgBox, % "c" choices.MaxIndex() " h" hiddenChoices.MaxIndex() " n" nonChoices.MaxIndex()
-; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
-; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
-; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
-; MsgBox, % nonChoices[1]
-; MsgBox, % nonChoices[10]
+	; MsgBox, Title: %title%
+	; MsgBox, % "c" choices.MaxIndex() " h" hiddenChoices.MaxIndex() " n" nonChoices.MaxIndex()
+	; MsgBox, % choices[1, NAME] " " hiddenChoices[1, NAME] " " nonChoices[1]
+	; MsgBox, % choices[2, NAME] " " hiddenChoices[2, NAME] " " nonChoices[2]
+	; MsgBox, % choices[3, NAME] " " hiddenChoices[3, NAME] " " nonChoices[3]
+	; MsgBox, % nonChoices[1]
+	; MsgBox, % nonChoices[10]
 
-; ExitApp
-
-
-; ----- Get choice. ----- ;
-; Allow for a command-line-passed input rather than popping up a GUI.
-if(silentChoice != "") {
-	userIn := silentChoice
-} else {
-	; Put the above stuff together.
-	displayText := generateDisplayText(title, choices, nonChoices)
-
-	; Actually prompt the user.
-	height += getTextHeight(displayText)
-	InputBox, userIn, %title%, %displayText%, , 400, %height%
-	if(ErrorLevel || userIn = "") {
-		ExitApp
-	}
-}
-
-; MsgBox, z%userIn%z
-; ExitApp
+	; ExitApp
 
 
-; ----- Parse input to meaningful command. ----- ;
-action := parseChoice(userIn, choices, hiddenChoices, historyChoices)
-
-; ----- Store what we're about to do, then do it. ----- ;
-; Don't save hidden entries or the previous entry (input of HISTORY_CHAR).
-if(SubStr(userIn, 1, 1) != HIDDEN_CHAR && userIn != HISTORY_CHAR) {
-	; If the histoy file already has 10 entries, trim off the oldest one.
-	if(historyChoices.MaxIndex() = 10) {
-		FileDelete, %historyFileName%
-		Loop, 9 {
-			FileAppend, % historyChoices[A_Index + 1] "`n", %historyFileName%
+	; ----- Get choice. ----- ;
+	; Allow for a command-line-passed input rather than popping up a GUI.
+	if(silentChoice != "") {
+		userIn := silentChoice
+	} else {
+		; Put the above stuff together.
+		displayText := generateDisplayText(title, choices, nonChoices)
+		
+		; Actually prompt the user.
+		height := startHeight + getTextHeight(displayText)
+		InputBox, userIn, %title%, %displayText%, , 400, %height%
+		if(ErrorLevel || userIn = "") {
+			ExitApp
 		}
 	}
-	
-	; Add our latest command to the end.
-	FileAppend, %userIn%`n, %historyFileName%
-}
 
-; So now we have something valid - do it and die.
-doAction(action)
-return
+	; MsgBox, z%userIn%z
+	; ExitApp
+
+
+	; ----- Parse input to meaningful command. ----- ;
+	action := parseChoice(userIn, choices, hiddenChoices, historyChoices)
+
+	; ----- Store what we're about to do, then do it. ----- ;
+	; Don't save hidden entries or the previous entry (input of HISTORY_CHAR).
+	if(SubStr(userIn, 1, 1) != HIDDEN_CHAR && userIn != HISTORY_CHAR) {
+		; If the histoy file already has 10 entries, trim off the oldest one.
+		if(historyChoices.MaxIndex() = 10) {
+			FileDelete, %historyFileName%
+			Loop, 9 {
+				FileAppend, % historyChoices[A_Index + 1] "`n", %historyFileName%
+			}
+		}
+		
+		; Add our latest command to the end.
+		FileAppend, %userIn%`n, %historyFileName%
+	}
+
+	; So now we have something valid - do it and die.
+	doAction(action)
+	return
+}
 
 ; Create text to display in popup using data structures from the file.
 generateDisplayText(title, choices, nonChoices) {
@@ -311,7 +314,7 @@ doAction(input) {
 	; Testing: parse and display the given file.
 	} else if(actionType = "TEST") {
 		; Run given file with a POPUP action. Yes, this is getting rather meta.
-		Run, genericSelectorGUI.ahk %input% POPUP
+		Run, genericSelector.ahk %input% POPUP
 	
 	; Call the action.
 	} else if(actionType = "CALL") {
