@@ -1,10 +1,4 @@
-; (Semi-) Generic standalone script which launches one of many given choices.
-
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-#SingleInstance, force
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-
+; (Semi-) Generic standalone script which launches one of many given choices based on their number or shortcut.
 #Include HTTPRequest.ahk
 #Include ..\Startup\commonIncludesStandalone.ahk
 
@@ -314,7 +308,7 @@ doAction(input) {
 	; Testing: parse and display the given file.
 	} else if(actionType = "TEST") {
 		; Run given file with a POPUP action. Yes, this is getting rather meta.
-		Run, genericSelector.ahk %input% POPUP
+		Run, select.ahk %input% POPUP
 	
 	; Call the action.
 	} else if(actionType = "CALL") {
