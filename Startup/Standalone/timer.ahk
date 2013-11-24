@@ -8,6 +8,7 @@ Menu, Tray, Icon, ..\CommonIncludes\Icons\timer.ico
 
 freezeDisplay := 0
 reallyExit := 0
+flashTimerNextTick := true
 
 ; Colors and transparency values.
 transShown := 230
@@ -20,7 +21,7 @@ guiWidth := 255
 guiMargin := 13
 tmpWidth := guiWidth - (guiMargin * 2)
 
-; Initial digit widths for h, m, s
+; Initial digit widths for h, m, s. Include colons on h/m.
 hDigits := 3
 mDigits := 3
 sDigits := 2
@@ -30,7 +31,7 @@ sDigits := 2
 if(%0%) {
    commandTime = %1%
 } else {
-	commandTime := "1h"
+	commandTime := "30m"
 }
 
 timeLeft := 0
@@ -127,14 +128,15 @@ WinGetTitle, prevWin, A
 Gui, Color, %backgroundColor%
 Gui, +Toolwindow -Resize -SysMenu -Border -Caption +AlwaysOnTop +LastFound
 WinGet, guiID, ID
-; WinSet, Transparent, %transHidden%
+WinSet, Transparent, %transHidden%
 
 Gui, Font, c%timeColor% s40, Consolas
 Gui, Add, Text, x%guiMargin% y10 w%tmpWidth% h50 vTimerText, 00:00:00
 
 ; Show it. (and hide it)
 Gui, Show, W%guiWidth% H75 X%showX% Y%showY%
-GoSub, hideTimer
+; showHideTimer()
+; SetTimer, showHideLabel, -1000
 
 ; Activate previous window.
 WinActivate %prevWin%
@@ -220,7 +222,6 @@ while(timeLeft > 0) {
 			
 			;MsgBox, %hDigits% %mDigits% %sDigits% %totalDigits%
 			;MsgBox, %hours% %minutes% %seconds%
-			;MsgBox, %displayTime%
 			
 			tmpWidth := totalDigits * 29
 			guiWidth := tmpWidth + (guiMargin * 2)
@@ -232,6 +233,12 @@ while(timeLeft > 0) {
 			
 			GuiControl, Text, TimerText, %displayTime%
 			GuiControl, Move, TimerText, x%guiMargin% y10 w%tmpWidth% h50
+			
+			; For at-beginning show of time.
+			if(flashTimerNextTick) {
+				flashTimerNextTick := false
+				showHideTimer()
+			}
 		}
 		
 		; Actually tick our time down a notch.
@@ -270,8 +277,8 @@ ExitApp
 ; ------------------------------------------------------------------------------------------ ;
 
 
-browser_back::
-browser_forward::
+~browser_back::
+~browser_forward::
 	showHideTimer()
 return
 
@@ -280,9 +287,9 @@ showHideTimer() {
 	
 	showTimer()
 	
-	; While GetKeyState("browser_refresh","P")
-		; Sleep, 1
-	; Sleep, 2000
+	while(GetKeyState("browser_back","P") || GetKeyState("browser_forward","P")) {
+		Sleep, 1
+	}
 	
 	if(freezeDisplay = 0) {
 		SetTimer, hideTimer, -2000
@@ -290,10 +297,18 @@ showHideTimer() {
 	}
 }
 
+showHideLabel:
+	showHideTimer()
+return
+
 hideTimer:
 	; global transShown, transHidden, guiID
 	
 	; MsgBox, test
+	
+	if(freezeDisplay) {
+		return
+	}
 	
 	steps := (transShown - transHidden) // 10
 	trans := transShown
@@ -350,7 +365,7 @@ return
 		reallyExit := 0
 		freezeDisplay := 0
 		
-		SetTimer, hideTimer, -2000
+		SetTimer, hideTimer, -2050
 		; Sleep, 2050
 		; GoSub, hidetimer
 	return
