@@ -10,7 +10,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include ..\CommonIncludes\string.ahk
 
 #Include ..\CommonIncludes\selector.ahk
- 
+
 
 iniPath := "..\borg.ini"
 iniSetupPath := "..\CommonIncludes\SelectorFiles\setup.ini"
