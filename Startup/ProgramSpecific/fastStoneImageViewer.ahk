@@ -2,6 +2,6 @@
 
 j::right
 k::left
-y::Escape
+F9::Escape
 
 #ifWinActive

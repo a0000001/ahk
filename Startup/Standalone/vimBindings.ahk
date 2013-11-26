@@ -121,7 +121,6 @@ setVimState(toState, super = false) {
 	
 	; Explicit unpause.
 	!m::
-	!j::
 		setVimState(true)
 	return
 		
@@ -334,3 +333,8 @@ unpauseSpecial() {
 	[::Send, {Home}
 	]::Send, {End}
 #If 
+
+; Explicit unpause that works outside of browser, for resetting the icon.
+!j::
+	setVimState(true)
+return

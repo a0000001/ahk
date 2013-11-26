@@ -253,10 +253,10 @@ return
 ; :*:funnyf::G:\Pictures\Funny
 
 ; Shodor
-:*:shodorfolder::G:\Programming\Shodor
-:*:ews::G:\workspace
-:*:igwt::G:\workspace\interactivateGWT
-:*:appc::apprentice
+; :*:shodorfolder::G:\Programming\Shodor
+; :*:ews::G:\workspace
+; :*:igwt::G:\workspace\interactivateGWT
+; :*:appc::apprentice
 
 ; ; Udacity
 ; :*:udacityf::G:\WFU Work\CSC 253 (Udacity)
@@ -266,6 +266,11 @@ return
 ; Pause::Send <3{Space}
 
 :*:ex.::explorer.exe
+
+; ; URLs
+
+; Epic
+:O:gup::http://guru/Staff/EmployeeProfile.aspx?id=
 
 ; ; Wordpress programming
 ; :*:wppe::/wp-admin/post.php?action=edit&post=
