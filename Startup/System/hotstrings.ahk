@@ -210,9 +210,13 @@ return
 ; Folders
 
 ; Script related
-:*:scriptsf::A:\
-:*:esfolder::A:\Experiments
-:*:sscriptsf::A:\Startup
+:*:ahkf::A:\
+:*:eahkf::A:\Experiments
+:*:sahkf::A:\Startup
+:*:csahkf::A:\Startup\CommonIncludes
+:*:psahkf::A:\Startup\ProgramSpecific
+:*:ssahkf::A:\Startup\System
+:*:tsahkf::A:\Startup\Standalone
 
 ; Others
 ; :*:dloads::

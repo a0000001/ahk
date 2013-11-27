@@ -81,8 +81,12 @@
 		Send, 3
 	return
 	
+	; Weekly scrolling.
 	!WheelUp::!Up
 	!WheelDown::!Down
+	
+	; Category application: Make ^F1 usable.
+	^F1::^F12
 #If
 
 ; Universal new email.

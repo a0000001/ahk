@@ -18,7 +18,7 @@ ahkDefaultHotkeys =
 ; Exit, reload, and suspend.
 ~!+x::ExitApp
 ~#!x::Suspend
-~!+r::
+^!r::
 	Suspend, Permit
 	Reload
 return

@@ -14,7 +14,7 @@ global SELECTOR_LABEL_CHAR := "#"
 global startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 
 ; Main function. Sets up and displays the selector gui, processes the choice, etc.
-launchSelector(filePath, actionType, silentChoice = "") {
+select(filePath, actionType, silentChoice = "", noIcon = 0) {
 	; Objects to hold choices and lines to print.
 	choices := Object() ; Visible choices the user can pick from.
 	hiddenChoices := Object() ; Invisible choices the user can pick from.
@@ -42,7 +42,9 @@ launchSelector(filePath, actionType, silentChoice = "") {
 	; MsgBox, % historyChoices[0] . "`n" . historyChoices[1]
 
 	; Set the tray icon based on the input ini filename.
-	Menu, Tray, Icon, %iconFileName%
+	if(!noIcon) {
+		Menu, Tray, Icon, %iconFileName%
+	}
 
 	; Read in the various paths, names, and abbreviations.
 	title := loadChoicesFromFile(filePath, choices, hiddenChoices, nonChoices)
@@ -246,6 +248,7 @@ searchTable(ByRef input, table) {
 	
 	tableLen := table.MaxIndex()
 	Loop, %tableLen% {
+		; MsgBox, % input . ", " . table[A_Index, SELECTOR_NAME] . " " . table[A_Index, SELECTOR_PATH]
 		if(input = A_Index || input = table[A_Index, SELECTOR_ABBREV] || input = table[A_Index, SELECTOR_NAME]) {
 			; MsgBox, Found: %input% at index: %A_Index%
 			input := table[A_Index, SELECTOR_ABBREV]
@@ -268,7 +271,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 			action := parseChoice(historyChoices[ historyChoices.MaxIndex() ], choices, hiddenChoices)
 		} else {
 			MsgBox, No history available!
-			ExitApp
+			return
 		}
 
 	; "+yada" passes in "yada" as an arbitrary, meaninful command.
@@ -282,7 +285,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 		action := searchBoth(splitBits1, choices, hiddenChoices)
 		if(action = "") {
 			MsgBox, No matches found!
-			ExitApp
+			return
 		}
 		action .= splitBits2
 		userIn := splitBits1 . SELECTOR_ARBITRARY_CHAR . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
@@ -293,7 +296,7 @@ parseChoice(ByRef userIn, choices, hiddenChoices, historyChoices = "") {
 		
 		if(action = "") {
 			MsgBox, No matches found!
-			ExitApp
+			return
 		}
 	}
 

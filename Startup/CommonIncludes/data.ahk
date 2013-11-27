@@ -12,3 +12,12 @@ insertFront(ByRef arr, new) {
 	
 	arr := arr2
 }
+
+; Array contains function. Returns index if it exists, assumes a numerical index starting at 1.
+contains(haystack, needle) {
+	For i, el in haystack {
+		if(el = needle) {
+			return i
+		}
+	}
+}
