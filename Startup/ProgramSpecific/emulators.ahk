@@ -4,7 +4,7 @@
 #IfWinActive 
 
 ; GBA
-#IfWinActive, ahk_class Afx:400000:0:0:1900011:4070ca1
+#IfWinActive, VisualBoyAdvance
 	q::u
 	e::o
 	l::j
