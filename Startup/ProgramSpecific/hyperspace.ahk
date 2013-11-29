@@ -44,20 +44,6 @@
 		Send, {Backspace}
 	return
 	
-	; EMC2: Get DLG number from title.
-	^+c::
-		WinGetTitle, title
-		; MsgBox, % title
-		
-		StringSplit, splitTitle, title, -, %A_Space%
-		; MsgBox, % splitTitle1
-		
-		StringSplit, splitFirstPart, splitTitle1, %A_Space%
-		; MsgBox, %splitFirstPart1% - %splitFirstPart2%
-		
-		clipboard := splitFirstPart2
-	return
-	
 	; Allow my save reflex to live on. Return to the field we were in when we finish.
 	^s::
 		; ControlGetFocus, currControl, A
@@ -88,7 +74,39 @@
 		
 		; ControlFocus, %currControl%, A
 	return
+	
+	
+	; EMC2: Get DLG number from title.
+	^+c::
+		clipboard := getEMC2DLGFromTitle()
+	return
+	
+	; EMC2: Take DLG # and pop up the DLG in EpicStudio sidebar.
+	^+o::
+		dlg := getEMC2DLGFromTitle()
+		if(dlg) {
+			Run, %pLaunchPath_EpicStudio% DLG-%dlg%
+		}
+	return
 #If
+
+getEMC2DLGFromTitle() {
+	WinGetTitle, title
+	; MsgBox, % title
+	
+	; If the title doesn't have a number, we shouldn't be returning anything.
+	if(title != "EMC2") {
+		StringSplit, splitTitle, title, -, %A_Space%
+		; MsgBox, % splitTitle1
+		
+		StringSplit, splitFirstPart, splitTitle1, %A_Space%
+		; MsgBox, %splitFirstPart1% - %splitFirstPart2%
+		
+		return splitFirstPart2
+	}
+	
+	return ""
+}
 
 #IfWinActive, Demand Claim Processing
 	; For demanding claims: Ctrl + Enter pops null unto the right box, tabs until accept is active, and accepts it.

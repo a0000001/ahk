@@ -41,7 +41,7 @@ pLaunchClass_Everything := "EVERYTHING"
 pLaunchPath_Everything := "C:\Program Files (x86)\Everything\Everything.exe"
 
 pLaunchClass_Outlook := "rctrl_renwnd32"
-pLaunchPath_Outlook := "C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK.EXE"
+pLaunchPath_Outlook := "C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK.EXE /recycle"
 
 pLaunchClass_ProcessExplorer := "PROCEXPL"
 if(borgWhichMachine = THINKPAD) {

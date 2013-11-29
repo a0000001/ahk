@@ -43,7 +43,10 @@ setupTrayIcons(v, m)
 
 ^a::
 	; SetNumLockState, On
-	MsgBox, % Substr("asdf", -1, 1)
+	; MsgBox, % Substr("asdf", -1, 1)
+	DetectHiddenText, On
+	ControlGet, List, List, , ListView20WndClass2
+	MsgBox, % List
 return
 
 ^b::
