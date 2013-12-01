@@ -28,7 +28,7 @@ StringTrimRight, rootPath, A_ScriptDir, 14 ; Length of path back to root for thi
 
 
 ; Prompt the user for which computer this is.
-machineInfo := launchSelector(iniSetupPath, "RETURN")
+machineInfo := Selector.select(iniSetupPath, "RETURN")
 if(machineInfo = "") {
 	MsgBox, No machine given, exiting setup...
 	ExitApp
