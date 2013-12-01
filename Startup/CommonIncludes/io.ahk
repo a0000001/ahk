@@ -7,7 +7,6 @@ fileLinesToArray(fileName) {
 	Loop Read, %fileName% 
 	{
 		lines[A_Index] := A_LoopReadLine
-		lines[0] := A_Index
 	}
 	
 	return lines

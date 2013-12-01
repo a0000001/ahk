@@ -42,14 +42,55 @@ setupTrayIcons(v, m)
 ; global LIST_TEXT = 5
 
 ^a::
+	; a := ["a", "b", "c"]
+	; b := ["a", "b", "c", "d"]
+	
+	; i := 1
+	; Loop, 3 {
+		; if(i = 2) {
+			; a.Remove(i)
+			; i--
+		; }
+		; i++
+	; }
+	
+	; i := 1
+	; For j, x in b {
+		; if(x = "b") {
+			; b.Remove(j)
+			; ; i--
+		; }
+	; }
+	
+	; MsgBox % a[1] a[2] a[3] "`n" b[1] b[2] b[3]
+	
 	; SetNumLockState, On
 	; MsgBox, % Substr("asdf", -1, 1)
-	DetectHiddenText, On
-	ControlGet, List, List, , ListView20WndClass2
-	MsgBox, % List
+	; DetectHiddenText, On
+	; ControlGet, List, List, , ListView20WndClass2
+	; MsgBox, % List
+	
+	; obj := Object()
+	; MsgBox, % isObject(obj)
+	
+	s := Selector.select("..\Selector\zip.ini")
+	
+	; rowArr := ["a", "b", "c"]
+	
+	; MsgBox, % rowArr[1] rowArr[2] rowArr[3]
+	; row := new Row(rowArr)
+	; MsgBox, % row.name row.abbr row.data
+	
+	; rasdf := new Rasdf()
+	; MsgBox, % rasdf.test
+	
+	; MsgBox, 
+	
 return
 
 ^b::
+	; if("+1" = 1)
+		; MsgBox, test
 	; SetNumLockState, Off
 return
 	; ; modStripped := "b:(3)asdf"

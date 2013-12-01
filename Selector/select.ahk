@@ -10,7 +10,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 filePath = %1%
 actionType = %2%
 silentChoice = %3%
-select(filePath, actionType, silentChoice)
+Selector.select(filePath, actionType, silentChoice)
+; select(filePath, actionType, silentChoice)
 
 ExitApp
 

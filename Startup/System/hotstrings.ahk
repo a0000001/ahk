@@ -287,3 +287,7 @@ return
 :*:.ahkdefault::
 	sendRawWithTabs(ahkDefaultHotkeys)
 return
+:*:.ahkm::
+	SendRaw, MsgBox, `% ""
+	Send, {Left}
+return
