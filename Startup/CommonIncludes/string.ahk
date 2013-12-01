@@ -266,7 +266,6 @@ parseModLine(modLine, label = 0, defaultBit = 1) {
 	
 	; Snag the rest of the info.
 	if(SubStr(modLine, 1, 1) = "(") {
-		; mod[LIST_TEXT] := SubStr(modLine, closeParenPos + 1)
 		mod.text := SubStr(modLine, closeParenPos + 1)
 			if(commaPos) { ; m: operation, two arguments in parens.
 				mod.start := SubStr(modLine, 2, commaPos - 2)
@@ -283,7 +282,6 @@ parseModLine(modLine, label = 0, defaultBit = 1) {
 		mod.text := modLine
 	}
 	
-	; MsgBox, % "Mod: " modLine "`nComma: " commaPos "`nCloseParenPos: " closeParenPos "`nStart: " mod[LIST_START] "`nLength: " mod[LIST_LEN] "`nInsert: " mod[LIST_TEXT] "`nLabel: " mod[LIST_LABEL]
 	; MsgBox, % "Mod: " modLine "`nComma: " commaPos "`nCloseParenPos: " closeParenPos "`nStart: " mod.start "`nLength: " mod.len "`nInsert: " mod.text "`nLabel: " mod.label
 	; MsgBox, % mod.toDebugString()
 	

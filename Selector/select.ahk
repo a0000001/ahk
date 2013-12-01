@@ -11,7 +11,6 @@ filePath = %1%
 actionType = %2%
 silentChoice = %3%
 Selector.select(filePath, actionType, silentChoice)
-; select(filePath, actionType, silentChoice)
 
 ExitApp
 

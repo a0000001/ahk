@@ -104,13 +104,10 @@ class Selector {
 		; MsgBox, % arrayToDebugString(list, 2)
 		
 		For i,currItem in list {
-		; listLen := list.MaxIndex()
-		; Loop, %listLen% {
-			; currItem := list[A_Index]
-			; MsgBox, % currItem[this.NAME]
+			; currItem := list[i]
+			; MsgBox, % currItem[this.NAME_IDX]
 			
 			; Parse this size-3 array into a new Row object.
-			; MsgBox, % currItem[1] "`n" currItem[this.NAME_IDX] "`n" this.historyChar
 			currRow := new SelectorRow(currItem[Selector.NAME_IDX], currItem[Selector.ABBR_IDX], currItem[Selector.DATA_IDX])
 			; MsgBox, % currRow.toDebugString()
 			
@@ -151,14 +148,8 @@ class Selector {
 					; MsgBox, % "pipe: " currRow.abbr
 					splitAbbrev := specialSplit(currRow.abbr, "|")
 					For i,a in splitAbbrev {
-					; splitAbbrevLen := splitAbbrev.MaxIndex()
-					; Loop, %splitAbbrevLen% {
 						tempRow := currRow.clone()
 						tempRow.abbr := splitAbbrev[i]
-						
-						; tempItem[SELECTOR_NAME] := currRow.name
-						; tempItem[SELECTOR_ABBR] := splitAbbrev[A_Index]
-						; tempItem[SELECTOR_DATA] := currRow.path
 						
 						if(A_Index = 1) {
 							this.choices.Insert(tempRow)
@@ -181,8 +172,6 @@ class Selector {
 		; Generate the text to display from the various choice objects.
 		displayText := ""
 		For i,c in this.choices {
-		; choicesLen := choices.MaxIndex()
-		; Loop, %choicesLen% {
 			; Extra newline if requested.
 			if(this.nonChoices[i]) {
 				; MsgBox, % i "	" this.nonChoices[i]
@@ -193,7 +182,6 @@ class Selector {
 				displayText .= this.nonChoices[i] "`n"
 			}
 			
-			; displayText .= i ") " choices[i, SELECTOR_ABBREV] ":`t" choices[i, SELECTOR_NAME] "`n"
 			displayText .= i ") " c.abbr ":`t" c.name "`n"
 		}
 		
@@ -276,19 +264,11 @@ class Selector {
 
 	; Function to search our generated table for a given index/shortcut.
 	searchTable(ByRef input, table) {
-		; MsgBox, % input . ", " . table[1, SELECTOR_NAME] . " " . table[1, SELECTOR_PATH]
-		
 		For i,t in table {
-		; tableLen := table.MaxIndex()
-		; Loop, %tableLen% {
-			; MsgBox, % input . ", " . table[A_Index, SELECTOR_NAME] . " " . table[A_Index, SELECTOR_ABBREV] . " " . table[A_Index, SELECTOR_PATH]
 			; MsgBox, % input ", " t.name " " t.abbr " " t.data
-			; if(input = A_Index || input = table[A_Index, SELECTOR_ABBREV] || input = table[A_Index, SELECTOR_NAME]) {
 			if(input = i || input = t.abbr || input = t.name) {
 				; MsgBox, Found: %input% at index: %i%
-				; input := table[A_Index, SELECTOR_ABBREV]
 				input := t.abbr
-				; return table[A_Index, SELECTOR_PATH]
 				return t.data
 			}
 		}
@@ -357,7 +337,6 @@ class Selector {
 		}
 	}
 	
-	
 	toDebugString() {
 		outStr := "Choices:"
 		For i,r in this.choices
@@ -374,11 +353,7 @@ class Selector {
 		
 		return outStr
 	}
-
-	
 }
-
-
 
 ; Row class for use in the Selector. Has three pieces.
 class SelectorRow {
