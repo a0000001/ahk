@@ -73,7 +73,7 @@ setupTrayIcons(v, m)
 	; obj := Object()
 	; MsgBox, % isObject(obj)
 	
-	s := Selector.select("..\Selector\zip.ini")
+	; s := Selector.select("..\Selector\zip.ini")
 	
 	; rowArr := ["a", "b", "c"]
 	
