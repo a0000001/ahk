@@ -298,7 +298,7 @@ class Selector {
 
 	; Function to do what it is we want done, then exit.
 	doAction(input, actionType) {
-		MsgBox, % "Input: "input "`nActionType: " actionType
+		; MsgBox, % "Input: "input "`nActionType: " actionType
 		
 		; For functional use: return what we've decided.
 		if(actionType = "" || actionType = "RETURN") {

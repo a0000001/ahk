@@ -6,12 +6,12 @@ REM Prompt user for password.
 REM Zip the lot of them up.
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\privateVariables.7z <ROOT>\Startup\CommonIncludes\privateVariables.ahk -p%pass%
 
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\emc2.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\emc2.ini -p%pass%
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\epicStudio.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\epicStudio.ini -p%pass%
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\hyperspace.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\hyperspace.ini -p%pass%
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\outlookTLG.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\outlookTLG.ini -p%pass%
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\phone.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\phone.ini -p%pass%
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\text.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\text.ini -p%pass%
-"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\tlg.7z <ROOT>\Startup\CommonIncludes\SelectorFiles\tlg.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\emc2.7z <ROOT>\Selector\emc2.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\epicStudio.7z <ROOT>\Selector\epicStudio.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\hyperspace.7z <ROOT>\Selector\hyperspace.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\outlookTLG.7z <ROOT>\Selector\outlookTLG.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\phone.7z <ROOT>\Selector\phone.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\text.7z <ROOT>\Selector\text.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\tlg.7z <ROOT>\Selector\tlg.ini -p%pass%
 
 pause

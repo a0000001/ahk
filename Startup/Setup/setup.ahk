@@ -13,10 +13,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 
 iniPath := "..\borg.ini"
-iniSetupPath := "..\CommonIncludes\SelectorFiles\setup.ini"
+iniSetupPath := "..\..\Selector\setup.ini"
 commonPath := "..\commonIncludesStandalone.ahk"
-zipPath := "..\CommonIncludes\SelectorFiles\zipAll.bat"
-unZipPath := "..\CommonIncludes\SelectorFiles\unZipAll.bat"
+zipPath := "..\..\Selector\zipAll.bat"
+unZipPath := "..\..\Selector\unZipAll.bat"
 rootTag := "<ROOT>"
 machineTag := "<WHICHMACHINE>"
 versionTag := "<VERSION>"
@@ -74,7 +74,7 @@ FileAppend, %unZipAll%, %unZipPath%
 
 
 ; Unzip all zipped files using .bat file.
-Run, % "..\CommonIncludes\SelectorFiles\unZipAll.bat"
+Run, % unZipPath
 
 
 ExitApp
