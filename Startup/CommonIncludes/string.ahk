@@ -8,8 +8,6 @@ global LIST_PRE_CHAR := 4
 global LIST_ADD_MOD_LABEL_CHAR := 5
 global LIST_REMOVE_MOD_LABEL_CHAR := 6
 
-
-
 ; Modification class for parsing lists.
 class ListMod {
 	mod := ""
