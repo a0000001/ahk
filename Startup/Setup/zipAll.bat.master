@@ -14,4 +14,6 @@ REM Zip the lot of them up.
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\text.7z <ROOT>\Selector\text.ini -p%pass%
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\tlg.7z <ROOT>\Selector\tlg.ini -p%pass%
 
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\icons.7z <ROOT>\Selector\emc2.ico <ROOT>\Selector\epicStudio.ico <ROOT>\Selector\hyperspace.ico <ROOT>\Selector\outlookTLG.ico <ROOT>\Selector\text.ico -p%pass%
+
 pause
