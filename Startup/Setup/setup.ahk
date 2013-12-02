@@ -74,8 +74,10 @@ FileAppend, %unZipAll%, %unZipPath%
 
 
 ; Unzip all zipped files using .bat file.
-Run, % unZipPath
+RunWait, % unZipPath
 
+; MsgBox, Close this once unzipping is completed.
+Run, %rootPath%\Startup\borg.ahk, %rootPath%\Startup\
 
 ExitApp
 
