@@ -14,4 +14,6 @@ REM Unzip the lot of them.
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\text.7z -aoa -o<ROOT>\Selector\ -p%pass%
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\tlg.7z -aoa -o<ROOT>\Selector\ -p%pass%
 
+"C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\icons.7z -aoa -o<ROOT>\Selector\ -p%pass%
+
 pause
