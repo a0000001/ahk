@@ -5,8 +5,18 @@ global LIST_ESC_CHAR := 1
 global LIST_PASS_ROW_CHAR := 2
 global LIST_COMMENT_CHAR := 3
 global LIST_PRE_CHAR := 4
-global LIST_ADD_MOD_LABEL_CHAR := 5
-global LIST_REMOVE_MOD_LABEL_CHAR := 6
+global LIST_POST_CHAR := 5
+global LIST_ADD_MOD_LABEL_CHAR := 6
+global LIST_REMOVE_MOD_LABEL_CHAR := 7
+
+; Default chars.
+global LIST_DEFAULT_ESC_CHAR := "\"
+global LIST_DEFAULT_PASS_ROW_CHAR := "#"
+global LIST_DEFAULT_COMMENT_CHAR := ";"
+global LIST_DEFAULT_PRE_CHAR := "*"
+global LIST_DEFAULT_POST_CHAR := "/"
+global LIST_DEFAULT_ADD_MOD_LABEL_CHAR := "+"
+global LIST_DEFAULT_REMOVE_MOD_LABEL_CHAR := "-"
 
 ; Modification class for parsing lists.
 class ListMod {
@@ -45,7 +55,13 @@ stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 }
 
 ; Splits a string on given delimeter, but ignores escaped delimeters.
-specialSplit(string, delimeter, escapeChar = "\") {
+; Note: making default non-blank so that if blank passed in, no esc chars at all.
+specialSplit(string, delimeter, escChar = "\x", placeholderChar = "x") {
+	; Can't put a global as a true default, so making do here.
+	if(escChar = "\x") {
+		escChar := LIST_DEFAULT_ESC_CHAR
+	}
+	
 	outArr := Object()
 	escapeNext := false
 	currStr := ""
@@ -63,13 +79,13 @@ specialSplit(string, delimeter, escapeChar = "\") {
 			escapeNext := false
 			
 			; Special ignore: \x is treated as blank, a placeholder for the start of the string if needed.
-			if(A_LoopField != "x") {
+			if(A_LoopField != placeholderChar) {
 				; Escaped character becomes what it was previously, sans slash.
 				currStr .= A_LoopField
 			}
 		
 		; The next character is escaped, so we won't add this one in.
-		} else if(A_LoopField = escapeChar) {
+		} else if(A_LoopField = escChar) {
 			escapeNext := true
 			; MsgBox, escape char caught!
 		
@@ -107,12 +123,13 @@ expandLine(input, prepend = "", postpend = "") {
 ;		Remove Mod
 cleanParseList(lines, chars = "", defaultBit = 1) {
 	; Load any given chars.
-	escChar := chars[LIST_ESC_CHAR] ? chars[LIST_ESC_CHAR] : "\"
-	passChar := chars[LIST_PASS_ROW_CHAR] ? chars[LIST_PASS_ROW_CHAR] : "#"
-	commentChar := chars[LIST_COMMENT_CHAR] ? chars[LIST_COMMENT_CHAR] : ";"
-	preChar := chars[LIST_PRE_CHAR] ? chars[LIST_PRE_CHAR] : "/"
-	addChar := chars[LIST_ADD_MOD_LABEL_CHAR] ? chars[LIST_ADD_MOD_LABEL_CHAR] : "+"
-	remChar := chars[LIST_REMOVE_MOD_LABEL_CHAR] ? chars[LIST_REMOVE_MOD_LABEL_CHAR] : "-"
+	escChar := chars[LIST_ESC_CHAR] ? chars[LIST_ESC_CHAR] : LIST_DEFAULT_ESC_CHAR
+	passChar := chars[LIST_PASS_ROW_CHAR] ? chars[LIST_PASS_ROW_CHAR] : LIST_DEFAULT_PASS_ROW_CHAR
+	commentChar := chars[LIST_COMMENT_CHAR] ? chars[LIST_COMMENT_CHAR] : LIST_DEFAULT_COMMENT_CHAR
+	preChar := chars[LIST_PRE_CHAR] ? chars[LIST_PRE_CHAR] : LIST_DEFAULT_PRE_CHAR
+	postChar := chars[LIST_POST_CHAR] ? chars[LIST_POST_CHAR] : LIST_DEFAULT_POST_CHAR
+	addChar := chars[LIST_ADD_MOD_LABEL_CHAR] ? chars[LIST_ADD_MOD_LABEL_CHAR] : LIST_DEFAULT_ADD_MOD_LABEL_CHAR
+	remChar := chars[LIST_REMOVE_MOD_LABEL_CHAR] ? chars[LIST_REMOVE_MOD_LABEL_CHAR] : LIST_DEFAULT_REMOVE_MOD_LABEL_CHAR
 	
 	; Initialize the objects.
 	mods := Object()
@@ -144,7 +161,7 @@ cleanParseList(lines, chars = "", defaultBit = 1) {
 		; Special row for modifying the current stringmod.
 		} else if(firstChar = "[") {
 			; MsgBox, Modifier line: %row%
-			updateMods(mods, row, escChar, preChar, addChar, remChar, defaultBit)
+			updateMods(mods, row, escChar, preChar, postChar, addChar, remChar, defaultBit)
 		
 		; Special row for label/title later on, leave it unmolested.
 		} else if(firstChar = passChar) {
@@ -187,7 +204,7 @@ killMods(ByRef mods, killLabel = 0) {
 }
 
 ; Update the given modifier string given the new one.
-updateMods(ByRef mods, new, escChar = "\", preChar = "/", addChar = "+", remChar = "-", defaultBit = 1) {
+updateMods(ByRef mods, new, escChar, preChar, postChar, addChar, remChar, defaultBit = 1) {
 	; MsgBox, % "`nCur Mods: `n`n" mods[1].toDebugString() "`n`n" mods[2].toDebugString() "`n`n" mods[3].toDebugString() "`n`n" mods[4].toDebugString() "`n`n" mods[5].toDebugString() "`n`n"
 	; MsgBox, New Mod: %new%
 	
@@ -214,6 +231,7 @@ updateMods(ByRef mods, new, escChar = "\", preChar = "/", addChar = "+", remChar
 		newSplit := specialSplit(new, "|", escChar)
 		For i,currMod in newSplit {
 			firstChar := SubStr(currMod, 1, 1)
+			; MsgBox, First char in mod line: %firstChar%
 			
 			; Check for an add row label.
 			if(i = 1 && firstChar = addChar) {
@@ -223,6 +241,8 @@ updateMods(ByRef mods, new, escChar = "\", preChar = "/", addChar = "+", remChar
 				; Allow backwards stacking - that is, a later mod can go first in mod order.
 				if(firstChar = preChar) {
 					insertFront(mods, parseModLine(SubStr(currMod, 2), label, defaultBit))
+				} else if(firstChar = postChar) {
+					; insertFront(mods, parseModLine(SubStr(currMod, 2), label, defaultBit))
 				} else {
 					mods.Insert(parseModLine(currMod, label, defaultBit))
 				}
@@ -231,9 +251,9 @@ updateMods(ByRef mods, new, escChar = "\", preChar = "/", addChar = "+", remChar
 	}
 }
 
-; Takes a modifier string and spits out the mod object/array. Assumes no [] around it, and no / at start.
+; Takes a modifier string and spits out the mod object/array. Assumes no [] around it, and no pre/post chars at start.
 parseModLine(modLine, label = 0, defaultBit = 1) {
-	; MsgBox, ModLine: %modLine%	
+	; MsgBox, ModLine: %modLine%
 	mod := new ListMod(modLine, defaultBit, 1, 0, "", label)
 	
 	; Next, check to see whether we have an explicit bit. Syntax: starts with {#}
@@ -287,7 +307,7 @@ parseModLine(modLine, label = 0, defaultBit = 1) {
 }
 
 ; Apply given string modifications to given row.
-applyMods(row, mods, escChar = "\") {
+applyMods(row, mods, escChar) {
 	; MsgBox, Row to apply mods to: %row%
 	
 	; Split up the row by tabs.

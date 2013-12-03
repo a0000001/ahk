@@ -1,7 +1,8 @@
-global SELECTOR_HISTORY_CHAR := 1
-global SELECTOR_ARBITRARY_CHAR := 2
-global SELECTOR_HIDDEN_CHAR := 3
-global SELECTOR_LABEL_CHAR := 4
+global SELECTOR_TITLE_CHAR := 1
+global SELECTOR_HISTORY_CHAR := 2
+global SELECTOR_ARBITRARY_CHAR := 3
+global SELECTOR_HIDDEN_CHAR := 4
+global SELECTOR_LABEL_CHAR := 5
 
 ; Selector class which reads in and stores data from a file, and given an index, abbreviation or path (and action), can return the result (and do the action).
 class Selector {
@@ -23,6 +24,7 @@ class Selector {
 		this.historyChoices := Object() ; Lines read in from the history file.
 		
 		; Character defaults vs what they gave us.
+		this.titleChar := chars[SELECTOR_TITLE_CHAR] ? chars[SELECTOR_TITLE_CHAR] : "="
 		this.historyChar := chars[SELECTOR_HISTORY_CHAR] ? chars[SELECTOR_HISTORY_CHAR] : "+"
 		this.arbitChar := chars[SELECTOR_ARBITRARY_CHAR] ? chars[SELECTOR_ARBITRARY_CHAR] : "."
 		this.hiddenChar := chars[SELECTOR_HIDDEN_CHAR] ? chars[SELECTOR_HIDDEN_CHAR] : "*"
@@ -114,7 +116,7 @@ class Selector {
 			firstChar := SubStr(currRow.name, 1, 1)
 			
 			; Title.
-			if(i = 1 && firstChar = "=") {
+			if(i = 1 && firstChar = this.titleChar) {
 				this.title := SubStr(currRow.name, 2)
 			
 			; Special: add a title and/or blank row in the list display.
