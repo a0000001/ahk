@@ -20,8 +20,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 	ini := SubStr(cleanText, 1, 3)
 	num := SubStr(cleanText, 5)
 	
-	; Right now using silentChoice and a bit of hackish logic - fix.
-	link := Selector.select(filePath, "RETURN", ini) num "?action=EDIT"
+	link := Selector.select("emc2link.ini", "RETURN", ini) num "?action=EDIT"
 	; link := select("emc2link.ini", "RETURN", ini, 1) num "?action=EDIT"
 	; MsgBox, % link
 	

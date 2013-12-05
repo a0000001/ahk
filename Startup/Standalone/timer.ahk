@@ -277,6 +277,7 @@ ExitApp
 ; Show time left hotkeys.
 ~browser_back::
 ~browser_forward::
+~^!Space::
 	showHideTimer()
 return
 
