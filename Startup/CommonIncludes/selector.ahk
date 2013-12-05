@@ -16,7 +16,7 @@ class Selector {
 		this.init(filePath, chars)
 	}
 	
-	init(filePath, chars) {
+	init(fPath, chars) {
 		; Various choice data objects.
 		this.choices := Object() ; Visible choices the user can pick from.
 		this.hiddenChoices := Object() ; Invisible choices the user can pick from.
@@ -33,18 +33,19 @@ class Selector {
 		; Other init values.
 		this.startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 		this.title := "Please make a choice by either number or abbreviation:"
+		this.filePath := fPath
 		this.fileName := ""
 		
 		; Read in the choices file.
-		if(filePath != "" && FileExist(filePath)) {
-			this.loadChoicesFromFile(filePath)
+		if(fPath != "" && FileExist(fPath)) {
+			this.loadChoicesFromFile(fPath)
 		} else {
 			MsgBox, File doesn't exist!
 			return ""
 		}
 		
 		; Get paths for the history and icon files, and read them in.
-		this.fileName := SubStr(filePath, 1, -4)
+		this.fileName := SubStr(fPath, 1, -4)
 		iconFilePath := this.fileName ".ico"
 		if(FileExist(this.fileName "History.ini"))
 			this.historyChoices := fileLinesToArray(this.fileName "History.ini")
@@ -71,7 +72,7 @@ class Selector {
 		
 		; Parse input to meaningful command.
 		; MsgBox, % "UserIn: " userIn
-		action := this.parseChoice(userIn)
+		action := this.parseChoice(userIn, actionType)
 		
 		; Store what we're about to do in the history file.
 		; Don't save hidden entries or the previous entry (input of this.historyChar).
@@ -198,7 +199,7 @@ class Selector {
 	}
 	
 	; Function to turn the input into something useful.
-	parseChoice(ByRef userIn) {
+	parseChoice(ByRef userIn, ByRef actionType) {
 		histCharPos := InStr(userIn, this.historyChar)
 		arbCharPos := InStr(userIn, this.arbitChar)
 		; MsgBox, % histCharPos
@@ -206,7 +207,7 @@ class Selector {
 		; Just historyChar gives us the last executed command. ArbitChar on its own does the same.
 		if(userIn = this.historyChar || userIn = this.arbitChar) {
 			if(this.historyChoices.MaxIndex()) {
-				action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() ])
+				action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() ], actionType)
 			} else {
 				MsgBox, No history available!
 				action := ""
@@ -214,13 +215,23 @@ class Selector {
 		
 		; History choice - 1 is last entry, 2 is next to last entered, etc.
 		} else if(histCharPos = 1) {
-			If SubStr(userIn, 2) is not number {
+			; Special case: historyChar+0 is the edit action, which will open the current INI file for editing.
+			rest := SubStr(userIn, 2)
+			if(rest = 0 || rest = "e" || rest = "edit") {
+				; MsgBox, Edit action!
+				actionType := "EDIT"
+				action := this.filePath
+			
+			; Otherwise, it has to be numeric.
+			} else If SubStr(userIn, 2) is not number {
 				MsgBox, History character must be used with numeric input!
 				action := ""
+			
+			; Normal case, get the history entry specified.
+			} else {
+				; MsgBox, % arrayToDebugString(this.historyChoices)
+				action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() + 1 - userIn ], actionType)
 			}
-			; MsgBox, % arrayToDebugString(this.historyChoices)
-			action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() + 1 - userIn ])
-		
 		; ".yada" passes in "yada" as an arbitrary, meaninful command.
 		} else if(arbCharPos = 1) {
 			action := SubStr(userIn, 2)
@@ -308,6 +319,10 @@ class Selector {
 			; Run given file with a POPUP action. Yes, this is getting rather meta.
 			Run, select.ahk %input% POPUP
 		
+		; Edit the current ini file.
+		} else if(actionType = "EDIT") {
+			Run, %input%
+		
 		; Call the action.
 		} else if(actionType = "CALL") {
 			URL := "http://guru/services/Webdialer.asmx/"
@@ -335,10 +350,11 @@ class Selector {
 			HTTPRequest(URL, In := "", Out := "")
 			; MsgBox, Response: %html%
 		} else {
-			MsgBox, No action type given, exiting...
+			MsgBox, Action type not recognized, exiting.
 		}
 	}
 	
+	; Function to output this object as a string for debug purposes.
 	toDebugString() {
 		outStr := "Choices:"
 		For i,r in this.choices
@@ -363,16 +379,19 @@ class SelectorRow {
 	abbr := ""
 	data := ""
 	
+	; Constructor.
 	__New(n, a, d) {
 		this.name := n
 		this.abbr := a
 		this.data := d
 	}
 	
+	; Shallow copy function.
 	clone() {
 		return new SelectorRow(this.name, this.abbr, this.data)
 	}
 	
+	; Function to output this object as a string for debug purposes.
 	toDebugString() {
 		return "        Name: " this.name "`n	Abbreviation: " this.abbr "`n	Data: " this.data
 	}
