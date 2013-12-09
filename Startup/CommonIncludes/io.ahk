@@ -94,3 +94,28 @@ sendTextWithClipboard(text) {
 	Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of Clipboard (not ClipboardAll).
 	ClipSaved =   ; Free the memory in case the clipboard was very large.
 }
+
+; Runs a command line program and returns the result.
+runAndReturnOutput(command, outputFile = "testCMDoutput.txt") {
+	RunWait, %comspec% /c %command% > %outputFile%,,UseErrorLevel Hide
+	outputFileContents := ""
+	FileRead, outputFileContents, %outputFile%
+	if(outputFileContents = "") {
+		; MsgBox, nope.
+		return 0
+	} else {
+		return outputFileContents
+	}
+	
+	FileDelete, %outputFile%
+}
+
+; Compares two files.
+compareFiles(file1, file2) {
+	compared := runAndReturnOutput("fc " file1 " " file2)
+	if(inStr(compared, "FC: no differences encountered")) {
+		return false
+	} else {
+		return true
+	}
+}

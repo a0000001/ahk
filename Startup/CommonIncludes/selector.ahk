@@ -54,8 +54,8 @@ class Selector {
 	}
 	
 	; Main function. Sets up and displays the selector gui, processes the choice, etc.
-	select(filePath, actionType = "", choice = "", chars = "") {
-		; MsgBox, % filePath "`n" choice "`n" actionType
+	select(filePath, actionType = "", silentChoice = "", chars = "") {
+		; MsgBox, % filePath "`n" actionType "`n" silentChoice
 		
 		; Set up our various information, read-ins, etc.
 		this.init(filePath, chars)
@@ -300,6 +300,10 @@ class Selector {
 		; Run the action.
 		} else if(actionType = "RUN") {
 			Run, % input
+			
+		; Run the action, waiting for it to finish.
+		} else if(actionType = "RUNWAIT") {
+			RunWait, % input
 		
 		; Just send the text of the action.
 		} else if(actionType = "PASTE") {

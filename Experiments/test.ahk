@@ -10,6 +10,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #Include test2\test2.ahk
 #Include ..\Startup\commonIncludesStandalone.ahk
 
+; #Include stdio.ahk
+
 suspended := 0
 v := Object()
 m := Object()
@@ -19,6 +21,118 @@ m[1] := "..\Startup\CommonIncludes\Icons\testSuspended.ico"
 setupTrayIcons(v, m)
 
 ; ----------------------------------------------------------------------------------------------------------------------
+
+global FC_NAME := 1
+global FC_LOC := 2
+global FC_REF_LOC := 3
+
+gitZipUnzip(unzip) {
+	if(unzip) {
+		postFix := "u"
+		iniFile := "unzipReferences.ini"
+	} else {
+		postFix := "z"
+		iniFile := "zipReferences.ini"
+	}
+	
+	; NOTE: GOOD OPPORTUNITY FOR MULTI-USE SELECTOR TEST/SETUP.
+	lines := fileLinesToArray(iniFile)
+	fileList := cleanParseList(lines)
+	
+	For i,f in fileList {
+		curr := f[FC_LOC]
+		ref := f[FC_REF_LOC]
+		MsgBox, % f[FC_NAME] "`n" curr "`n" ref "`n" compareFiles(curr, ref)
+		if(compareFiles(curr, ref)) {
+			; Do the zip/unzip operation to ensure that the newest version is where it needs to be.
+			Selector.select("..\Selector\zip.ini", "RUN", f[FC_NAME] postFix)
+			
+			; Update the reference version.
+			MsgBox, Copying: %curr% `nTo: %ref%
+			FileCopy, %curr%, %ref%, 1
+			
+			MsgBox, %errorlevel%
+		}
+	}
+}
+
+^a::
+	gitZipUnzip(0)
+	; gitZipUnzip(1)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	; compared := runAndReturnOutput("fc A:\Zipped\epicStudio.7z A:\Zipped\Reference\epicStudio.7z")
+	; MsgBox, % compareFiles("A:\Zipped\emc2.7z", "A:\Zipped\Reference\emc2.7z")
+	; MsgBox, % compareFiles("A:\Zipped\epicStudio.7z", "A:\Zipped\Reference\epicStudio.7z")
+	; MsgBox, % compareFiles("A:\Selector\emc2.ini", "A:\Zipped\Reference\emc2.ini")
+	
+	; MsgBox, % compared
+	; comparedSplit := specialSplit(compared, "`n")
+	; MsgBox, % "z"comparedSplit[2]"z"
+	; if(comparedSplit[2] = noChangesOutput) {
+		; MsgBox, no changes.
+	; }
+	; StringSplit, comparedSplit, compared, `n
+	; MsgBox, % comparedSplit2
+	
+return
+
+	
+	
+	
+	; StdioInitialize()
+	; ; FileAppend, This method should not work with console windows, *
+	; ; printf("`n")
+	; ; printf("Hello World`n")
+	; ; RunIOWait(comspec " /c echo Hello from a child process.")
+	; RunIOWait(comspec " /c fc A:\Zipped\emc2.7z A:\Zipped\Reference\emc2.7z", "", "", eCode)
+	; MsgBox, % eCode
+	; FreeConsole()
+	
+	; ; This demo requires AutoHotkey_L.
+	; C_Title := "COM example of manipulating command-line program"
+
+	; objShell := ComObjCreate("WScript.Shell")
+	; objExec := objShell.Exec(ComSpec " /c fc A:\Zipped\emc2.7z A:\Zipped\Reference\emc2.7z")
+
+	; strStdOut := ""
+	; while, !objExec.StdOut.AtEndOfStream
+	; {
+		 ; strStdOut .= objExec.StdOut.Read(1)
+		 ; if InStr(strStdOut, "Input new time")
+			  ; break
+		 ; Sleep, 100
+	; }
+	
+	; MsgBox, % strStdOut
+	
+	; MsgBox, 36, %C_Title%, % strStdOut "`n" . "Change system's time?"
+	; IfMsgBox, Yes
+	; {
+		 ; InputBox, NewTime, %C_Title%, Please input new time
+		 ; if (ErrorLevel = 0 and NewTime <> "")
+		 ; {
+			  ; objExec.StdIn.Write(NewTime "`n")
+			  
+			  ; if objExec.StdOut.AtEndOfStream
+					; MsgBox, 0, %C_Title%, It's success to update system's time!`nCurrent time is %A_Hour%:%A_Min%:%A_Sec%.
+		 ; }
+	; }
+
+	; if !objExec.Status
+		 ; objExec.Terminate()
+return
+
+
+
 
 ; ^+y::
 	; str1 := applyMods("thisIsAString	2", "[{1}b:asdf|e:here'sJohnny!|b:more|m:(5,2)ggggg]")
@@ -41,11 +155,11 @@ setupTrayIcons(v, m)
 ; global LIST_LEN = 4
 ; global LIST_TEXT = 5
 
-$g::
-	SendRaw, gangnamstyle
-return
+; $g::
+	; SendRaw, gangnamstyle
+; return
 
-^a::
+; ^a::
 	; a := ["a", "b", "c"]
 	; b := ["a", "b", "c", "d"]
 	
@@ -90,13 +204,13 @@ return
 	
 	; MsgBox, 
 	
-return
+; return
 
-^b::
+; ^b::
 	; if("+1" = 1)
 		; MsgBox, test
 	; SetNumLockState, Off
-return
+; return
 	; ; modStripped := "b:(3)asdf"
 	; ; mods := parseModLine(modStripped)
 	; ; MsgBox, % "Mod: " modStripped "`nBit: " mods[LIST_BIT] "`nStart: " mods[LIST_START] "`nLen: " mods[LIST_LEN] "`nText: " mods[LIST_TEXT]
