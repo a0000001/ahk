@@ -41,6 +41,10 @@ setupTrayIcons(v, m)
 ; global LIST_LEN = 4
 ; global LIST_TEXT = 5
 
+$g::
+	SendRaw, gangnamstyle
+return
+
 ^a::
 	; a := ["a", "b", "c"]
 	; b := ["a", "b", "c", "d"]
