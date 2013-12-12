@@ -1,4 +1,4 @@
-#If WinActive("ahk_class ThunderRT6MDIForm") || WinActive("ahk_class ThunderRT6FormDC")
+#If WinActive("ahk_class ThunderRT6MDIForm") || WinActive("ahk_class ThunderRT6FormDC") || WinActive("ahk_class ThunderMDIForm") || WinActive("ahk_class ThunderFormDC")
 	; TLG Hotkey.
 	^t::
 		Send, %epicID%
@@ -30,12 +30,13 @@
 		return false
 	}
 	
-	; Exit hotkey.
+	; Exit hotkey. Requires the first toolbar item be set to Exit.
 	^d::
-		KeyWait, Control
-		Send, {Alt Down}{Alt Up}
-		Sleep, 100
-		Send, x
+		; KeyWait, Control
+		; Send, {Alt Down}{Alt Up}
+		; Sleep, 100
+		; Send, x
+		Send, ^1
 	return
 	
 	; Make ctrl+backspace act as expected.

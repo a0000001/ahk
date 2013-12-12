@@ -13,6 +13,7 @@
 #Include ProgramSpecific\explorer.ahk
 #Include ProgramSpecific\fastStoneImageViewer.ahk
 #Include ProgramSpecific\foobar.ahk
+#Include ProgramSpecific\freeCommander.ahk
 #Include ProgramSpecific\hyperspace.ahk
 #Include ProgramSpecific\notepad.ahk
 #Include ProgramSpecific\notepad++.ahk
