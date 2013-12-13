@@ -32,6 +32,8 @@ Loop {
 
 return
 
+; #Include Standalone\epicFunctionHotstrings.ahk
+
 ~!#x::
 	Suspend, Toggle
 	suspended := !suspended

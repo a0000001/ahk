@@ -4,10 +4,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force  ; Ensures that if this script is running, running it again replaces the first instance.
 ; #NoTrayIcon  ; Uncomment to hide the tray icon.
 
-#Include commonIncludesStandalone.ahk
+; #Include commonIncludesStandalone.ahk
 
 ; Tray icon setup.
-global suspended := 0
+; global suspended := 0
 ; v := Object()
 ; v[0] := "suspended"
 ; m := Object()
@@ -18,8 +18,8 @@ global suspended := 0
 #Include Standalone\epic_FunctionHotstringsWithoutLibs.ahk
 #Include Standalone\epic_FunctionHotstringsWithLibs.ahk
 
-~!#x::
-	Suspend, Toggle
-	suspended := !suspended
-	; updateTrayIcon()
-return
+; ~!#x::
+	; Suspend, Toggle
+	; suspended := !suspended
+	; ; updateTrayIcon()
+; return

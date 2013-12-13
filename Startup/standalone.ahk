@@ -4,7 +4,7 @@
 if(borgWhichMachine = EPIC_DESKTOP) {
 	Run, Standalone\killUAC.ahk
 	Run, Standalone\tortoiseSVN_dlgFiller.ahk
-	Run, Standalone\epicFunctionHotstrings.ahk
+	; Run, Standalone\epicFunctionHotstrings.ahk
 }
 
 Run, Standalone\vimBindings.ahk
