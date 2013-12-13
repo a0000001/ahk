@@ -100,19 +100,22 @@ runAndReturnOutput(command, outputFile = "testCMDoutput.txt") {
 	RunWait, %comspec% /c %command% > %outputFile%,,UseErrorLevel Hide
 	outputFileContents := ""
 	FileRead, outputFileContents, %outputFile%
+	FileDelete, %outputFile%
+	
 	if(outputFileContents = "") {
 		; MsgBox, nope.
 		return 0
 	} else {
 		return outputFileContents
 	}
-	
-	FileDelete, %outputFile%
 }
 
 ; Compares two files.
 compareFiles(file1, file2) {
 	compared := runAndReturnOutput("fc " file1 " " file2)
+	
+	; MsgBox, % compared
+	
 	if(inStr(compared, "FC: no differences encountered")) {
 		return false
 	} else {

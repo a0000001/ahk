@@ -12,14 +12,10 @@ global FC_REF_LOC := 3
 global FC_ZIP_LOC := 4
 global FC_ZIP_REF_LOC := 5
 
-gitZipUnzip(unzip) {
+; Function to check what's changed against reference versions, and update them as needed.
+; zipOrUnzip can be "u" or "z".
+gitZipUnzip(zipOrUnzip) {
 	iniFile := "zipReferences.ini"
-	
-	if(unzip) {
-		postFix := "u"
-	} else {
-		postFix := "z"
-	}
 	
 	lines := fileLinesToArray(iniFile)
 	; MsgBox, % arrayToDebugString(lines)
@@ -28,17 +24,24 @@ gitZipUnzip(unzip) {
 	; MsgBox, % arrayToDebugString(list, 2)
 	
 	For i,f in fileList {
-		curr := f[FC_LOC]
-		ref := f[FC_REF_LOC]
-		currZip := f[FC_ZIP_LOC]
-		refZip := f[FC_ZIP_REF_LOC]
+		if(zipOrUnzip = "z") {
+			curr := f[FC_LOC]
+			ref := f[FC_REF_LOC]
+			currZip := f[FC_ZIP_LOC]
+			refZip := f[FC_ZIP_REF_LOC]
+		} else {
+			curr := f[FC_ZIP_LOC]
+			ref := f[FC_ZIP_REF_LOC]
+			currZip := f[FC_LOC]
+			refZip := f[FC_REF_LOC]
+		}
 		; MsgBox, % f[FC_NAME] "`n" curr "`n" ref "`n" compareFiles(curr, ref)
 		if(compareFiles(curr, ref)) {
 		
 ; NOTE: GOOD OPPORTUNITY FOR MULTI-USE SELECTOR TEST/SETUP.
 
 			; Do the zip/unzip operation to ensure that the newest version is where it needs to be.
-			Selector.select("..\Selector\zip.ini", "RUNWAIT", f[FC_NAME] postFix)
+			Selector.select("..\Selector\zip.ini", "RUNWAIT", f[FC_NAME] zipOrUnzip)
 			
 			; Update the reference versions of the file(s).
 			if(SubStr(curr, 1, 1) = "*") {
@@ -58,9 +61,11 @@ gitZipUnzip(unzip) {
 			FileCopy, %currZip%, %refZip%, 1
 		}
 	}
+	
+	ExitApp
 }
 
 ^a::
-	gitZipUnzip(0)
-	; gitZipUnzip(1)
+	gitZipUnzip("z")
+	gitZipUnzip("u")
 return
