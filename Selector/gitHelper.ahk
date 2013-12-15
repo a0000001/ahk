@@ -67,5 +67,5 @@ gitZipUnzip(zipOrUnzip) {
 
 ^a::
 	gitZipUnzip("z")
-	gitZipUnzip("u")
+	; gitZipUnzip("u")
 return
