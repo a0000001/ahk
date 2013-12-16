@@ -4,7 +4,7 @@ global SELECTOR_ARBITRARY_CHAR := 3
 global SELECTOR_HIDDEN_CHAR := 4
 global SELECTOR_LABEL_CHAR := 5
 global SELECTOR_START_MODEL_ROW_CHAR := 6
-global SELECTOR_END_MODEL_ROW_CHAR := 7
+global SELECTOR_START_ACTION_DEF_ROW_CHAR := 7
 
 ; Selector class which reads in and stores data from a file, and given an index, abbreviation or action, can return the result (and do the action).
 class Selector {
@@ -18,6 +18,8 @@ class Selector {
 	static abbrevConstant := "ABBREV"
 	static actionConstant := "ACTION"
 	static dataConstant := "DATA"
+	
+	static actionRowDef := ""
 	
 	; Constructor: take any characters they want to change and keep track of them, and read in the various files.
 	__New(filePath, chars = "") {
@@ -38,7 +40,7 @@ class Selector {
 		this.hiddenChar := chars[SELECTOR_HIDDEN_CHAR] ? chars[SELECTOR_HIDDEN_CHAR] : "*"
 		this.labelChar := chars[SELECTOR_LABEL_CHAR] ? chars[SELECTOR_LABEL_CHAR] : "#"
 		this.startModelRowChar := chars[SELECTOR_START_MODEL_ROW_CHAR] ? chars[SELECTOR_START_MODEL_ROW_CHAR] : "("
-		this.endModelRowChar := chars[SELECTOR_END_MODEL_ROW_CHAR] ? chars[SELECTOR_END_MODEL_ROW_CHAR] : ")"
+		this.startActionDefRowChar := chars[SELECTOR_START_ACTION_DEF_ROW_CHAR] ? chars[SELECTOR_START_ACTION_DEF_ROW_CHAR] : "{"
 		
 		; Other init values.
 		this.startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
@@ -163,10 +165,16 @@ class Selector {
 				this.hiddenChoices.Insert(currRow)
 			
 			; Special model row that tells us how a file with more than 3 columns should be laid out.
-			MsgBox, % firstChar "`n" this.startModelRowChar "`n" currRow.get(-1) "`n" this.endModelRowChar
-			} else if(firstChar = this.startModelRowChar && InStr(currRow.get(-1), this.endModelRowChar)) {
+			} else if(firstChar = this.startModelRowChar) {
 				; MsgBox, Model row!
 				this.parseModelRow(currRow)
+			
+			; Special row that tells us how to string together the action if it's not directly in there - used for more complex substitutions.
+			} else if(firstChar = this.startActionDefRowChar) {
+				; Strip off the bracket from the first element.
+				currRow.set(1, SubStr(currRow.get(1), 2))
+				
+				this.actionRowDef := currRow
 			
 			; Otherwise, it's a visible, viable choice!
 			} else {
@@ -196,9 +204,9 @@ class Selector {
 	
 	; Function to deal with special model rows.
 	parseModelRow(row) {
-		; Strip off the parens from the first/last elements.
+		; Strip off the paren from the first element.
 		row.set(1, SubStr(row.get(1), 2))
-		row.set(-1, SubStr(row.get(-1), 1, -1))
+		; row.set(-1, SubStr(row.get(-1), 1, -1))
 		
 		For i,r in row.rowArr {
 			; MsgBox, % i "	" r
@@ -212,10 +220,10 @@ class Selector {
 				this.dataIndices.insert(i)
 		}
 		
-		; outStr := "Model row results:" "`n`nName: " this.nameIndex "`nAbbreviation: " this.abbrevIndex "`nAction: " this.actionIndex "`nData: "
-		; For i,d in this.dataIndices
-			; outStr .= "`n	"d
-		; MsgBox, % outStr
+		outStr := "Model row results:" "`n`nName: " this.nameIndex "`nAbbreviation: " this.abbrevIndex "`nAction: " this.actionIndex "`nData: "
+		For i,d in this.dataIndices
+			outStr .= "`n	"d
+		MsgBox, % outStr
 	}
 	
 	; Generate the text for the GUI and display it, returning the user's response.
@@ -317,7 +325,7 @@ class Selector {
 
 		; MsgBox, % "Action: " action
 		; return action
-		MsgBox, % "Row To Do: `n`n" rowToDo.toDebugString()
+		; MsgBox, % "Row To Do: `n`n" rowToDo.toDebugString()
 		return rowToDo
 	}
 
@@ -351,11 +359,45 @@ class Selector {
 		
 		return ""
 	}
+	
+	; Puts together the action for files in which it's not explicit, but pieced together.
+	processAction(def, row) {
+		action := ""
+		; MsgBox, % arrayToDebugString(def.rowArr, 2)
+		
+		For i,d in def.rowArr {
+			; MsgBox, % "Def: " d
+			if(d = "NAME")
+				action .= row.name
+			else if(d = "ABBREV")
+				action .= row.abbrev
+			else if(d = "ACTION")
+				action .= row.action
+			else if(SubStr(d, 1, StrLen(this.dataConstant)) = this.dataConstant) {
+				; This should be the number associated with the data bit.
+				rest := SubStr(d, StrLen(this.dataConstant) + 1)
+				
+				; Get the data from that number and stick it on the end.
+				action .= row.getData(rest)
+			} else
+				action .= d
+			
+			; MsgBox, % "Action: " action
+		}
+		
+		return action
+	}
 
 	; Function to do what it is we want done, then exit.
 	doAction(rowToDo, actionType) {
+		; MsgBox, % "ActionType: " actionType "`n`nAction Row to run:`n" rowToDo.toDebugString()
+		
 		action := rowToDo.action
-		MsgBox, % "ActionType: " actionType "`n`nAction Row to run:`n" rowToDo.toDebugString()
+		
+		; If this is a more complex case, process the action before trying to do it.
+		if(this.actionRowDef) {
+			action := this.processAction(this.actionRowDef, rowToDo)
+		}
 		
 		; For functional use: return what we've decided.
 		if(actionType = "" || actionType = "RETURN") {
@@ -447,6 +489,7 @@ class SelectorRow {
 	name := ""
 	abbr := ""
 	action := ""
+	dataNums := []
 	data := []
 	
 	; Constructor.
@@ -462,8 +505,11 @@ class SelectorRow {
 			this.name := this.rowArr[Selector.nameIndex]
 			this.abbrev := this.rowArr[Selector.abbrevIndex]
 			this.action := this.rowArr[Selector.actionIndex]
-			For i,j in Selector.dataIndices
+			For i,j in Selector.dataIndices {
+				; MsgBox, % this.rowArr[j]
 				this.data.insert(this.rowArr[j])
+				this.dataNums.insert(i)
+			}
 			
 			; MsgBox, % this.rowArr[1] "x"
 			
@@ -503,11 +549,19 @@ class SelectorRow {
 		this.rowArr[i] := x
 	}
 	
+	getData(n) {
+		For i,d in this.dataNums {
+			if(d = n) {
+				return this.data[i]
+			}
+		}
+	}
+	
 	; Function to output this object as a string for debug purposes.
 	toDebugString() {
 		outStr := "        Name: " this.name "`n	Abbreviation: " this.abbrev "`n	Action: " this.action "`n	Data:"
 		For i,d in this.data
-			outStr .= "`n		" d
+			outStr .= "`n		" this.dataNums[i] "	" d
 		return outStr
 	}
 }

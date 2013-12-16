@@ -57,7 +57,9 @@ setupTrayIcons(v, m)
 ; }
 
 ^b::
-	; MsgBox, % Selector.select("test.ini", "RETURN")
+	; test := "MsgBox, kiu"
+	; Run, test
+	; Selector.select("test.ini", "POPUP")
 	; x := []
 	; ; x := ""
 	; if(x)
