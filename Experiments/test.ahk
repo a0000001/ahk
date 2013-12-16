@@ -28,6 +28,19 @@ setupTrayIcons(v, m)
 	MsgBox, % test.name
 return
 
+^+!t::
+	; Get user input.
+	FileSelectFile, fileName
+	
+	; Read in the list of names.
+	referenceLines := fileLinesToArray(fileName)
+	MsgBox, % arrayToDebugString(referenceLines)
+	
+	; Parse the list into nice, uniform reference lines.
+	references := cleanParseList(referenceLines)
+	MsgBox, % arrayToDebugString(references, 2)	
+return
+
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ~#!x::

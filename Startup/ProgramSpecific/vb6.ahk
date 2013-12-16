@@ -523,9 +523,11 @@ convertStarToES(string) {
 		
 		; Read in the list of names.
 		referenceLines := fileLinesToArray(fileName)
+		; MsgBox, % arrayToDebugString(referenceLines)
 		
 		; Parse the list into nice, uniform reference lines.
 		references := cleanParseList(referenceLines)
+		; MsgBox, % arrayToDebugString(references, 2)
 		
 		textOut := ""
 		refsLen := references.MaxIndex()
