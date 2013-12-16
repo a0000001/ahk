@@ -3,13 +3,21 @@ global SELECTOR_HISTORY_CHAR := 2
 global SELECTOR_ARBITRARY_CHAR := 3
 global SELECTOR_HIDDEN_CHAR := 4
 global SELECTOR_LABEL_CHAR := 5
+global SELECTOR_START_MODEL_ROW_CHAR := 6
+global SELECTOR_END_MODEL_ROW_CHAR := 7
 
-; Selector class which reads in and stores data from a file, and given an index, abbreviation or path (and action), can return the result (and do the action).
+; Selector class which reads in and stores data from a file, and given an index, abbreviation or action, can return the result (and do the action).
 class Selector {
 	; Constants and such.
-	static NAME_IDX := 1
-	static ABBR_IDX := 2
-	static DATA_IDX := 3
+	static nameIndex := 1
+	static abbrevIndex := 2
+	static actionIndex := 3
+	static dataIndices := []
+	
+	static nameConstant := "NAME"
+	static abbrevConstant := "ABBREV"
+	static actionConstant := "ACTION"
+	static dataConstant := "DATA"
 	
 	; Constructor: take any characters they want to change and keep track of them, and read in the various files.
 	__New(filePath, chars = "") {
@@ -29,6 +37,8 @@ class Selector {
 		this.arbitChar := chars[SELECTOR_ARBITRARY_CHAR] ? chars[SELECTOR_ARBITRARY_CHAR] : "."
 		this.hiddenChar := chars[SELECTOR_HIDDEN_CHAR] ? chars[SELECTOR_HIDDEN_CHAR] : "*"
 		this.labelChar := chars[SELECTOR_LABEL_CHAR] ? chars[SELECTOR_LABEL_CHAR] : "#"
+		this.startModelRowChar := chars[SELECTOR_START_MODEL_ROW_CHAR] ? chars[SELECTOR_START_MODEL_ROW_CHAR] : "("
+		this.endModelRowChar := chars[SELECTOR_END_MODEL_ROW_CHAR] ? chars[SELECTOR_END_MODEL_ROW_CHAR] : ")"
 		
 		; Other init values.
 		this.startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
@@ -72,11 +82,13 @@ class Selector {
 		
 		; Parse input to meaningful command.
 		; MsgBox, % "UserIn: " userIn
-		action := this.parseChoice(userIn, actionType)
+		; action := this.parseChoice(userIn, actionType)
+		rowToDo := this.parseChoice(userIn, actionType)
 		
 		; Store what we're about to do in the history file.
 		; Don't save hidden entries or the previous entry (input of this.historyChar).
-		firstChar := SubStr(userIn, 1, 1)
+		; firstChar := SubStr(userIn, 1, 1)
+		firstChar := SubStr(rowToDo.name, 1, 1)
 		if(firstChar != this.hiddenChar && firstChar != this.historyChar) {
 			historyFilePath := this.fileName "History.ini"
 			
@@ -84,16 +96,19 @@ class Selector {
 			if(this.historyChoices.MaxIndex() = 10) {
 				FileDelete, %historyFilePath%
 				Loop, 9 {
-					FileAppend, % historyChoices[A_Index + 1] "`n", %historyFilePath%
+					; MsgBox, % "Adding back in history choice: " this.historyChoices[A_Index + 1]
+					FileAppend, % this.historyChoices[A_Index + 1] "`n", %historyFilePath%
 				}
 			}
 			
 			; Add our latest command to the end.
-			FileAppend, %userIn%`n, %historyFilePath%
+			tempUserIn := rowToDo.abbrev
+			FileAppend, %tempUserIn%`n, %historyFilePath%
 		}
-
+		
 		; So now we have something valid - do it and die.
-		return this.doAction(action, actionType)
+		; return this.doAction(action, actionType)
+		return this.doAction(rowToDo, actionType)
 	}
 	
 	; Load the choices and other such things from a specially formatted file.
@@ -102,7 +117,7 @@ class Selector {
 		lines := fileLinesToArray(filePath)
 		; MsgBox, % arrayToDebugString(lines)
 		
-		; Parse those lines into a N x 3 array, where the meaningful lines have become a size 3 array (Name, Abbrev, Path) each.
+		; Parse those lines into a N x 3 array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		list := cleanParseList(lines)
 		; MsgBox, % arrayToDebugString(list, 2)
 		
@@ -111,13 +126,16 @@ class Selector {
 			; MsgBox, % currItem[this.NAME_IDX]
 			
 			; Parse this size-3 array into a new Row object.
-			currRow := new SelectorRow(currItem[Selector.NAME_IDX], currItem[Selector.ABBR_IDX], currItem[Selector.DATA_IDX])
+			; currRow := new SelectorRow(currItem[Selector.NAME_IDX], currItem[Selector.ABBR_IDX], currItem[Selector.DATA_IDX])
+			currRow := new SelectorRow(currItem)
 			; MsgBox, % currRow.toDebugString()
 			
-			firstChar := SubStr(currRow.name, 1, 1)
+			firstChar := SubStr(currRow.get(1), 1, 1)
+			; MsgBox, % "First char: " firstChar
 			
-			; Title.
+			; Popup title.
 			if(i = 1 && firstChar = this.titleChar) {
+				; MsgBox, Title row!
 				this.title := SubStr(currRow.name, 2)
 			
 			; Special: add a title and/or blank row in the list display.
@@ -144,15 +162,21 @@ class Selector {
 				; MsgBox, It's a star row!
 				this.hiddenChoices.Insert(currRow)
 			
+			; Special model row that tells us how a file with more than 3 columns should be laid out.
+			MsgBox, % firstChar "`n" this.startModelRowChar "`n" currRow.get(-1) "`n" this.endModelRowChar
+			} else if(firstChar = this.startModelRowChar && InStr(currRow.get(-1), this.endModelRowChar)) {
+				; MsgBox, Model row!
+				this.parseModelRow(currRow)
+			
 			; Otherwise, it's a visible, viable choice!
 			} else {
 				; Allow piped-together entries, but only show the first one.
-				if(inStr(currRow.abbr, "|")) {
-					; MsgBox, % "pipe: " currRow.abbr
-					splitAbbrev := specialSplit(currRow.abbr, "|")
+				if(inStr(currRow.abbrev, "|")) {
+					; MsgBox, % "pipe: " currRow.abbrev
+					splitAbbrev := specialSplit(currRow.abbrev, "|")
 					For i,a in splitAbbrev {
 						tempRow := currRow.clone()
-						tempRow.abbr := splitAbbrev[i]
+						tempRow.abbrev := splitAbbrev[i]
 						
 						if(A_Index = 1) {
 							this.choices.Insert(tempRow)
@@ -170,6 +194,30 @@ class Selector {
 		; MsgBox, % this.toDebugString()
 	}
 	
+	; Function to deal with special model rows.
+	parseModelRow(row) {
+		; Strip off the parens from the first/last elements.
+		row.set(1, SubStr(row.get(1), 2))
+		row.set(-1, SubStr(row.get(-1), 1, -1))
+		
+		For i,r in row.rowArr {
+			; MsgBox, % i "	" r
+			if(r = this.nameConstant)
+				this.nameIndex := i
+			else if(r = this.abbrevConstant)
+				this.abbrevIndex := i
+			else if(r = this.actionConstant)
+				this.actionIndex := i
+			else if(InStr(r, this.dataConstant))
+				this.dataIndices.insert(i)
+		}
+		
+		; outStr := "Model row results:" "`n`nName: " this.nameIndex "`nAbbreviation: " this.abbrevIndex "`nAction: " this.actionIndex "`nData: "
+		; For i,d in this.dataIndices
+			; outStr .= "`n	"d
+		; MsgBox, % outStr
+	}
+	
 	; Generate the text for the GUI and display it, returning the user's response.
 	launchSelectorPopup() {
 		; Generate the text to display from the various choice objects.
@@ -185,7 +233,7 @@ class Selector {
 				displayText .= this.nonChoices[i] "`n"
 			}
 			
-			displayText .= i ") " c.abbr ":`t" c.name "`n"
+			displayText .= i ") " c.abbrev ":`t" c.name "`n"
 		}
 		
 		; Actually prompt the user.
@@ -203,67 +251,78 @@ class Selector {
 		histCharPos := InStr(userIn, this.historyChar)
 		arbCharPos := InStr(userIn, this.arbitChar)
 		; MsgBox, % histCharPos
-
+		
+		rowToDo := ""
+		rest := SubStr(userIn, 2)
+		
 		; Just historyChar gives us the last executed command. ArbitChar on its own does the same.
 		if(userIn = this.historyChar || userIn = this.arbitChar) {
 			if(this.historyChoices.MaxIndex()) {
-				action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() ], actionType)
+				; action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() ], actionType)
+				rowToDo := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() ], actionType)
 			} else {
 				MsgBox, No history available!
-				action := ""
+				; action := ""
 			}
 		
 		; History choice - 1 is last entry, 2 is next to last entered, etc.
 		} else if(histCharPos = 1) {
 			; Special case: historyChar+0 is the edit action, which will open the current INI file for editing.
-			rest := SubStr(userIn, 2)
 			if(rest = 0 || rest = "e" || rest = "edit") {
 				; MsgBox, Edit action!
 				actionType := "EDIT"
-				action := this.filePath
+				; action := this.filePath
+				rowToDo := new SelectorRow()
+				rowToDo.action := this.filePath
 			
 			; Otherwise, it has to be numeric.
-			} else If SubStr(userIn, 2) is not number {
-				MsgBox, History character must be used with numeric input!
-				action := ""
+			} else If rest Is Not Number ; This if loop behaves oddly with curly braces.
+				MsgBox, History character must be used with numeric input or "edit"!
 			
 			; Normal case, get the history entry specified.
-			} else {
+			else {
 				; MsgBox, % arrayToDebugString(this.historyChoices)
-				action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() + 1 - userIn ], actionType)
+				; action := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() + 1 - userIn ], actionType)
+				rowToDo := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() + 1 - userIn ], actionType)
 			}
 		; ".yada" passes in "yada" as an arbitrary, meaninful command.
 		} else if(arbCharPos = 1) {
-			action := SubStr(userIn, 2)
+			; action := rest
+			rowToDo = new SelectorRow()
+			rowToDo.action := rest
 
 		; Allow concatentation of arbitrary addition with short.yada or #.yada.
 		} else if(arbCharPos > 1) {
 			StringSplit, splitBits, userIn, % this.arbitChar
 			; MsgBox, % splitBits1 . "	" . splitBits2
-			action := this.searchAllTables(splitBits1)
-			if(action = "") {
+			; action := this.searchAllTables(splitBits1)
+			rowToDo := this.searchAllTables(splitBits1)
+			if(!rowToDo) {
 				MsgBox, No matches found!
-				action := ""
 			}
-			userIn := splitBits1 . this.arbitChar . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
-			action .= splitBits2
+			; userIn := splitBits1 . this.arbitChar . splitBits2 ; Update userIn so that first half of x+y is the shortcut.
+			rowToDo.abbrev := splitBits1 . this.arbitChar . splitBits2 ; Update the return so that first half of x+y is the shortcut.
+			; action .= splitBits2
+			rowToDo.action .= splitBits2
 			
 		; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 		} else {
-			action := this.searchAllTables(userIn)
+			; action := this.searchAllTables(userIn)
+			rowToDo := this.searchAllTables(userIn)
 			
-			if(action = "") {
+			if(!rowToDo) {
 				MsgBox, No matches found!
-				action := ""
 			}
 		}
 
 		; MsgBox, % "Action: " action
-		return action
+		; return action
+		MsgBox, % "Row To Do: `n`n" rowToDo.toDebugString()
+		return rowToDo
 	}
 
 	; Search both given tables, the visible and the invisible.
-	searchAllTables(ByRef input) {
+	searchAllTables(input) {
 		; Try the visible choices.
 		out := this.searchTable(input, this.choices)
 		if(out)
@@ -271,18 +330,22 @@ class Selector {
 		
 		; Try the invisible choices.
 		out := this.searchTable(input, this.hiddenChoices)
-		input := this.hiddenChar input ; Mark that this is an invisible choice.
+		if(out)
+			out.name := this.hiddenChar input ; Mark that this is an invisible choice.
+			; input := this.hiddenChar input ; Mark that this is an invisible choice.
+		
 		return out
 	}
 
 	; Function to search our generated table for a given index/shortcut.
-	searchTable(ByRef input, table) {
+	searchTable(input, table) {
 		For i,t in table {
-			; MsgBox, % input ", " t.name " " t.abbr " " t.data
-			if(input = i || input = t.abbr || input = t.name) {
+			; MsgBox, % input ", " t.name " " t.abbrev " " t.action
+			if(input = i || input = t.abbrev || input = t.name) {
 				; MsgBox, Found: %input% at index: %i%
-				input := t.abbr
-				return t.data
+				; input := t.abbrev
+				; return t.action
+				return t.clone()
 			}
 		}
 		
@@ -290,53 +353,54 @@ class Selector {
 	}
 
 	; Function to do what it is we want done, then exit.
-	doAction(input, actionType) {
-		; MsgBox, % "Input: "input "`nActionType: " actionType
+	doAction(rowToDo, actionType) {
+		action := rowToDo.action
+		MsgBox, % "ActionType: " actionType "`n`nAction Row to run:`n" rowToDo.toDebugString()
 		
 		; For functional use: return what we've decided.
 		if(actionType = "" || actionType = "RETURN") {
-			return input
+			return action
 			
 		; Run the action.
 		} else if(actionType = "RUN") {
-			Run, % input
+			Run, % action
 			
 		; Run the action, waiting for it to finish.
 		} else if(actionType = "RUNWAIT") {
-			RunWait, % input
+			RunWait, % action
 		
 		; Just send the text of the action.
 		} else if(actionType = "PASTE") {
-			SendRaw, %input%
+			SendRaw, %action%
 		
 		; Send the text of the action and press enter.
 		} else if(actionType = "PASTE_SUBMIT") {
-			SendRaw, %input%
+			SendRaw, %action%
 			Send, {Enter}
 		
-		; Mainly for debug: pop up a message box with the path.
+		; Mainly for debug: pop up a message box with the action.
 		} else if(actionType = "POPUP") {
-			MsgBox, %input%
+			MsgBox, %action%
 		
 		; Testing: parse and display the given file.
 		} else if(actionType = "TEST") {
 			; Run given file with a POPUP action. Yes, this is getting rather meta.
-			Run, select.ahk %input% POPUP
+			Run, select.ahk %action% POPUP
 		
 		; Edit the current ini file.
 		} else if(actionType = "EDIT") {
-			Run, %input%
+			Run, %action%
 		
 		; Call the action.
 		} else if(actionType = "CALL") {
 			URL := "http://guru/services/Webdialer.asmx/"
 			
-			if(input = "-") {
+			if(action = "-") {
 				; MsgBox, Hanging up current call.
 				URL .= "HangUpCall?"
 				MsgText = Hanging up current call. `n`nContinue?
 			} else {
-				phoneNum := parsePhone(input)
+				phoneNum := parsePhone(action)
 				
 				if(phoneNum = -1) {
 					MsgBox, Invalid phone number!
@@ -344,7 +408,7 @@ class Selector {
 				}
 				
 				URL .= "CallNumber?extension=" . phoneNum
-				MsgText = Calling: `n`n%input% `n[%phoneNum%] `n`nContinue?
+				MsgText = Calling: `n`n%action% `n[%phoneNum%] `n`nContinue?
 			}
 			
 			MsgBox, 4,, %MsgText%
@@ -379,24 +443,71 @@ class Selector {
 
 ; Row class for use in the Selector. Has three pieces.
 class SelectorRow {
+	rowArr := []
 	name := ""
 	abbr := ""
-	data := ""
+	action := ""
+	data := []
 	
 	; Constructor.
-	__New(n, a, d) {
-		this.name := n
-		this.abbr := a
-		this.data := d
+	__New(arr = "") {
+		if(arr != "") {
+			For i,a in arr {
+				; MsgBox, %"x " i "	" a
+				; MsgBox, Adding to row: %a%
+				this.rowArr.insert(a)
+			}
+			
+			; Variable access to needed pieces.
+			this.name := this.rowArr[Selector.nameIndex]
+			this.abbrev := this.rowArr[Selector.abbrevIndex]
+			this.action := this.rowArr[Selector.actionIndex]
+			For i,j in Selector.dataIndices
+				this.data.insert(this.rowArr[j])
+			
+			; MsgBox, % this.rowArr[1] "x"
+			
+			; Temp, remove and fix later.
+			; this.name := this.rowArr[1]
+			; this.abbrev := this.rowArr[2]
+			; this.action := this.rowArr[3]
+			
+			; MsgBox, % "Name: " this.name
+		}
 	}
+	; __New(n, a, d) {
+		; this.name := n
+		; this.abbrev := a
+		; this.action := d
+	; }
 	
 	; Shallow copy function.
 	clone() {
-		return new SelectorRow(this.name, this.abbr, this.data)
+		; return new SelectorRow(this.name, this.abbrev, this.action)
+		return new SelectorRow(this.rowArr)
+	}
+	
+	get(i) {
+		; MsgBox, % "Getting " i ": " rowArr[i]
+		if(i < 0) {
+			return this.rowArr[this.rowArr.MaxIndex()]
+		}
+		return this.rowArr[i]
+	}
+	set(i, x) {
+		if(i < 0) {
+			; MsgBox, % i "	" this.rowArr.MaxIndex()
+			this.rowArr[this.rowArr.MaxIndex()] := x
+			return
+		}
+		this.rowArr[i] := x
 	}
 	
 	; Function to output this object as a string for debug purposes.
 	toDebugString() {
-		return "        Name: " this.name "`n	Abbreviation: " this.abbr "`n	Data: " this.data
+		outStr := "        Name: " this.name "`n	Abbreviation: " this.abbrev "`n	Action: " this.action "`n	Data:"
+		For i,d in this.data
+			outStr .= "`n		" d
+		return outStr
 	}
 }

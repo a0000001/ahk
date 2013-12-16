@@ -6,6 +6,7 @@ fileLinesToArray(fileName) {
 	
 	Loop Read, %fileName% 
 	{
+		; MsgBox, Line %A_Index%: %A_LoopReadLine%
 		lines[A_Index] := A_LoopReadLine
 	}
 	

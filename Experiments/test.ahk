@@ -22,42 +22,49 @@ setupTrayIcons(v, m)
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
-global FC_NAME := 1
-global FC_LOC := 2
-global FC_REF_LOC := 3
+; global FC_NAME := 1
+; global FC_LOC := 2
+; global FC_REF_LOC := 3
 
-gitZipUnzip(unzip) {
-	if(unzip) {
-		postFix := "u"
-		iniFile := "unzipReferences.ini"
-	} else {
-		postFix := "z"
-		iniFile := "zipReferences.ini"
-	}
+; gitZipUnzip(unzip) {
+	; if(unzip) {
+		; postFix := "u"
+		; iniFile := "unzipReferences.ini"
+	; } else {
+		; postFix := "z"
+		; iniFile := "zipReferences.ini"
+	; }
 	
-	; NOTE: GOOD OPPORTUNITY FOR MULTI-USE SELECTOR TEST/SETUP.
-	lines := fileLinesToArray(iniFile)
-	fileList := cleanParseList(lines)
+	; ; NOTE: GOOD OPPORTUNITY FOR MULTI-USE SELECTOR TEST/SETUP.
+	; lines := fileLinesToArray(iniFile)
+	; fileList := cleanParseList(lines)
 	
-	For i,f in fileList {
-		curr := f[FC_LOC]
-		ref := f[FC_REF_LOC]
-		MsgBox, % f[FC_NAME] "`n" curr "`n" ref "`n" compareFiles(curr, ref)
-		if(compareFiles(curr, ref)) {
-			; Do the zip/unzip operation to ensure that the newest version is where it needs to be.
-			Selector.select("..\Selector\zip.ini", "RUN", f[FC_NAME] postFix)
+	; For i,f in fileList {
+		; curr := f[FC_LOC]
+		; ref := f[FC_REF_LOC]
+		; MsgBox, % f[FC_NAME] "`n" curr "`n" ref "`n" compareFiles(curr, ref)
+		; if(compareFiles(curr, ref)) {
+			; ; Do the zip/unzip operation to ensure that the newest version is where it needs to be.
+			; Selector.select("..\Selector\zip.ini", "RUN", f[FC_NAME] postFix)
 			
-			; Update the reference version.
-			MsgBox, Copying: %curr% `nTo: %ref%
-			FileCopy, %curr%, %ref%, 1
+			; ; Update the reference version.
+			; MsgBox, Copying: %curr% `nTo: %ref%
+			; FileCopy, %curr%, %ref%, 1
 			
-			MsgBox, %errorlevel%
-		}
-	}
-}
+			; MsgBox, %errorlevel%
+		; }
+	; }
+; }
 
-^a::
-	gitZipUnzip(0)
+^b::
+	; MsgBox, % Selector.select("test.ini", "RETURN")
+	; x := []
+	; ; x := ""
+	; if(x)
+		; MsgBox, asdf
+return
+	
+	; gitZipUnzip(0)
 	; gitZipUnzip(1)
 	
 	
