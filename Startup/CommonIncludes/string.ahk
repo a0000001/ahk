@@ -386,7 +386,7 @@ parsePhone(input) {
 	nums := RegExReplace(input, "[^0-9]" , "")
 	StringLen, len, nums
 	
-	; MsgBox, % nums " x " len
+	; MsgBox, % input " x " nums " x " len
 	
 	if(len=4) ; Old extension.
 		return "7"nums

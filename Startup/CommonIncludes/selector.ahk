@@ -220,10 +220,10 @@ class Selector {
 				this.dataIndices.insert(i)
 		}
 		
-		outStr := "Model row results:" "`n`nName: " this.nameIndex "`nAbbreviation: " this.abbrevIndex "`nAction: " this.actionIndex "`nData: "
-		For i,d in this.dataIndices
-			outStr .= "`n	"d
-		MsgBox, % outStr
+		; outStr := "Model row results:" "`n`nName: " this.nameIndex "`nAbbreviation: " this.abbrevIndex "`nAction: " this.actionIndex "`nData: "
+		; For i,d in this.dataIndices
+			; outStr .= "`n	"d
+		; MsgBox, % outStr
 	}
 	
 	; Generate the text for the GUI and display it, returning the user's response.
@@ -296,7 +296,7 @@ class Selector {
 		; ".yada" passes in "yada" as an arbitrary, meaninful command.
 		} else if(arbCharPos = 1) {
 			; action := rest
-			rowToDo = new SelectorRow()
+			rowToDo := new SelectorRow()
 			rowToDo.action := rest
 
 		; Allow concatentation of arbitrary addition with short.yada or #.yada.
