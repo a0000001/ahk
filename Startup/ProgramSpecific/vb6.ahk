@@ -445,7 +445,8 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		
 		; Grab current item's identity.
 		Sleep, 1
-		ControlGetText, currRow, Button5, A
+		; ControlGetText, currRow, Button5, A
+		ControlGetText, currRow, Button1, A
 		; MsgBox, %currRow%
 		
 		; Trim it down to size to allow partial matching.
@@ -536,6 +537,55 @@ convertStarToES(string) {
 			; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
 			findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
 		}
+		
+		MsgBox, Selected References: `n`n%textOut%
+	return
+#IfWinActive
+
+; Components window.
+#IfWinActive, Components
+	^f::
+		; Get user input.
+		InputBox, userIn, Partial Search, Please enter the first portion of the row to find. You may replace "Epic Systems " with "* "
+		if(ErrorLevel) {
+			return
+		}
+		
+		; Expand it as needed.
+		userIn := convertStarToES(userIn)
+		
+		; Crawl the list and check it.
+		if(!findReferenceLine(userIn)) {
+			MsgBox, Reference not found in list!
+		}
+	return
+	
+	^a::
+		; Get user input.
+		FileSelectFile, fileName
+		
+		; Read in the list of names.
+		referenceLines := fileLinesToArray(fileName)
+		; MsgBox, % arrayToDebugString(referenceLines)
+		
+		; Parse the list into nice, uniform reference lines.
+		references := cleanParseList(referenceLines)
+		; MsgBox, % arrayToDebugString(references, 2)
+		
+		textOut := ""
+		For i,r in References {
+			textOut .= r[1] . "	" . r[2] . "`n"
+			; MsgBox, % r[1] . "	" . r[2] . "`n"
+			; findReferenceLine(r[1], r[2])
+		}
+		
+		; textOut := ""
+		; refsLen := references.MaxIndex()
+		; Loop, %refsLen% {
+			; textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
+			; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
+			; findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
+		; }
 		
 		MsgBox, Selected References: `n`n%textOut%
 	return

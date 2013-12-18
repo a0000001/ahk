@@ -65,10 +65,10 @@ gitZipUnzip(zipOrUnzip) {
 	ExitApp
 }
 
-^a::
+^z::
 	gitZipUnzip("z")
 return
 
-^b::
+^u::
 	gitZipUnzip("u")
 return
