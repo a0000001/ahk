@@ -4,7 +4,7 @@
 	~^1::Send, ^+i
 
 	; Make Control+F be search, not forward.
-	^f::Send, ^e
+	; ^f::Send, ^e
 	
 	; Shortcut to go to today on the calendar. (In desired, 3-day view.)
 	^t::
@@ -12,8 +12,9 @@
 		Send, {Up}{Down}
 		Send, !h
 		Send, od
-		Send, !3
-		Send, {Left}{Home}
+		; Send, !3
+		Send, ^!3 ; Week, not 3 days.
+		; Send, {Left}{Home}
 	return
 
 	; TLG Event Creation Macro.
@@ -50,18 +51,17 @@
 	return
 
 #If WinActive("Calendar - " localEmailAddress " - Microsoft Outlook") || WinActive("TLG - " localEmailAddress " - Microsoft Outlook")
-	; Calendar view: 3-day view.
+	; Calendar view: 3-day view, week view, and month view.
 	$^e::Send, !3
-	
-	; Calendar view: work week view.
-	^w::Send, !-
+	^w::Send, ^!3
+	^q::Send, ^!4
 	
 	; Toggle the preview pane in calendar view.
 	!r::
 		Send, !v
 		Send, pn
 		if(previewOpen) {
-			Send, r
+			Send, b
 			previewOpen := 0
 		} else {
 			Send, o
@@ -69,7 +69,7 @@
 		}
 	return
 	
-	; Time Scale on calendar.
+	; Time Scale on calendar: 15m and 30m.
 	^+1::
 		Send, !v
 		Send, sc
@@ -82,8 +82,8 @@
 	return
 	
 	; Weekly scrolling.
-	!WheelUp::!Up
-	!WheelDown::!Down
+	; !WheelUp::!Up
+	; !WheelDown::!Down
 	
 	; Category application: Make ^F1 usable.
 	^F1::^F12
