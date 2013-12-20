@@ -19,6 +19,8 @@ class Selector {
 	static actionConstant := "ACTION"
 	static dataConstant := "DATA"
 	
+	static editStrings := ["0", "e", "edit"]
+	
 	static actionRowDef := ""
 	
 	; Constructor: take any characters they want to change and keep track of them, and read in the various files.
@@ -276,11 +278,12 @@ class Selector {
 		; History choice - 1 is last entry, 2 is next to last entered, etc.
 		} else if(histCharPos = 1) {
 			; Special case: historyChar+0 is the edit action, which will open the current INI file for editing.
-			if(rest = 0 || rest = "e" || rest = "edit") {
+			if(contains(this.editStrings, rest)) {
 				; MsgBox, Edit action!
 				actionType := "EDIT"
 				; action := this.filePath
 				rowToDo := new SelectorRow()
+				rowToDo.abbrev := userIn
 				rowToDo.action := this.filePath
 			
 			; Otherwise, it has to be numeric.
@@ -395,7 +398,7 @@ class Selector {
 		action := rowToDo.action
 		
 		; If this is a more complex case, process the action before trying to do it.
-		if(this.actionRowDef) {
+		if(this.actionRowDef && !action) {
 			action := this.processAction(this.actionRowDef, rowToDo)
 		}
 		

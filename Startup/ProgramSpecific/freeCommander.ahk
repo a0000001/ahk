@@ -2,12 +2,14 @@
 ; #e::Run "C:\Program Files\FreeCommander\FreeCommander.exe"
 
 ; ; Activation hotkey.
-; ~!2::
+; #v::
 	; if(WinExist("ahk_class TfcForm")) {
+		; ; WinActivateBottom 
+		; ; WinRestore
 		; WinActivate
 	; } else {
 		; ; FC isn't running - run it.
-		; Run "C:\Program Files\FreeCommander\FreeCommander.exe"
+		; Run "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
 	; }
 ; return
 
