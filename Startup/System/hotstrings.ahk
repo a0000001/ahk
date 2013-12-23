@@ -245,6 +245,25 @@ return
 :*:xpff::C:\Program Files (x86)
 :*:.x8:: (x86)
 
+; Epic
+:*:2esf::
+:*:82esf::
+:*:esf::
+	Send, % epicSourceAppQA82
+return
+:*:1esf::
+:*:81esf::
+	Send, % epicSourceAppQA81
+return
+:*:9esf::
+:*:79esf::
+	Send, % epicSourceAppQA79
+return
+:*:8esf::
+:*:78esf::
+	Send, % epicSourceAppQA78
+return
+
 ; :*:tsf::
 ; :*:testf::
 	; Send, G:\TestStuff
