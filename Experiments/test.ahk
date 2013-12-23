@@ -20,12 +20,16 @@ m[0] := "..\Startup\CommonIncludes\Icons\test.ico"
 m[1] := "..\Startup\CommonIncludes\Icons\testSuspended.ico"
 setupTrayIcons(v, m)
 
+; Hotkey to open test.ahk for editing.
+^+e::
+	Run, C:\Program Files (x86)\Notepad++\notepad++.exe A:\Experiments\test.ahk
+return
+
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
-	test := new SelectorRow()
-	test.name := "I have a name!"
-	MsgBox, % test.name
+	
+	
 return
 
 ^+!t::

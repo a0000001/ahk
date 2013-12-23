@@ -154,6 +154,8 @@ TrayIcons(sExeName = "") {
 	idxTB := GetTrayBar()
 	SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class Shell_TrayWnd ; TB_BUTTONCOUNT
 	
+	; MsgBox, % pidTaskbar "`n" hProc "`n" pProc "`n" idxTB "`n" ErrorLevel
+	
 	Loop, %ErrorLevel%
 	{
 		SendMessage, 0x417, A_Index-1, pProc, ToolbarWindow32%idxTB%, ahk_class Shell_TrayWnd ; TB_GETBUTTON
@@ -169,6 +171,8 @@ TrayIcons(sExeName = "") {
 			dwData := NumGet(btn,16,"int64")
 			iString :=NumGet(btn,24,"int64")
 		}
+		
+		; MsgBox, % iBitmap "`n" idn "`n" Statyle "`n" dwData "`n" iString
 		
 		DllCall("ReadProcessMemory", "Uint", hProc, "Uint", dwData, "Uint", &nfo, "Uint", 32, "Uint", 0)
 		
@@ -187,13 +191,19 @@ TrayIcons(sExeName = "") {
 		WinGet, sProcess, ProcessName, ahk_id %hWnd%
 		WinGetClass, sClass, ahk_id %hWnd%
 		
+		; MsgBox, % hWnd "`n" uID "`n" nMsg "`n" hIcon "`n" sExeName "`n" pid "`n" sProcess "`n" sClass
+		
 		if(!sExeName || (sExeName = sProcess) || (sExeName = pid)) {
+			; MsgBox, in?
+			
 			VarSetCapacity(sTooltip,128)
 			VarSetCapacity(wTooltip,128*2)
 			DllCall("ReadProcessMemory", "Uint", hProc, "Uint", iString, "Uint", &wTooltip, "Uint", 128*2, "Uint", 0)
 			DllCall("WideCharToMultiByte", "Uint", 0, "Uint", 0, "str", wTooltip, "int", -1, "str", sTooltip, "int", 128, "Uint", 0, "Uint", 0)
 			sTrayIcons .= "idx: " . A_Index-1 . " | idn: " . idn . " | Pid: " . pid . " | uID: " . uID . " | MessageID: " . nMsg . " | hWnd: " . hWnd . " | Class: " . sClass . " | Process: " . sProcess . "`n" . "   | Tooltip: " . sTooltip . "`n"
 		}
+		
+		; MsgBox, % hWnd "`n" uID "`n" nMsg "`n" hIcon "`n" pid "`n" sProcess "`n" sClass "`n" sExeName
 	}
 	
 	DllCall("VirtualFreeEx", "Uint", hProc, "Uint", pProc, "Uint", 0, "Uint", 0x8000)
@@ -226,6 +236,8 @@ doubleClickTrayIcon(exeName) {
 	uID  := RegExReplace( TIV4, "uID: " )
 	Msg  := RegExReplace( TIV5, "MessageID: " )
 	hWnd := RegExReplace( TIV6, "hWnd: " )
+	
+	MsgBox, % TI "`n" uID "`n" Msg "`n" hWnd
 	
 	PostMessage, Msg, uID, 0x0203, , ahk_id %hWnd% ; Double Click Icon
 }

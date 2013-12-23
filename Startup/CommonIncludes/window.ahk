@@ -115,3 +115,15 @@ minimizeWindowSpecial(case = 0) {
 		WinMinimize, A
 	}
 }
+
+; Centers a window on the screen. "A" will use the active window, and passing nothing will use the last found window.
+centerWindow(title = "") {
+	if(!title) {
+		WinGetTitle, title
+	} else if(title = "A") {
+		WinGetTitle, title, A
+	}
+	
+	WinGetPos, , , Width, Height, %WinTitle%
+	WinMove, %WinTitle%, , (A_ScreenWidth / 2) - (Width / 2), (A_ScreenHeight / 2) - (Height / 2)
+}
