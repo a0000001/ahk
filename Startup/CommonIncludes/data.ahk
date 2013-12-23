@@ -21,3 +21,11 @@ contains(haystack, needle) {
 		}
 	}
 }
+
+; Converts decimal numbers to hex ones.
+decimalToHex(var) {
+	SetFormat, integer, hex
+	var += 0
+	SetFormat, integer, d
+	return var
+}

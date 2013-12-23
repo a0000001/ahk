@@ -70,6 +70,11 @@ closeWindowSpecial(case = 0) {
 		; Send, !q
 		PostMessage, 0x112, 0xF020
 	}
+	
+	else if(WinActive("ahk_class TfcForm")) { ; FreeCommander.
+		minimizeWindowSpecial()
+	}
+	
 	; if((WinActive("ahk_class MozillaWindowClass")) ; Firefox - tabs. Only if CapsLock was held.
 	; and case == 1)
 	; {
@@ -111,6 +116,10 @@ minimizeWindowSpecial(case = 0) {
 	} else if(WinActive("ahk_class ahk_class CabinetWClass")) { ; Windows Explorer/QTTabbar.
 		Send, ^m
 
+	} else if(WinActive("ahk_class TfcForm")) { ; FreeCommander.
+		; Send, 
+		WinHide
+		
 	} else {
 		WinMinimize, A
 	}
@@ -126,4 +135,62 @@ centerWindow(title = "") {
 	
 	WinGetPos, , , Width, Height, %WinTitle%
 	WinMove, %WinTitle%, , (A_ScreenWidth / 2) - (Width / 2), (A_ScreenHeight / 2) - (Height / 2)
+}
+
+activateLastWindow() {
+	WinActivate, % "ahk_id " getPreviousWindowID()
+}
+
+getPreviousWindowID() {
+	WS_EX_CONTROLPARENT = 0x10000
+	WS_EX_APPWINDOW = 0x40000
+	WS_EX_TOOLWINDOW = 0x80
+	WS_DISABLED = 0x8000000
+	WS_POPUP = 0x80000000
+	
+	; Gather a list of running programs to loop over.
+	WinGet, Window_List, List
+	WinGetTitle, currTitle, A
+	WinGetClass, currClass, A
+	
+	; Loop until we have the previous window.
+	Loop, %Window_List%
+	{
+		; Gather information on the window.
+		wid := Window_List%A_Index%
+		WinGetTitle, wid_Title, ahk_id %wid%
+		WinGet, Style, Style, ahk_id %wid%
+		WinGet, es, ExStyle, ahk_id %wid%
+		WinGetClass, Win_Class, ahk_id %wid%
+		WinGet, Style_parent, Style, ahk_id %Parent%
+		Parent := decimalToHex(DllCall("GetParent", "uint", wid))
+		; MsgBox, % wid "`n" wid_Title "`n" Style "`n" es "`n" Win_Class "`n" Style_parent "`n" Parent
+		
+		; Skip unimportant windows.
+		if((Style & WS_DISABLED) || !(wid_Title))
+			Continue
+		; Skip tool-type windows.
+		if(es & WS_EX_TOOLWINDOW)
+			Continue
+		; Skip pspad child windows.
+		if((es & ws_ex_controlparent) && !(Style & WS_POPUP) && (Win_Class != "#32770") && !(es & WS_EX_APPWINDOW))
+			Continue
+		; Skip notepad find windows.
+		if((Style & WS_POPUP) && (Parent) && ((Style_parent & WS_DISABLED) = 0))
+			Continue
+		; Skip other random windows.
+		if(Win_Class = "#32770" || Win_Class = "AU3Reveal" || Win_Class = "Progman")
+			Continue
+		; Don't get yourself, either.
+		if(currClass = Win_Class || currTitle = wid_Title)
+			Continue
+
+		break
+	}
+	
+	; WinActivate, ahk_id %wid%
+	; WinGetTitle, title, ahk_id %wid%
+	; MsgBox, % title "`n" wid "`n" Style "`n" es "`n" Win_Class
+	
+	return, wid
 }
