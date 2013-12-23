@@ -143,15 +143,15 @@ activateLastWindow() {
 
 getPreviousWindowID() {
 	; Gather a list of running programs to loop over.
-	WinGet, Window_List, List
+	WinGet, windowList, List
 	WinGetTitle, oldTitle, A
 	WinGetClass, oldClass, A
 	
 	; Loop until we have the previous window.
-	Loop, %Window_List%
+	Loop, %windowList%
 	{
 		; Gather information on the window.
-		currID := Window_List%A_Index%
+		currID := windowList%A_Index%
 		WinGetTitle, currTitle, ahk_id %currID%
 		WinGet, currStyle, Style, ahk_id %currID%
 		WinGet, currExStyle, ExStyle, ahk_id %currID%
@@ -173,7 +173,7 @@ getPreviousWindowID() {
 		if((currStyle & WS_POPUP) && (currParent) && ((currParentStyle & WS_DISABLED) = 0))
 			Continue
 		; Skip other random windows.
-		if(currClass = "#32770" || currClass = "AU3Reveal" || currClass = "Progman")
+		if(currClass = "#32770" || currClass = "AU3Reveal" || currClass = "Progman" || currClass = "AutoHotkey" || currClass = "AutoHotkeyGUI")
 			Continue
 		; Don't get yourself, either.
 		if(oldClass = currClass || oldTitle = currTitle)
