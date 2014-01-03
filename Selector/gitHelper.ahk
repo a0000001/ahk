@@ -30,10 +30,10 @@ gitZipUnzip(zipOrUnzip) {
 			currZip := f[FC_ZIP_LOC]
 			refZip := f[FC_ZIP_REF_LOC]
 		} else {
-			curr := f[FC_ZIP_LOC]
-			ref := f[FC_ZIP_REF_LOC]
 			currZip := f[FC_LOC]
 			refZip := f[FC_REF_LOC]
+			curr := f[FC_ZIP_LOC]
+			ref := f[FC_ZIP_REF_LOC]
 		}
 		; MsgBox, % f[FC_NAME] "`n" curr "`n" ref "`n" compareFiles(curr, ref)
 		if(compareFiles(curr, ref)) {
