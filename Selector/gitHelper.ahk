@@ -21,7 +21,7 @@ gitZipUnzip(zipOrUnzip) {
 	; MsgBox, % arrayToDebugString(lines)
 	
 	fileList := cleanParseList(lines)
-	; MsgBox, % arrayToDebugString(list, 2)
+	; MsgBox, % arrayToDebugString(fileList, 2)
 	
 	For i,f in fileList {
 		if(zipOrUnzip = "z") {
