@@ -8,12 +8,17 @@
 	
 	; Shortcut to go to today on the calendar. (In desired, 3-day view.)
 	^t::
+		; Get to calendar if needed.
 		Send, ^2
 		Send, {Up}{Down}
+		
+		; Go to today if needed.
 		Send, !h
 		Send, od
-		; Send, !3
-		Send, ^!3 ; Week, not 3 days.
+		
+		; Set view as desired.
+		Send, !3 ; 3 days.
+		; Send, ^!3 ; Week, not 3 days.
 		; Send, {Left}{Home}
 	return
 
@@ -29,10 +34,10 @@
 		Send, ^n
 	return
 
-	; Calendar view: for 3-day view
-	~^2::
-		Send, {Left}
-	return
+	; Calendar view: for 3-day view - shifts one day back so today is center.
+	; ~^2::
+		; Send, {Left}
+	; return
 	
 	; Send whitespace character that outlook checks the body of the message for in order to skip delay send.
 	!x::
