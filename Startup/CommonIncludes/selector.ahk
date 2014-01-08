@@ -87,6 +87,11 @@ class Selector {
 		; Parse input to meaningful command.
 		; MsgBox, % "UserIn: " userIn
 		rowToDo := this.parseChoice(userIn, actionType)
+		; MsgBox, % rowToDo.toDebugString()
+		
+		if(!rowToDo) {
+			return
+		}
 		
 		; Store what we're about to do in the history file.
 		; Don't save hidden entries or the previous entry (input of this.historyChar).
@@ -124,10 +129,9 @@ class Selector {
 		; MsgBox, % arrayToDebugString(list, 2)
 		
 		For i,currItem in list {
-			; MsgBox, % currItem[this.NAME_IDX]
-			
-			; Parse this size-3 array into a new Row object.
-			currRow := new SelectorRow(currItem)
+			; Parse this size-n array into a new SelectorRow object.
+			currRow := new SelectorRow()
+			currRow.parseArray(currItem)
 			; MsgBox, % currRow.toDebugString()
 			
 			firstChar := SubStr(currRow.get(1), 1, 1)
@@ -170,7 +174,8 @@ class Selector {
 			; Special row that tells us how to string together the action if it's not directly in there - used for more complex substitutions.
 			} else if(firstChar = this.startActionDefRowChar) {
 				; Strip off the bracket from the first element.
-				currRow.set(1, SubStr(currRow.get(1), 2))
+				; currRow.set(1, SubStr(currRow.get(1), 2))
+				currRow.rowArr[1] := SubStr(currRow.rowArr[1], 2)
 				
 				this.actionRowDef := currRow
 			
@@ -182,7 +187,7 @@ class Selector {
 					splitAbbrev := specialSplit(currRow.abbrev, "|")
 					For i,a in splitAbbrev {
 						tempRow := currRow.clone()
-						tempRow.abbrev := splitAbbrev[i]
+						tempRow.setAbbrev(splitAbbrev[i])
 						
 						if(A_Index = 1) {
 							this.choices.Insert(tempRow)
@@ -208,7 +213,7 @@ class Selector {
 		this.actionIndex := ""
 		
 		; Strip off the paren from the first element.
-		row.set(1, SubStr(row.get(1), 2))
+		row.rowArr[1] := SubStr(row.rowArr[1], 2)
 		
 		For i,r in row.rowArr {
 			; MsgBox, % i "	" r
@@ -280,8 +285,8 @@ class Selector {
 				; MsgBox, Edit action!
 				actionType := "EDIT"
 				rowToDo := new SelectorRow()
-				rowToDo.abbrev := userIn
-				rowToDo.action := this.filePath
+				rowToDo.setAbbrev(userIn)
+				rowToDo.setAction(this.filePath)
 			
 			; Otherwise, it has to be numeric.
 			} else If rest Is Not Number ; This if loop behaves oddly with curly braces.
@@ -295,7 +300,7 @@ class Selector {
 		; ".yada" passes in "yada" as an arbitrary, meaninful command.
 		} else if(arbCharPos = 1) {
 			rowToDo := new SelectorRow()
-			rowToDo.action := rest
+			rowToDo.setAction(rest)
 
 		; Allow concatentation of arbitrary addition with short.yada or #.yada.
 		} else if(arbCharPos > 1) {
@@ -304,7 +309,7 @@ class Selector {
 			if(!rowToDo) {
 				MsgBox, No matches found!
 			}
-			rowToDo.abbrev := splitBits1 . this.arbitChar . splitBits2 ; Update the return so that first half of x+y is the shortcut.
+			rowToDo.setAbbrev(splitBits1 . this.arbitChar . splitBits2) ; Update the return so that first half of x+y is the shortcut.
 			rowToDo.action .= splitBits2
 			
 		; Otherwise, we search through the data structure by both number and shortcut and look for a match.
@@ -330,7 +335,7 @@ class Selector {
 		; Try the invisible choices.
 		out := this.searchTable(input, this.hiddenChoices)
 		if(out)
-			out.name := this.hiddenChar input ; Mark that this is an invisible choice.
+			out.setName(this.hiddenChar input) ; Mark that this is an invisible choice.
 		
 		return out
 	}
@@ -341,8 +346,7 @@ class Selector {
 			; MsgBox, % input ", " t.name " " t.abbrev " " t.action
 			if(input = i || input = t.abbrev || input = t.name) {
 				; MsgBox, Found: %input% at index: %i%
-				; input := t.abbrev
-				; return t.action
+				; MsgBox, % t.toDebugString()
 				return t.clone()
 			}
 		}
@@ -484,31 +488,44 @@ class SelectorRow {
 	
 	; Constructor.
 	__New(arr = "") {
-		if(arr != "") {
-			For i,a in arr {
-				; MsgBox, %"x " i "	" a
-				; MsgBox, Adding to row: %a%
-				this.rowArr.insert(a)
-			}
-			
-			; Variable access to needed pieces.
-			if(Selector.nameIndex)
-				this.name := this.rowArr[Selector.nameIndex]
-			if(Selector.abbrevIndex)
-				this.abbrev := this.rowArr[Selector.abbrevIndex]
-			if(Selector.actionIndex)
-				this.action := this.rowArr[Selector.actionIndex]
-			For i,j in Selector.dataIndices {
-				; MsgBox, % this.rowArr[j]
-				this.data.insert(this.rowArr[j])
-				this.dataNums.insert(i)
-			}
+	}
+	
+	parseArray(arr) {
+		For i,a in arr {
+			; MsgBox, %"x " i "	" a
+			; MsgBox, Adding to row: %a%
+			this.rowArr.insert(a)
+		}
+		
+		; Variable access to needed pieces.
+		if(Selector.nameIndex)
+			this.name := this.rowArr[Selector.nameIndex]
+		if(Selector.abbrevIndex)
+			this.abbrev := this.rowArr[Selector.abbrevIndex]
+		if(Selector.actionIndex)
+			this.action := this.rowArr[Selector.actionIndex]
+		For i,j in Selector.dataIndices {
+			; MsgBox, % this.rowArr[j]
+			this.data.insert(this.rowArr[j])
+			this.dataNums.insert(i)
 		}
 	}
 	
 	; Deep copy function.
 	clone() {
-		return new SelectorRow(this.rowArr)
+		; MsgBox, % this.toDebugString()
+		; MsgBox, % new SelectorRow(this.rowArr).toDebugString()
+		; return new SelectorRow(this.rowArr)
+		temp := new SelectorRow()
+		temp.name := this.name
+		temp.abbrev := this.abbrev
+		temp.action := this.action
+		For i,d in this.dataNums {
+			temp.dataNums.insert(d)
+			temp.data.insert(this.data[i])
+		}
+		
+		return temp
 	}
 	
 	get(i) {
@@ -521,10 +538,35 @@ class SelectorRow {
 	set(i, x) {
 		if(i < 0) {
 			; MsgBox, % i "	" this.rowArr.MaxIndex()
-			this.rowArr[this.rowArr.MaxIndex()] := x
-			return
+			i := this.rowArr.MaxIndex()
 		}
 		this.rowArr[i] := x
+		
+		; Update the special properties if needed, too.
+		; MsgBox, % i " " Selector.abbrevIndex
+		if(i = Selector.nameIndex) {
+			this.name := x
+		} else if(i = Selector.abbrevIndex) {
+			this.abbrev := x
+		} else if(i = Selector.actionIndex) {
+			this.action := x
+		}
+	}
+	
+	setName(n) {
+		this.name := n
+		if(Selector.nameIndex)
+			this.rowArr[Selector.nameIndex] := n
+	}
+	setAbbrev(a) {
+		this.abbrev := a
+		if(Selector.abbrevIndex)
+			this.rowArr[Selector.abbrevIndex] := n
+	}
+	setAction(a) {
+		this.action := a
+		if(Selector.actionIndex)
+			this.rowArr[Selector.actionIndex] := n
 	}
 	
 	getData(n) {
@@ -537,9 +579,12 @@ class SelectorRow {
 	
 	; Function to output this object as a string for debug purposes.
 	toDebugString() {
-		outStr := "        Name: " this.name "`n	Abbreviation: " this.abbrev "`n	Action: " this.action "`n	Data:"
+		outStr := "		Name: " this.name "`n	Abbreviation: " this.abbrev "`n	Action: " this.action "`n	Data:"
 		For i,d in this.data
 			outStr .= "`n		" this.dataNums[i] "	" d
+		outStr .= "`n	RowArr:"
+		For i,r in this.rowArr
+			outStr .= "`n		" i "	" r
 		return outStr
 	}
 }
