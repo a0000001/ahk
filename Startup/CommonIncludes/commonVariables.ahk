@@ -53,6 +53,9 @@ if(borgWhichMachine = THINKPAD) {
 pLaunchClass_Explorer := "CabinetWClass"
 pLaunchPath_Explorer := "C:\Windows\explorer.exe"
 
+pLaunchClass_FreeCommander := "TfcForm"
+pLaunchPath_FreeCommander := "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
+
 pLaunchClass_EpicStudio := "WindowsForms10.Window.8.app.0.2bf8098_r13_ad1"
 pLaunchPath_EpicStudio := "C:\Program Files (x86)\EpicStudio\EpicStudio.exe"
 
@@ -93,6 +96,9 @@ if(borgWhichMachine = THINKPAD) {
 	pLaunchPath_5 := pLaunchPath_Onenote
 	
 	
+	pLaunchClass_FileManager := pLaunchClass_Explorer
+	pLaunchPath_FileManager := pLaunchPath_Explorer
+	
 	pLaunchClass_HomeWeb := pLaunchClass_Chrome
 	pLaunchPath_HomeWeb := pLaunchPath_Chrome
 	
@@ -112,6 +118,9 @@ if(borgWhichMachine = THINKPAD) {
 	; pLaunchPath_Chat := pLaunchPath_Pidgin
 	
 } else if(borgWhichMachine = EPIC_DESKTOP) {
+	pLaunchClass_FileManager := pLaunchClass_FreeCommander
+	pLaunchPath_FileManager := pLaunchPath_FreeCommander
+	
 	pLaunchClass_HomeWeb := pLaunchClass_Chrome
 	pLaunchPath_HomeWeb := pLaunchPath_Chrome
 	
@@ -127,9 +136,8 @@ if(borgWhichMachine = THINKPAD) {
 	pLaunchClass_TaskManager := pLaunchClass_ProcessExplorer
 	pLaunchPath_TaskManager := pLaunchPath_ProcessExplorer
 	
-	
-	pLaunchClass_1 := pLaunchClass_Explorer
-	pLaunchPath_1 := pLaunchPath_Explorer
+	pLaunchClass_1 := pLaunchClass_FreeCommander
+	pLaunchPath_1 := pLaunchPath_FreeCommander
 	
 	pLaunchClass_2 := pLaunchClass_EpicStudio
 	pLaunchPath_2 := pLaunchPath_EpicStudio

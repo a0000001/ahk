@@ -1,4 +1,4 @@
-﻿; Function to either focus or open a program.
+; Either focus or open a program.
 activateOpenMinimize(ahkClass, pathToExecutable) {
 	if(SubStr(ahkClass, 1, 8) = "_{NAME}_") {
 		ahkClassString := ahkClass
@@ -6,17 +6,56 @@ activateOpenMinimize(ahkClass, pathToExecutable) {
 		ahkClassString := "ahk_class "ahkClass
 	}
 	
-	if(WinExist(ahkClassString)) {
-		if(WinActive(ahkClassString)) {
+	if(winExistSpecial(ahkClassString)) {
+		if(winActiveSpecial(ahkClassString)) {
 			minimizeWindowSpecial(1)
 		} else {
-			WinShow
-			WinActivate
+			restoreActivateWindowSpecial()
 		}
 	} else {
 		; MsgBox, % pathToExecutable
 		Run %pathToExecutable%
 	}
+}
+
+; Returns whether a window exists, with special exceptions.
+winExistSpecial(inClass) {
+	; if(inClass = "") { ; 
+		
+		; return XXXXX
+	; }
+	
+	; Normal Case.
+	return WinExist(inClass)
+}
+
+; Returns whether a program is active, with special exceptions.
+winActiveSpecial(inClass) {
+	if(inClass = "TfcForm") { ; FreeCommander.
+		; Grab the style so we can tell if it's already hidden.
+		WinGet, style, Style, ahk_class TfcForm
+		if(WinActive("ahk_class TfcForm") && !(style = "0x07CF0000" || style = "0x06CF0000" || style = "0x36CF0000")) {
+			return true
+		} else {
+			return false
+		}
+		
+		return XXXXX
+	}
+	
+	return WinActive(inClass)
+}
+
+; Activates/shows the last found window, with special exceptions.
+restoreActivateWindowSpecial() {
+	; if(inClass = "") { ; 
+		
+		; return
+	; }
+	
+	; Normal case.
+	WinShow
+	WinActivate
 }
 
 ; Activate window by name, loosely.
@@ -117,8 +156,8 @@ minimizeWindowSpecial(case = 0) {
 		Send, ^m
 
 	} else if(WinActive("ahk_class TfcForm")) { ; FreeCommander.
-		; Send, 
 		WinHide
+		activateLastWindow()
 		
 	} else {
 		WinMinimize, A

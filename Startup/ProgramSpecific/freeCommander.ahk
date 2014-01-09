@@ -2,31 +2,29 @@
 ; Replace windows explorer with FreeCommander.
 ; #e::Run "C:\Program Files\FreeCommander\FreeCommander.exe"
 
-; Activation hotkey.
-#e::
-	if(WinExist("ahk_class TfcForm")) {
-		; Make it a tool-type window to hide it from the taskbar.
-		; WinSet, ExStyle, +0x80
+; #e::
+	; if(WinExist("ahk_class TfcForm")) {
+		; ; Make it a tool-type window to hide it from the taskbar.
+		; ; WinSet, ExStyle, +0x80
 		
-		; Grab the style so we can tell if it's already hidden.
-		WinGet, style, Style, ahk_class TfcForm
+		; ; Grab the style so we can tell if it's already hidden.
+		; WinGet, style, Style, ahk_class TfcForm
+		; if(WinActive("ahk_class TfcForm") && !(style = "0x07CF0000" || style = "0x06CF0000" || style = "0x36CF0000")) {
+			; minimizeWindowSpecial()
+			; activateLastWindow()
+		; } else {
+			; WinShow
+			; ; WinMaximize
+			; WinActivate
+			; ; Send, ^+{F2}
+		; }
 		
-		if(WinActive("ahk_class TfcForm") && !(style = "0x07CF0000" || style = "0x06CF0000" || style = "0x36CF0000")) {
-			minimizeWindowSpecial()
-			activateLastWindow()
-		} else {
-			WinShow
-			; WinMaximize
-			WinActivate
-			; Send, ^+{F2}
-		}
-		
-	} else {
-		; MsgBox, Running FC.
-		Run "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
-		WinWait, ahk_class TfcForm
-	}
-return
+	; } else {
+		; ; MsgBox, Running FC.
+		; Run "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
+		; WinWait, ahk_class TfcForm
+	; }
+; return
 
 #IfWinActive, ahk_class TfcForm
 	; ; New folder hotkey.
