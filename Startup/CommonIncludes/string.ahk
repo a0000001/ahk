@@ -418,3 +418,38 @@ getTextHeight(text) {
 	return height
 }
 
+; Pops up a debug breakdown of the given variable.
+debugPrint(var) {
+	MsgBox, % debugString(var)
+}
+
+debugString(var, numTabs = 0) {
+	outStr := ""
+	varSize := var.MaxIndex()
+	
+	if(IsObject(var) && IsFunc(var.toDebugString) && var.debugNoRecurse) {
+		return var.toDebugString(numTabs)
+	
+	} else if(!varSize) {
+		MsgBox, var has no size.
+		return var
+		
+	} else {
+		; Loop, %numTabs% {
+			; outStr .= "`t"
+		; }
+		
+		numTabs++
+		
+		outStr .= "Size: " varSize "`n"
+		For i,v in var {
+			Loop, %numTabs% {
+				outStr .= "`t"
+			}
+			
+			outStr .= "[" i "] " debugString(v, numTabs) "`n"
+		}
+		
+		return outStr
+	}
+}

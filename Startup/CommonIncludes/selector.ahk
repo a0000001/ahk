@@ -41,6 +41,9 @@ class Selector {
 	
 	static actionRowDef := ""
 	
+	
+	static debugNoRecurse := true
+	
 	; Constructor: take any characters they want to change and keep track of them, and read in the various files.
 	__New(filePath, chars = "") {
 		this.init(filePath, chars)
@@ -91,6 +94,7 @@ class Selector {
 		
 		; Set up our various information, read-ins, etc.
 		this.init(filePath, chars)
+		debugPrint(this)
 		
 		; If they've given us a choice, run silently.
 		if(silentChoice != "")
@@ -141,10 +145,12 @@ class Selector {
 		; Read the file into an array.
 		lines := fileLinesToArray(filePath)
 		; MsgBox, % arrayToDebugString(lines)
+		; debugPrint(lines)
 		
 		; Parse those lines into a N x 3 array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		list := cleanParseList(lines)
 		; MsgBox, % arrayToDebugString(list, 2)
+		; debugPrint(list)
 		
 		For i,currItem in list {
 			; Parse this size-n array into a new SelectorRow object.
@@ -545,19 +551,58 @@ class Selector {
 	}
 	
 	; Function to output this object as a string for debug purposes.
-	toDebugString() {
-		outStr := "Choices:"
-		For i,r in this.choices
-			outStr .= "`n" i r.toDebugString()
-		outStr .= "`n`nHidden Choices:"
-		For i,r in this.hiddenChoices
-			outStr .= "`n`n" i r.toDebugString()
-		outStr .= "`n`nNon-Choices:"
-		For i,r in this.nonChoices
-			outStr .= "`n	" i " " r
-		outStr .= "`n`nHistory Choices:"
-		For i,r in this.historyChoices
-			outStr .= i " " r
+	toDebugString(numTabs = 0) {
+		outStr := "[Selector Object]`n"
+		
+		numTabs++
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "[Choices]`n"
+		
+		numTabs++
+		For i,r in this.choices {
+			Loop, %numTabs%
+				outStr .= "`t"
+			outStr .= "[" i "] " debugString(r, numTabs)
+		}
+		numTabs--
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "`n[Hidden Choices]`n"
+		
+		numTabs++
+		For i,r in this.hiddenChoices {
+			Loop, %numTabs%
+				outStr .= "`t"
+			outStr .= "[" i "] " debugString(r, numTabs)
+		}
+		numTabs--
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "`n[Non-Choices]`n"
+		
+		numTabs++
+		For i,r in this.nonChoices {
+			Loop, %numTabs%
+				outStr .= "`t"
+			outStr .= i "	" r "`n"
+		}
+		numTabs--
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "`n[History Choices]`n"
+		
+		numTabs++
+		For i,r in this.historyChoices {
+			Loop, %numTabs%
+				outStr .= "`t"
+			outStr .= i "	" r "`n"
+		}
+		numTabs--
 		
 		return outStr
 	}
@@ -572,6 +617,8 @@ class SelectorRow {
 	action := ""
 	dataNums := []
 	data := []
+	
+	static debugNoRecurse := true
 	
 	; Constructor.
 	__New(arr = "") {
@@ -665,13 +712,47 @@ class SelectorRow {
 	}
 	
 	; Function to output this object as a string for debug purposes.
-	toDebugString() {
-		outStr := "		Name: " this.name "`n	Abbreviation: " this.abbrev "`n	Action: " this.action "`n	Data:"
-		For i,d in this.data
-			outStr .= "`n		" this.dataNums[i] "	" d
-		outStr .= "`n	RowArr:"
-		For i,r in this.rowArr
-			outStr .= "`n		" i "	" r
-		return outStr
+	toDebugString(numTabs = 0) {
+		outStr := "[SelectorRow Object]`n"
+		
+		numTabs++
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .=	"Name: " this.name "`n"
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "Abbreviation: " this.abbrev "`n"
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "Action: " this.action "`n"
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "Data:`n"
+		
+		numTabs++
+		For i,d in this.data {
+			Loop, %numTabs%
+				outStr .= "`t"
+			outStr .= this.dataNums[i] "	" d "`n"
+		}
+		numTabs--
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "RowArr:`n"
+		
+		numTabs++
+		
+		For i,r in this.rowArr {
+			Loop, %numTabs%
+				outStr .= "`t"
+			outStr .= i "	" r "`n"
+		}
+		
+		return outStr "`n"
 	}
 }
