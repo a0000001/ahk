@@ -41,10 +41,10 @@ return
 	
 	; For ergonomic mouse. 1 is closer to me.
 	XButton1::
-		Send, {Browser_Favorites}
+		; Send, {Browser_Favorites}
 	return
 	XButton2::
-		Send, {Media_Play_Pause}
+		; Send, {Media_Play_Pause}
 	return
 	
 	; Hotkey to fix one-spot-too-late spaces.

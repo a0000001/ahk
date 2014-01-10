@@ -6,7 +6,25 @@ global SELECTOR_LABEL_CHAR := 5
 global SELECTOR_START_MODEL_ROW_CHAR := 6
 global SELECTOR_START_ACTION_DEF_ROW_CHAR := 7
 
-; Selector class which reads in and stores data from a file, and given an index, abbreviation or action, can return the result (and do the action).
+
+; GUI subroutines.
+GuiEscape:
+GuiClose:
+	if(Selector.loaded) {
+		Gui, Cancel
+		return
+	}
+
+ButtonSubmitSelectorChoice:
+	if(Selector.loaded) {
+		Gui, Submit
+		return
+	}
+
+Selector.loaded := true
+
+
+; Selector class which reads in and stores data from a file, and given an index, abbreviation or action, does that action.
 class Selector {
 	; Constants and such.
 	static nameIndex := 1
@@ -235,6 +253,28 @@ class Selector {
 	
 	; Generate the text for the GUI and display it, returning the user's response.
 	launchSelectorPopup() {
+		Static GuiUserInput ; Must be static to use with Edit control.
+		
+		; Various GUI element dimensions.
+		titleX := 10
+		indexX := 5
+		abbrevX := indexX + 30
+		nameX := abbrevX + 50
+		inputX := 10
+		
+		currY := 10
+		lineHeight := 25
+		
+		indexW := 25
+		
+		titleStyle := "w700 underline" ; Bold, underline.
+		
+		; Create and begin styling the GUI.
+		Gui, Color, 2A211C
+		Gui, Font, s12 cBDAE9D
+		Gui, +LastFound
+		GuiHWND := WinExist()
+		
 		; Generate the text to display from the various choice objects.
 		displayText := ""
 		For i,c in this.choices {
@@ -242,23 +282,68 @@ class Selector {
 			if(this.nonChoices[i]) {
 				; MsgBox, % i "	" this.nonChoices[i]
 				if(this.nonChoices[i] != " " && i != 1) {
-					displayText .= "`n"
+					; displayText .= "`n"
+					currY += lineHeight
 				}
 				
-				displayText .= this.nonChoices[i] "`n"
+				; Title formatting.
+				Gui, Font, % titleStyle
+				
+				; displayText .= this.nonChoices[i] "`n"
+				Gui, Add, Text, x%titleX% y%currY%, % this.nonChoices[i]
+				currY += lineHeight
+				
+				; Clear title formatting.
+				Gui, Font, norm
 			}
 			
-			displayText .= i ") " c.abbrev ":`t" c.name "`n"
+			; displayText .= i ") " c.abbrev ":`t" c.name "`n"
+			
+			Gui, Add, Text, x%indexX% Right w%indexW% y%currY%, %i%)
+			
+			displayText := c.abbrev ":"
+			Gui, Add, Text, x%abbrevX% y%currY%, % displayText
+			
+			Gui, Add, Text, x%nameX% y%currY%, % c.name
+			currY += lineHeight
 		}
 		
-		; Actually prompt the user.
-		height := this.startHeight + getTextHeight(displayText)
-		title := this.title
-		InputBox, userIn, %title%, %displayText%, , 400, %height%
-		if(ErrorLevel)
-			userIn := ""
+		; ; Actually prompt the user.
+		; height := this.startHeight + getTextHeight(displayText)
+		; title := this.title
+		; InputBox, userIn, %title%, %displayText%, , 400, %height%
 		
-		return userIn
+		; Show the window in order to get its width.
+		Gui, Show, , % this.title
+		WinGetPos, X, Y, W, H, A
+		; MsgBox, % "X: " X "`nY: " Y "`nW: " W "`nH: " H
+		
+		; Add the edit control with almost the width of the window.
+		currY += lineHeight
+		W -= 25
+		Gui, Add, Edit, vGuiUserInput x%inputX% y%currY% w%W% -WantReturn
+		
+		; Resize the GUI to show the newly added edit control.
+		H += 30
+		Gui, Show, h%H%
+		
+		; Hidden OK button for {Enter} submission.
+		Gui, Add, Button, Hidden Default, SubmitSelectorChoice
+		
+		; Focus the edit control.
+		GuiControl, Focus, GuiUserInput
+		
+		; Wait for the user to submit the GUI.
+		WinWaitClose, ahk_id %GuiHWND%
+		
+		; MsgBox, % GuiUserInput
+		
+		return GuiUserInput
+		
+		; if(ErrorLevel)
+			; userIn := ""
+		
+		; return userIn
 	}
 	
 	; Function to turn the input into something useful.
@@ -477,7 +562,8 @@ class Selector {
 	}
 }
 
-; Row class for use in the Selector. Has three pieces.
+
+; Row class for use in Selector. Has three pieces.
 class SelectorRow {
 	rowArr := []
 	name := ""
