@@ -4,6 +4,7 @@
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#SingleInstance force ; Force just one instance, we don't want muliple of this running around.
 
 ; #Include %A_ScriptDir%\..\CommonIncludes\runAsAdmin.ahk
 #Include commonIncludesStandalone.ahk
@@ -20,3 +21,5 @@ Run, C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\
 Sleep, 500
 
 WinClose, ahk_pid %pid%
+
+ExitApp
