@@ -321,7 +321,7 @@ class Selector {
 		; Add the edit control with almost the width of the window.
 		currY += lineHeight
 		W -= 25
-		Gui, Add, Edit, vGuiUserInput x%inputX% y%currY% w%W% -WantReturn
+		Gui, Add, Edit, vGuiUserInput x%inputX% y%currY% w%W% h24 -E0x200 +Border
 		
 		; Resize the GUI to show the newly added edit control.
 		H += 30
@@ -332,6 +332,7 @@ class Selector {
 		
 		; Focus the edit control.
 		GuiControl, Focus, GuiUserInput
+		GuiControl, +0x800000, GuiUserInput
 		
 		; Wait for the user to submit the GUI.
 		WinWaitClose, ahk_id %GuiHWND%
