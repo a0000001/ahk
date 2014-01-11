@@ -9,3 +9,8 @@
 	e::o
 	l::j
 #IfWinActive 
+
+; PSX
+#IfWinActive, EPSX
+	Space::F4
+#IfWinActive
