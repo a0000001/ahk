@@ -31,9 +31,9 @@ global justOmnibox := 0
 global justFeedlySearched := 0
 global justOtherKeyPressed := 0
 
-; Control classes.
-ChromeSearchboxClass := "Chrome_WidgetWin_11"
-ChromeOmnibarClass := "" ; Blank at this time.
+; ; Control classes.
+; ChromeSearchboxClass := "Chrome_WidgetWin_11"
+; ChromeOmnibarClass := "" ; Blank at this time.
 
 ; Titles for which pages have controls of their own.
 global ownControlTitles := Object()
@@ -82,19 +82,19 @@ chromeOrFirefoxActive() {
 	return (WinActive("ahk_class Chrome_WidgetWin_1") || WinActive("ahk_class MozillaWindowClass"))
 }
 
-specialTextFieldActive() {
-	ControlGetFocus, controlName, A
-	; MsgBox, % controlName
-	if(WinActive("ahk_class Chrome_WidgetWin_1")) {
-		if(controlName = ChromeOmnibarClass || controlName = ChromeSearchboxClass) {
-			return true
-		} else {
-			return false
-		}
-	} else {
-		return false
-	}
-}
+; specialTextFieldActive() {
+	; ControlGetFocus, controlName, A
+	; ; MsgBox, % controlName
+	; if(WinActive("ahk_class Chrome_WidgetWin_1")) {
+		; if(controlName = ChromeOmnibarClass || controlName = ChromeSearchboxClass) {
+			; return true
+		; } else {
+			; return false
+		; }
+	; } else {
+		; return false
+	; }
+; }
 
 ~!#x::
 	Suspend, Toggle
@@ -138,7 +138,7 @@ setVimState(toState, super = false) {
 		setVimState(true)
 	return
 #If chromeOrFirefoxActive() && borgWhichMachine = EPIC_DESKTOP
-	; Close Tab. Here because F9 is not a typically-pressed key.
+	; Close Tab. Here because F6 is not a typically-pressed key.
 	F6::
 		Send, ^w
 	~^w::
@@ -147,17 +147,19 @@ setVimState(toState, super = false) {
 #If
 
 unpauseSpecial() {
-	global superKeysOn, justFeedlySearched, justOtherKeyPressed
+	global superKeysOn, justFeedlySearched, justOtherKeyPressed, justOmnibox
 	
-	if(superKeysOn || justFeedlySearched || justOtherKeyPressed) {
+	if(superKeysOn || justFeedlySearched || justOtherKeyPressed || justOmnibox) {
 		setVimState(true)
 		justFeedlySearched := 0
 		justOtherKeyPressed := 0
+		justOmnibox := 0
 	}
 }
 
 ; Main hotkeys, run if not turned off.
-#If chromeOrFirefoxActive() && vimKeysOn && !pageToExclude() && !specialTextFieldActive()
+; #If chromeOrFirefoxActive() && vimKeysOn && !pageToExclude() && !specialTextFieldActive()
+#If chromeOrFirefoxActive() && vimKeysOn && !pageToExclude()
 	; Next/Previous Tab.
 	o::Send, ^{Tab}
 	u::Send, ^+{Tab}
@@ -279,9 +281,9 @@ unpauseSpecial() {
 	; General: Double quote will never be a legitimate control input, turn it off.
 	
 	; Pause/suspend.
-	; ~^l::
-	; ~^t::
-		; justOmnibox := 1
+	~^l::
+	~^t::
+		justOmnibox := 1
 	i::
 		setVimState(false)
 	return
@@ -299,11 +301,10 @@ unpauseSpecial() {
 #If
 
 ; Main hotkeys, run if turned on and we're not on a special page.
-#If chromeOrFirefoxActive() && vimKeysOn && !pageHasOwnControls() && !pageToExclude() && !specialTextFieldActive()
+; #If chromeOrFirefoxActive() && vimKeysOn && !pageHasOwnControls() && !pageToExclude() && !specialTextFieldActive()
+#If chromeOrFirefoxActive() && vimKeysOn && !pageHasOwnControls() && !pageToExclude()
 	; Up/Down/Left/Right.
-	j::
-		Send, {Down}
-	return
+	j::Send, {Down}
 	k::Send, {Up}
 	h::Send, {Left}
 	l::Send, {Right}
@@ -340,3 +341,19 @@ unpauseSpecial() {
 !j::
 	setVimState(true)
 return
+
+; ^a::
+	; MsgBox, % "Vim keys: " vimKeysOn "`nSuper keys: " superKeysOn "`nChrome or Firefox active: " chromeOrFirefoxActive() "`nPage has own controls: " pageHasOwnControls() "`nPage to exclude: " pageToExclude() "`nSpecial text field active: " specialTextFieldActive()
+	; if(chromeOrFirefoxActive())
+		; MsgBox, Chrome
+	; if(vimKeysOn)
+		; MsgBox, Vim
+	; if(superKeysOn)
+		; MsgBox, Vim
+	; if(!pageHasOwnControls())
+		; MsgBox, Page
+	; if(!pageToExclude())
+		; MsgBox, Exclude
+	; if(!specialTextFieldActive())
+		; MsgBox, Special
+; return
