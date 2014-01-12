@@ -301,7 +301,9 @@ unpauseSpecial() {
 ; Main hotkeys, run if turned on and we're not on a special page.
 #If chromeOrFirefoxActive() && vimKeysOn && !pageHasOwnControls() && !pageToExclude() && !specialTextFieldActive()
 	; Up/Down/Left/Right.
-	j::Send, {Down}
+	j::
+		Send, {Down}
+	return
 	k::Send, {Up}
 	h::Send, {Left}
 	l::Send, {Right}

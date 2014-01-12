@@ -94,7 +94,7 @@ class Selector {
 		
 		; Set up our various information, read-ins, etc.
 		this.init(filePath, chars)
-		debugPrint(this)
+		; debugPrint(this)
 		
 		; If they've given us a choice, run silently.
 		if(silentChoice != "")
