@@ -80,17 +80,6 @@
 		MsgBox, Bad info choice!
 	}
 	
-	tableContains(table, toFind) {
-		For i,row in table {
-			For j,r in row {
-				; debugPrint(r)
-				if(r = toFind) {
-					return i
-				}
-			}
-		}
-	}
-	
 	getEpicEnvironment(env, type) {
 		; Read the file into an array.
 		lines := fileLinesToArray("A:\Selector\epicEnvironments.ini")

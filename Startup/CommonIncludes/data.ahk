@@ -22,6 +22,18 @@ contains(haystack, needle) {
 	}
 }
 
+; Table contains function.	
+tableContains(table, toFind) {
+	For i,row in table {
+		For j,r in row {
+			; debugPrint(r)
+			if(r = toFind) {
+				return i
+			}
+		}
+	}
+}
+
 ; Converts decimal numbers to hex ones.
 decimalToHex(var) {
 	SetFormat, integer, hex
