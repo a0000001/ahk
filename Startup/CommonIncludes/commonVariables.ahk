@@ -185,3 +185,13 @@ global WS_EX_APPWINDOW = 0x40000
 global WS_EX_TOOLWINDOW = 0x80
 global WS_DISABLED = 0x8000000
 global WS_POPUP = 0x80000000
+
+; ----- EpicStudio Constants. ----- ;
+global EPICSTUDIO_ROUTINE := 1
+global EPICSTUDIO_ENVIRONMENT := 2
+global EPICSTUDIO_DLG := 3
+
+; ----- Epic Constants. ----- ;
+global EPIC_DEV := 1
+global EPIC_IDE := 2
+global EPIC_QA := 3

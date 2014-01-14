@@ -431,7 +431,7 @@ debugString(var, numTabs = 0) {
 		return var.toDebugString(numTabs)
 	
 	} else if(!varSize) {
-		MsgBox, var has no size.
+		; MsgBox, var has no size.
 		return var
 		
 	} else {

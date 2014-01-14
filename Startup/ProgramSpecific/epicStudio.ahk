@@ -1,4 +1,4 @@
-#ifWinActive, ahk_class WindowsForms10.Window.8.app.0.2bf8098_r13_ad1
+#IfWinActive, ahk_class WindowsForms10.Window.8.app.0.2bf8098_r13_ad1
 	; TLG Hotkey.
 	^t::
 		Send, %epicID%
@@ -15,16 +15,16 @@
 	return
 
 	; Duplicate Line.
-	^d::
-		Send, {End}{Shift Down}{Home}{Shift Up}
-		; Send, ^c
-		; Sleep, 100
-		line := getSelectedText()
+	; ^d::
+		; Send, {End}{Shift Down}{Home}{Shift Up}
+		; ; Send, ^c
+		; ; Sleep, 100
+		; line := getSelectedText()
 		
-		Send, {End}{Enter}
-		SendRaw, %line%
-		Send, {Up}{End}
-	return
+		; Send, {End}{Enter}
+		; SendRaw, %line%
+		; Send, {Up}{End}
+	; return
 		
 	; Toggle comment. 
 	^+c::
@@ -54,7 +54,63 @@
 		Send, {Home}
 	return
 
-	^q::Send, % commentStartString
+	; ^q::Send, % commentStartString
+	
+	getInfoFromTitle(info) {
+		; debugPrint(info)
+		
+		WinGetTitle, title
+		; MsgBox, % title
+		
+		splitTitle := specialSplit(title, "(")
+		; debugPrint(splitTitle)
+		splitTitle[1] := SubStr(splitTitle[1], 1, -1)
+		splitTitle[2] := SubStr(splitTitle[2], 1, -2)
+		splitTitle[3] := SubStr(splitTitle[3], 5, -14)
+		; debugPrint(splitTitle)
+		
+		if(info = EPICSTUDIO_ROUTINE) {
+			return splitTitle[1]
+		} else if(info = EPICSTUDIO_ENVIRONMENT) {
+			return splitTitle[2]
+		} else if(info = EPICSTUDIO_DLG) {
+			return splitTitle[3]
+		}
+		
+		MsgBox, Bad info choice!
+	}
+	
+	getEpicEnvironment(env, type) {
+		if(type = EPIC_DEV) {
+			
+		} else if(type = EPIC_IDE) {
+			
+		} else if(type = EPIC_QA) {
+			
+		}
+	}
+	
+	diffWithEnvironment(type) {
+		currEnv := getInfoFromTitle(EPICSTUDIO_ENVIRONMENT)
+		; debugPrint(currEnv)
+		
+		diffEnv := getEpicEnvironment(currEnv, type)
+		; debugPrint(diffEnv)
+		
+		; Send, !d
+		; Send, {Tab 3}
+		; Send, % diffEnv
+		; Send, {Enter 2}
+	}
+	
+	; Diff with IDE.
+	^d::
+		diffWithEnvironment(EPIC_IDE)
+	return
+	; Diff with QA.
+	^q::
+		diffWithEnvironment(EPIC_QA)
+	return
 	
 	; Get routine name from title to clipboard.
 	!c::
