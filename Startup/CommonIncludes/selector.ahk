@@ -147,7 +147,7 @@ class Selector {
 		; MsgBox, % arrayToDebugString(lines)
 		; debugPrint(lines)
 		
-		; Parse those lines into a N x 3 array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
+		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		list := cleanParseList(lines)
 		; MsgBox, % arrayToDebugString(list, 2)
 		; debugPrint(list)

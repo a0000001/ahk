@@ -80,14 +80,31 @@
 		MsgBox, Bad info choice!
 	}
 	
-	getEpicEnvironment(env, type) {
-		if(type = EPIC_DEV) {
-			
-		} else if(type = EPIC_IDE) {
-			
-		} else if(type = EPIC_QA) {
-			
+	tableContains(table, toFind) {
+		For i,row in table {
+			For j,r in row {
+				; debugPrint(r)
+				if(r = toFind) {
+					return i
+				}
+			}
 		}
+	}
+	
+	getEpicEnvironment(env, type) {
+		; Read the file into an array.
+		lines := fileLinesToArray("A:\Selector\epicEnvironments.ini")
+		; debugPrint(lines)
+		
+		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
+		table := cleanParseList(lines)
+		; debugPrint(table)
+		
+		; Find the current environment in the table.
+		rowNum := tableContains(table, env)
+		; debugPrint(rowNum)
+		
+		return table[rowNum, type]
 	}
 	
 	diffWithEnvironment(type) {
@@ -97,10 +114,18 @@
 		diffEnv := getEpicEnvironment(currEnv, type)
 		; debugPrint(diffEnv)
 		
-		; Send, !d
-		; Send, {Tab 3}
-		; Send, % diffEnv
-		; Send, {Enter 2}
+		; Get to diff prompt.
+		Send, !d
+		WinWait, Diff with Object
+		
+		; Move to environment field, and drop in what we figured out.
+		Send, {Tab 3}
+		Send, % diffEnv
+		
+		; Get through search popup, then accept.
+		Send, {Enter}
+		WinWait, Find Environment
+		Send, {Enter 2}
 	}
 	
 	; Diff with IDE.

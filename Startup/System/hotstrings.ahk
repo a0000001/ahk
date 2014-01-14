@@ -231,6 +231,10 @@ return
 
 ; :*:exfolder::C:\Program Files\Executor\
 
+:*:dsf::
+	Send, G:\Desktop\
+return
+
 :*:varioustextsf::
 :*:vtf::
 	Send, G:\Various Texts\
@@ -262,6 +266,11 @@ return
 :*:8esf::
 :*:78esf::
 	Send, % epicSourceAppQA78
+return
+
+; Multiple Copays
+:*:mcf::
+	Send, G:\Desktop\MultiplePreCopays\
 return
 
 ; :*:tsf::
