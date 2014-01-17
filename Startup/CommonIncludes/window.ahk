@@ -87,6 +87,7 @@ closeWindowSpecial(case = 0) {
 	or WinActive("ahk_class Notepad") ; Notepad.
 	or WinActive("ahk_class 1by1WndClass") ; 1by1 Audio Player.
 	or WinActive("ahk_class AU3Reveal") ; WinSpy.
+	or WinActive("ahk_class Photo_Lightweight_Viewer") ; Windows Photo Viewer.
 	{
 		sleep, 10
 		send !{F4}
