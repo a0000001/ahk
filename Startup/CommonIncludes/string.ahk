@@ -5,18 +5,20 @@ global LIST_ESC_CHAR := 1
 global LIST_PASS_ROW_CHAR := 2
 global LIST_COMMENT_CHAR := 3
 global LIST_PRE_CHAR := 4
-global LIST_POST_CHAR := 5
-global LIST_ADD_MOD_LABEL_CHAR := 6
-global LIST_REMOVE_MOD_LABEL_CHAR := 7
+; global LIST_POST_CHAR := 5
+global LIST_ADD_MOD_LABEL_CHAR := 5
+global LIST_REMOVE_MOD_LABEL_CHAR := 6
+global LIST_IGNORE_MOD_CHAR := "/"
 
 ; Default chars.
 global LIST_DEFAULT_ESC_CHAR := "\"
 global LIST_DEFAULT_PASS_ROW_CHAR := "#"
 global LIST_DEFAULT_COMMENT_CHAR := ";"
 global LIST_DEFAULT_PRE_CHAR := "*"
-global LIST_DEFAULT_POST_CHAR := "/"
+; global LIST_DEFAULT_POST_CHAR := "/"
 global LIST_DEFAULT_ADD_MOD_LABEL_CHAR := "+"
 global LIST_DEFAULT_REMOVE_MOD_LABEL_CHAR := "-"
+global LIST_DEFAULT_IGNORE_MOD_CHAR := "/"
 
 ; Modification class for parsing lists.
 class ListMod {
@@ -127,7 +129,7 @@ cleanParseList(lines, chars = "", defaultBit = 1) {
 	passChar := chars[LIST_PASS_ROW_CHAR] ? chars[LIST_PASS_ROW_CHAR] : LIST_DEFAULT_PASS_ROW_CHAR
 	commentChar := chars[LIST_COMMENT_CHAR] ? chars[LIST_COMMENT_CHAR] : LIST_DEFAULT_COMMENT_CHAR
 	preChar := chars[LIST_PRE_CHAR] ? chars[LIST_PRE_CHAR] : LIST_DEFAULT_PRE_CHAR
-	postChar := chars[LIST_POST_CHAR] ? chars[LIST_POST_CHAR] : LIST_DEFAULT_POST_CHAR
+	; postChar := chars[LIST_POST_CHAR] ? chars[LIST_POST_CHAR] : LIST_DEFAULT_POST_CHAR
 	addChar := chars[LIST_ADD_MOD_LABEL_CHAR] ? chars[LIST_ADD_MOD_LABEL_CHAR] : LIST_DEFAULT_ADD_MOD_LABEL_CHAR
 	remChar := chars[LIST_REMOVE_MOD_LABEL_CHAR] ? chars[LIST_REMOVE_MOD_LABEL_CHAR] : LIST_DEFAULT_REMOVE_MOD_LABEL_CHAR
 	
@@ -161,7 +163,8 @@ cleanParseList(lines, chars = "", defaultBit = 1) {
 		; Special row for modifying the current stringmod.
 		} else if(firstChar = "[") {
 			; MsgBox, Modifier line: %row%
-			updateMods(mods, row, escChar, preChar, postChar, addChar, remChar, defaultBit)
+			; updateMods(mods, row, escChar, preChar, postChar, addChar, remChar, defaultBit)
+			updateMods(mods, row, escChar, preChar, addChar, remChar, defaultBit)
 		
 		; Special row for label/title later on, leave it unmolested.
 		} else if(firstChar = passChar) {
@@ -204,7 +207,8 @@ killMods(ByRef mods, killLabel = 0) {
 }
 
 ; Update the given modifier string given the new one.
-updateMods(ByRef mods, new, escChar, preChar, postChar, addChar, remChar, defaultBit = 1) {
+; updateMods(ByRef mods, new, escChar, preChar, postChar, addChar, remChar, defaultBit = 1) {
+updateMods(ByRef mods, new, escChar, preChar, addChar, remChar, defaultBit = 1) {
 	; MsgBox, % "`nCur Mods: `n`n" mods[1].toDebugString() "`n`n" mods[2].toDebugString() "`n`n" mods[3].toDebugString() "`n`n" mods[4].toDebugString() "`n`n" mods[5].toDebugString() "`n`n"
 	; MsgBox, New Mod: %new%
 	
@@ -241,7 +245,7 @@ updateMods(ByRef mods, new, escChar, preChar, postChar, addChar, remChar, defaul
 				; Allow backwards stacking - that is, a later mod can go first in mod order.
 				if(firstChar = preChar) {
 					insertFront(mods, parseModLine(SubStr(currMod, 2), label, defaultBit))
-				} else if(firstChar = postChar) {
+				; } else if(firstChar = postChar) {
 					; insertFront(mods, parseModLine(SubStr(currMod, 2), label, defaultBit))
 				} else {
 					mods.Insert(parseModLine(currMod, label, defaultBit))

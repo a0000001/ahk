@@ -1,3 +1,4 @@
+; Constants.
 global SELECTOR_TITLE_CHAR := 1
 global SELECTOR_HISTORY_CHAR := 2
 global SELECTOR_ARBITRARY_CHAR := 3
@@ -5,6 +6,15 @@ global SELECTOR_HIDDEN_CHAR := 4
 global SELECTOR_LABEL_CHAR := 5
 global SELECTOR_START_MODEL_ROW_CHAR := 6
 global SELECTOR_START_ACTION_DEF_ROW_CHAR := 7
+
+; Default characters.
+global SELECTOR_DEFAULT_TITLE_CHAR := "="
+global SELECTOR_DEFAULT_HISTORY_CHAR := "+"
+global SELECTOR_DEFAULT_ARBITRARY_CHAR := "."
+global SELECTOR_DEFAULT_HIDDEN_CHAR := "*"
+global SELECTOR_DEFAULT_LABEL_CHAR := "#"
+global SELECTOR_DEFAULT_START_MODEL_ROW_CHAR := "("
+global SELECTOR_DEFAULT_START_ACTION_DEF_ROW_CHAR := "{"
 
 
 ; GUI subroutines.
@@ -21,6 +31,7 @@ ButtonSubmitSelectorChoice:
 		return
 	}
 
+; The above subroutines aren't run until this flag is set.
 Selector.loaded := true
 
 
@@ -57,16 +68,16 @@ class Selector {
 		this.historyChoices := Object() ; Lines read in from the history file.
 		
 		; Character defaults vs what they gave us.
-		this.titleChar := chars[SELECTOR_TITLE_CHAR] ? chars[SELECTOR_TITLE_CHAR] : "="
-		this.historyChar := chars[SELECTOR_HISTORY_CHAR] ? chars[SELECTOR_HISTORY_CHAR] : "+"
-		this.arbitChar := chars[SELECTOR_ARBITRARY_CHAR] ? chars[SELECTOR_ARBITRARY_CHAR] : "."
-		this.hiddenChar := chars[SELECTOR_HIDDEN_CHAR] ? chars[SELECTOR_HIDDEN_CHAR] : "*"
-		this.labelChar := chars[SELECTOR_LABEL_CHAR] ? chars[SELECTOR_LABEL_CHAR] : "#"
-		this.startModelRowChar := chars[SELECTOR_START_MODEL_ROW_CHAR] ? chars[SELECTOR_START_MODEL_ROW_CHAR] : "("
-		this.startActionDefRowChar := chars[SELECTOR_START_ACTION_DEF_ROW_CHAR] ? chars[SELECTOR_START_ACTION_DEF_ROW_CHAR] : "{"
+		this.titleChar := chars[SELECTOR_TITLE_CHAR] ? chars[SELECTOR_TITLE_CHAR] : SELECTOR_DEFAULT_TITLE_CHAR
+		this.historyChar := chars[SELECTOR_HISTORY_CHAR] ? chars[SELECTOR_HISTORY_CHAR] : SELECTOR_DEFAULT_HISTORY_CHAR
+		this.arbitChar := chars[SELECTOR_ARBITRARY_CHAR] ? chars[SELECTOR_ARBITRARY_CHAR] : SELECTOR_DEFAULT_ARBITRARY_CHAR
+		this.hiddenChar := chars[SELECTOR_HIDDEN_CHAR] ? chars[SELECTOR_HIDDEN_CHAR] : SELECTOR_DEFAULT_HIDDEN_CHAR
+		this.labelChar := chars[SELECTOR_LABEL_CHAR] ? chars[SELECTOR_LABEL_CHAR] : SELECTOR_DEFAULT_LABEL_CHAR
+		this.startModelRowChar := chars[SELECTOR_START_MODEL_ROW_CHAR] ? chars[SELECTOR_START_MODEL_ROW_CHAR] : SELECTOR_DEFAULT_START_MODEL_ROW_CHAR
+		this.startActionDefRowChar := chars[SELECTOR_START_ACTION_DEF_ROW_CHAR] ? chars[SELECTOR_START_ACTION_DEF_ROW_CHAR] : SELECTOR_DEFAULT_START_ACTION_DEF_ROW_CHAR
 		
 		; Other init values.
-		this.startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
+		; this.startHeight := 105 ; Starting height. Includes prompt, plus extra newline above and below choice list.
 		this.title := "Please make a choice by either number or abbreviation:"
 		this.filePath := fPath
 		this.fileName := ""
