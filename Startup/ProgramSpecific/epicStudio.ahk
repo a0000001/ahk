@@ -86,7 +86,8 @@
 		; debugPrint(lines)
 		
 		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
-		table := cleanParseList(lines)
+		; table := cleanParseList(lines)
+		table := TableList.parseList(lines)
 		; debugPrint(table)
 		
 		; Find the current environment in the table.

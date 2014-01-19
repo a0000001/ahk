@@ -527,7 +527,8 @@ convertStarToES(string) {
 		; MsgBox, % arrayToDebugString(referenceLines)
 		
 		; Parse the list into nice, uniform reference lines.
-		references := cleanParseList(referenceLines)
+		; references := cleanParseList(referenceLines)
+		references := TableList.parseList(referenceLines)
 		; MsgBox, % arrayToDebugString(references, 2)
 		
 		textOut := ""
@@ -569,7 +570,8 @@ convertStarToES(string) {
 		; MsgBox, % arrayToDebugString(referenceLines)
 		
 		; Parse the list into nice, uniform reference lines.
-		references := cleanParseList(referenceLines)
+		; references := cleanParseList(referenceLines)
+		references := TableList.parseList(referenceLines)
 		; MsgBox, % arrayToDebugString(references, 2)
 		
 		textOut := ""
