@@ -20,7 +20,8 @@ global LIST_DEFAULT_IGNORE_MOD_CHAR := "/"
 
 ; Modification class for parsing lists.
 class TableListMod {
-	; debugOn := true
+	debugOn := true
+	debugNoRecurse := true
 	
 	mod := ""
 	bit := 1
@@ -82,6 +83,7 @@ class TableListMod {
 
 ; Generic custom class for parsing lists.
 class TableList {
+	static debugOn := true
 	
 	static whiteSpaceChars := [A_Space, A_Tab]
 	
@@ -161,19 +163,6 @@ class TableList {
 		
 		return this.table
 	}
-	
-	; Parses and cleans the given list into single-line items.
-	; Character positions:
-	;		Escape
-	;		Pass Row
-	;		Comment
-	;		Pre
-	;		Add Mod
-	;		Remove Mod
-	cleanParseList(lines, chars = "", defaultBit = 1) {
-		
-		
-	}
 
 	; Kill mods with the given label.
 	killMods(killLabel = 0) {
@@ -197,6 +186,7 @@ class TableList {
 	updateMods(newRow) {
 		; MsgBox, % "`nCur Mods: `n`n" mods[1].toDebugString() "`n`n" mods[2].toDebugString() "`n`n" mods[3].toDebugString() "`n`n" mods[4].toDebugString() "`n`n" mods[5].toDebugString() "`n`n"
 		; MsgBox, New Mod: %newRow%
+		DEBUG.popup(newRow, "New Mod:", this.debugOn)
 		
 		label := 0
 		
@@ -220,6 +210,7 @@ class TableList {
 			
 			; Split new into individual mods.
 			newModsSplit := specialSplit(newRow, "|", this.escChar)
+			DEBUG.popup(newModsSplit, "Modline Split", this.debugOn)
 			For i,currMod in newModsSplit {
 				firstChar := SubStr(currMod, 1, 1)
 				; MsgBox, First char in mod line: %firstChar%
@@ -231,13 +222,16 @@ class TableList {
 				} else {
 					; Allow backwards stacking - that is, a later mod can go first in mod order.
 					if(firstChar = this.preChar) {
+						DEBUG.popup(currMod, "Pre-Mod:", this.debugOn)
 						newMod := this.parseModLine(SubStr(currMod, 2), label)
-						insertFront(this.mods, newMod)
+						this.mods := insertFront(this.mods, newMod)
 					} else {
 						newMod := this.parseModLine(currMod, label)
 						this.mods.Insert(newMod)
 					}
 				}
+				
+				DEBUG.popup(this.mods, "Current Mods", this.debugOn)
 			}
 		}
 	}
@@ -252,6 +246,7 @@ class TableList {
 		if(firstChar = "{") {
 			closeCurlyPos := InStr(modLine, "}")
 			currMod.bit := SubStr(modLine, 2, closeCurlyPos - 2)
+
 			; MsgBox, % "Which Bit: " . currMod.bit
 			
 			modLine := SubStr(modLine, closeCurlyPos + 1)
