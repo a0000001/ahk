@@ -6,6 +6,7 @@ borgPathINI := "<ROOT>\Startup\borg.ini"
 #Include <ROOT>\Startup\CommonIncludes\borgReadINI.ahk
 #Include <ROOT>\Startup\CommonIncludes\commonVariables.ahk
 #Include <ROOT>\Startup\CommonIncludes\data.ahk
+#Include <ROOT>\Startup\CommonIncludes\debug.ahk
 #Include <ROOT>\Startup\CommonIncludes\graphics.ahk
 #Include <ROOT>\Startup\CommonIncludes\HTTPRequest.ahk
 #Include <ROOT>\Startup\CommonIncludes\io.ahk

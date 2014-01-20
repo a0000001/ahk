@@ -20,7 +20,7 @@ ExitApp
 ; Exit, reload, and suspend.
 ~!+x::ExitApp
 ~#!x::Suspend
-~!+r::
-	Suspend, Permit
-	Reload
-return
+; ~!+r::
+	; Suspend, Permit
+	; Reload
+; return

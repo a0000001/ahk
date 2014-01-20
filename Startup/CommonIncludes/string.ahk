@@ -20,12 +20,16 @@ global LIST_DEFAULT_IGNORE_MOD_CHAR := "/"
 
 ; Modification class for parsing lists.
 class TableListMod {
+	; debugOn := true
+	
 	mod := ""
 	bit := 1
 	start := 1
 	len := 0
 	text := ""
 	label := 0
+	
+	debugName := "Hi. This is mah name."
 	
 	; __New(m, b, s, l, t, a) {
 	__New(m, s, l, t, a) {
@@ -42,6 +46,7 @@ class TableListMod {
 		rowBit := rowBits[this.bit]
 		
 		; MsgBox, % "Modification to apply: " this.mod "`nOn String: " rowBit
+		DEBUG.popupV(this.debugOn, this.mod, "Mod to apply:", rowBit, "On String:", rowBits, "")
 		
 		rowBitLen := StrLen(rowBit)
 		
@@ -702,38 +707,18 @@ getTextHeight(text) {
 	return height
 }
 
-; Pops up a debug breakdown of the given variable.
-debugPrint(var) {
-	MsgBox, % debugString(var)
+; Gives the specified number of tabs as a string.
+getTabs(i) {
+	outStr := ""
+	Loop, %i%
+		outStr .= "`t"
+	return outStr
 }
 
-debugString(var, numTabs = 0) {
+; Gives the specified number of newlines as a string.
+getNewLines(i) {
 	outStr := ""
-	varSize := var.MaxIndex()
-	
-	if(IsObject(var) && IsFunc(var.toDebugString) && var.debugNoRecurse) {
-		return var.toDebugString(numTabs)
-	
-	} else if(!varSize) {
-		; MsgBox, var has no size.
-		return var
-		
-	} else {
-		; Loop, %numTabs% {
-			; outStr .= "`t"
-		; }
-		
-		numTabs++
-		
-		outStr .= "Size: " varSize "`n"
-		For i,v in var {
-			Loop, %numTabs% {
-				outStr .= "`t"
-			}
-			
-			outStr .= "[" i "] " debugString(v, numTabs) "`n"
-		}
-		
-		return outStr
-	}
+	Loop, %i%
+		outStr .= "`n"
+	return outStr
 }

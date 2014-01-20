@@ -34,14 +34,7 @@ return
 	arr3 := [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]
 	arr4 := [ [ ["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"] ], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]]
 	
-	debugPrint(arr0)
-	debugPrint(arr1)
-	debugPrint(arr2)
-	debugPrint(arr3)
-	debugPrint(arr4)
 return
-
-
 
 ^+!t::
 	; Get user input.
@@ -52,7 +45,7 @@ return
 	MsgBox, % arrayToDebugString(referenceLines)
 	
 	; Parse the list into nice, uniform reference lines.
-	references := cleanParseList(referenceLines)
+	references := TableList.parse(referenceLines)
 	MsgBox, % arrayToDebugString(references, 2)	
 return
 

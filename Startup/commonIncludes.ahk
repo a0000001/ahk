@@ -6,6 +6,7 @@ borgPathINI := "borg.ini"
 #Include CommonIncludes\borgReadINI.ahk
 #Include CommonIncludes\commonVariables.ahk
 #Include CommonIncludes\data.ahk
+#Include CommonIncludes\debug.ahk
 #Include CommonIncludes\graphics.ahk
 #Include CommonIncludes\HTTPRequest.ahk
 #Include CommonIncludes\io.ahk

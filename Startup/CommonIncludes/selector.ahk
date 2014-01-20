@@ -37,6 +37,8 @@ Selector.loaded := true
 
 ; Selector class which reads in and stores data from a file, and given an index, abbreviation or action, does that action.
 class Selector {
+	; static debugOn := true
+	
 	; Constants and such.
 	static nameIndex := 1
 	static abbrevIndex := 2
@@ -106,6 +108,7 @@ class Selector {
 		; Set up our various information, read-ins, etc.
 		this.init(filePath, chars)
 		; debugPrint(this)
+		; DEBUG.popup(this, this.debugOn)
 		
 		; If they've given us a choice, run silently.
 		if(silentChoice != "")
@@ -155,14 +158,12 @@ class Selector {
 	loadChoicesFromFile(filePath) {
 		; Read the file into an array.
 		lines := fileLinesToArray(filePath)
-		; MsgBox, % arrayToDebugString(lines)
-		; debugPrint(lines)
+		DEBUG.popup(lines, "Lines from file:", this.debugOn)
 		
 		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		; list := cleanParseList(lines)
 		list := TableList.parseList(lines)
-		; MsgBox, % arrayToDebugString(list, 2)
-		; debugPrint(list)
+		DEBUG.popup(list, "Parsed List:", this.debugOn)
 		
 		For i,currItem in list {
 			; Parse this size-n array into a new SelectorRow object.
@@ -576,7 +577,7 @@ class Selector {
 		For i,r in this.choices {
 			Loop, %numTabs%
 				outStr .= "`t"
-			outStr .= "[" i "] " debugString(r, numTabs)
+			outStr .= "[" i "] " DEBUG.string(r, numTabs)
 		}
 		numTabs--
 		
@@ -588,7 +589,7 @@ class Selector {
 		For i,r in this.hiddenChoices {
 			Loop, %numTabs%
 				outStr .= "`t"
-			outStr .= "[" i "] " debugString(r, numTabs)
+			outStr .= "[" i "] " DEBUG.string(r, numTabs)
 		}
 		numTabs--
 		
@@ -603,6 +604,8 @@ class Selector {
 			outStr .= i "	" r "`n"
 		}
 		numTabs--
+		
+		; DEBUG.popupWithLabel("[History Choices]", this.historyChoices)
 		
 		Loop, %numTabs%
 			outStr .= "`t"
