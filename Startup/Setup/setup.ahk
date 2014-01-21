@@ -7,9 +7,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include ..\CommonIncludes\io.ahk
 #Include ..\CommonIncludes\data.ahk
 #Include ..\CommonIncludes\HTTPRequest.ahk
-#Include ..\CommonIncludes\string.ahk
-
 #Include ..\CommonIncludes\selector.ahk
+#Include ..\CommonIncludes\string.ahk
+#Include ..\CommonIncludes\tableList.ahk
+#Include ..\CommonIncludes\tableListMod.ahk
 
 
 iniPath := "..\borg.ini"
@@ -77,7 +78,9 @@ FileAppend, %unZipAll%, %unZipPath%
 RunWait, % unZipPath
 
 ; MsgBox, Close this once unzipping is completed.
-Run, %rootPath%\Startup\borg.ahk, %rootPath%\Startup\
+MsgBox, 4, , Run now?
+IfMsgBox Yes
+	Run, %rootPath%\Startup\borg.ahk, %rootPath%\Startup\
 
 ExitApp
 

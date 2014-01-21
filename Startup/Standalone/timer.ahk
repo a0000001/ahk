@@ -344,6 +344,12 @@ showTimer() {
 }
 
 
+
+; Hotkey to die.
+~^+!#r::
+	ExitApp
+return
+
 ;Shift+Alt+X = Exit + warning, in case closing other scripts and this one unintentionally.
 ~+!x::
 	if(reallyExit = 0) {

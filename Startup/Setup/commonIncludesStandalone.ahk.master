@@ -14,5 +14,7 @@ borgPathINI := "<ROOT>\Startup\borg.ini"
 #Include <ROOT>\Startup\CommonIncludes\runAsAdmin.ahk
 #Include <ROOT>\Startup\CommonIncludes\selector.ahk
 #Include <ROOT>\Startup\CommonIncludes\string.ahk
+#Include <ROOT>\Startup\CommonIncludes\tableList.ahk
+#Include <ROOT>\Startup\CommonIncludes\tableListMod.ahk
 #Include <ROOT>\Startup\CommonIncludes\tray.ahk
 #Include <ROOT>\Startup\CommonIncludes\window.ahk

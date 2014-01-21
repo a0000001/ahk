@@ -16,3 +16,10 @@ programClass := "pLaunchClass_"programToLaunch
 programPath := "pLaunchPath_"programToLaunch
 
 activateOpenMinimize(%programClass%, %programPath%)
+
+ExitApp
+
+; Hotkey to die.
+~^+!#r::
+	ExitApp
+return

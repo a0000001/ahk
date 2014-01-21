@@ -3,7 +3,6 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
-; #Include CommonIncludes\tray.ahk
 #Include commonIncludesStandalone.ahk
 
 ; Tray icon setup.
@@ -32,8 +31,12 @@ Loop {
 
 return
 
-; #Include Standalone\epicFunctionHotstrings.ahk
+; Hotkey to die.
+~^+!#r::
+	ExitApp
+return
 
+; Suspend hotkey.
 ~!#x::
 	Suspend, Toggle
 	suspended := !suspended

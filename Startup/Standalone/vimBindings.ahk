@@ -96,6 +96,13 @@ chromeOrFirefoxActive() {
 	; }
 ; }
 
+
+; Hotkey to die.
+~^+!#r::
+	ExitApp
+return
+
+; Suspend hotkey.
 ~!#x::
 	Suspend, Toggle
 	suspended := !suspended

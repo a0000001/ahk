@@ -21,6 +21,11 @@ return
 	; }
 return
 
+; Hotkey to die.
+^+!#r::
+	ExitApp
+return
+
 ; ; Emergency Exit (for use when VirtualBox joins forces with altdrag, sticks, and freaks out)
 ; !+#r::
 ; *^PrintScreen::

@@ -23,3 +23,10 @@ Sleep, 500
 WinClose, ahk_pid %pid%
 
 ExitApp
+
+; Hotkey to die.
+~^+!#r::
+	ExitApp
+return
+
+; Suspend hotkey.
