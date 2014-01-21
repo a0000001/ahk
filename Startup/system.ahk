@@ -2,7 +2,7 @@
 
 ; Hotstrings moved directly to borg.ahk, must be special.
 #Include System\input.ahk
-#Include System\KDE Mover-Sizer.ahk
+#Include System\kdeMoverSizer.ahk
 #Include System\media.ahk
 #Include System\mouseWheelEmulator.ahk
 #Include System\programLauncher.ahk

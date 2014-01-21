@@ -20,7 +20,8 @@ gitZipUnzip(zipOrUnzip) {
 	lines := fileLinesToArray(iniFile)
 	; MsgBox, % arrayToDebugString(lines)
 	
-	fileList := TableList.parse(lines)
+	fileList := TableList.parseList(lines)
+	; MsgBox, % "Filelist size: " fileList[1]
 	; MsgBox, % arrayToDebugString(fileList, 2)
 	
 	For i,f in fileList {

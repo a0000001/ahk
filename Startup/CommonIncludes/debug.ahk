@@ -1,55 +1,69 @@
 ; Debugger object and functions.
 
 class DEBUG {
-	; enabled := false
+	; -- Enabled/disabled flags. -- ;
 	
-	; __New(state = false) {
-		; ; this.setEnabled(state)
-		; ; MsgBox, % state
-		; this.enabled := state
-	; }
+	; - Common Includes. - ;
 	
-	; ; Setter for debug on/off flag.
-	; setEnabled(state) {
-		; this.enabled := state
-	; }
+	; static borgReadINI := true
+	; static commonVariables := true
+	; static data := true
+	; static debug := true
+	; static graphics := true
+	; static io := true
+	; static privateVariables := true
+	; static runAsAdmin := true
+	; static selector := true
+	; static selectorRow := true
+	; static stringDB := true ; Special because of string function below.
+	; static tableList := true
+	; static tableListRow := true
+	; static tray := true
+	; static window := true
 	
-	; ; Pops up a debug breakdown of the given variable.
-	; ; debugPrint(var) {
-	; popup(var, debugOn = true) {
-		; if(debugOn) {
-			; MsgBox, % this.string(var)
-		; }
-	; }
-
-	; ; debugString(var, numTabs = 0) {
-	; string(var, numTabs = 0, debugOn = true) {
-		; if(debugOn) {
-			; outStr := ""
-			; varSize := var.MaxIndex()
-			
-			; if(IsObject(var) && IsFunc(var.toDebugString) && var.debugNoRecurse) {
-				; return var.toDebugString(numTabs)
-			
-			; } else if(!varSize) {
-				; ; MsgBox, var has no size.
-				; return var
-				
-			; } else {
-				; numTabs++
-				
-				; outStr .= "Size: " varSize "`n"
-				; For i,v in var {
-					; Loop, %numTabs%
-						; outStr .= "`t"
-					
-					; outStr .= "[" i "] " this.string(v, numTabs) "`n"
-				; }
-				
-				; return outStr
-			; }
-		; }
-	; }
+	; - Programs - ;
+	
+	; static chrome := true
+	; static epicStudio := true
+	; static excel := true
+	; static foobar := true
+	; static freeCommander := true
+	; static hyperspace := true
+	; static notepad := true
+	; static notepadPP := true
+	; static onenote := true
+	; static outlook := true
+	; static powerpoint := true
+	; static reflections := true
+	; static remoteDesktop := true
+	; static sites := true
+	; static skype := true
+	; static sumatraPDF := true
+	; static tortoiseSVN := true
+	; static vb6 := true
+	; static vlc := true
+	; static word := true
+	
+	; - Standalone - ;
+	
+	; static externalProgramLauncher := true
+	; static killUAC := true
+	; static timer := true
+	; static vimBindings := true
+	
+	; - System - ;
+	
+	; static hotstrings := true
+	; static input := true
+	; static kdeMoverSizer := true
+	; static media := true
+	; static mouseWheelEmulator := true
+	; static programLauncher := true
+	; static screen := true
+	; static volume := true
+	; static windowDB := true ; Different because there's also a common include with this name.
+	
+	
 	
 	string(var, label = "", debugOn = true, numTabs = 0, child = true) {
 		if(debugOn) {

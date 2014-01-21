@@ -79,19 +79,77 @@
 	
 	; EMC2: Get DLG number from title.
 	^+c::
-		clipboard := getEMC2DLGFromTitle()
+		clipboard := getEMC2ObjectFromTitle()
 	return
 	
 	; EMC2: Take DLG # and pop up the DLG in EpicStudio sidebar.
 	^+o::
-		dlg := getEMC2DLGFromTitle()
+		dlg := getEMC2ObjectFromTitle()
 		if(dlg) {
 			Run, %pLaunchPath_EpicStudio% DLG-%dlg%
 		}
 	return
+	
+	; EMC2: Generate link using title for current object. (DLG, etc.)
+	^+l::
+		objectName := getEMC2ObjectFromTitle(true)
+		objectSplit := specialSplit(objectName, A_Space)
+		DEBUG.popup(objectSplit, "EMC2 Object Name:", DEBUG.hyperspace)
+		
+		; Get the link.
+		link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
+		DEBUG.popup(link, "Generated Link:", DEBUG.hyperspace)
+	return
 #If
 
-getEMC2DLGFromTitle() {
+; Generic linker - will allow coming from clipboard or selected text, or input entirely.
+^+!l::
+	; Grab the selected text/clipboard.
+	text := getSelectedText(true)
+	DEBUG.popup(text, "Silent Choice:", DEBUG.hyperspace)
+	
+	; Drop any leading whitespace.
+	cleanText = %text%
+	
+	; Grab the INI.
+	ini := SubStr(cleanText, 1, 3)
+	
+	; Allow of form XXX 123456 or XXX123456.
+	if(SubStr(cleanText, 4, 1) = A_Space)
+		num := SubStr(cleanText, 5)
+	else
+		num := SubStr(cleanText, 4)
+	
+	if(StrLen(ini) != 3) {
+		ini := ""
+		num := ""
+	}
+	
+	If num Is Not Number
+		ini := ""
+		num := ""
+	
+	; Get the link.
+	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
+	DEBUG.popup(link, "Generated Link:", DEBUG.hyperspace)
+	
+	; if(WinActive("ahk_class rctrl_renwnd32")) { ; Outlook.
+		; Send, ^k
+		; WinWait, Insert Hyperlink, , 2
+		; Sleep, 100
+		; if(ErrorLevel) {
+			; MsgBox, Couldn't find Insert Hyperlink window!
+		; } else {
+			; SendRaw, %link%
+			; Send, {Enter}
+		; }
+	; } else { ; Just output in form: "XXX ###### (emc2://TRACK/XXX/######?action=EDIT)"
+		; Send, %text%{Space}
+		; SendRaw, (%link%) 
+	; }
+return
+
+getEMC2ObjectFromTitle(includeINI = false) {
 	WinGetTitle, title
 	; MsgBox, % title
 	
@@ -100,10 +158,13 @@ getEMC2DLGFromTitle() {
 		StringSplit, splitTitle, title, -, %A_Space%
 		; MsgBox, % splitTitle1
 		
-		StringSplit, splitFirstPart, splitTitle1, %A_Space%
+		if(includeINI)
+			return splitTitle1
+		
+		StringSplit, objectName, splitTitle1, %A_Space%
 		; MsgBox, %splitFirstPart1% - %splitFirstPart2%
 		
-		return splitFirstPart2
+		return objectName2
 	}
 	
 	return ""

@@ -63,7 +63,7 @@ sendRawWithTabs(input) {
 }
 
 ; Grabs the selected text using the clipboard, fixing the clipboard as it finishes.
-getSelectedText() {
+getSelectedText(orClipboard = false) {
 	ClipSaved := ClipboardAll   ; Save the entire clipboard to a variable of your choice.
 	
 	; ... here make temporary use of the clipboard, such as for pasting Unicode text via Transform Unicode ...
@@ -76,6 +76,10 @@ getSelectedText() {
 	
 	Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of Clipboard (not ClipboardAll).
 	ClipSaved =   ; Free the memory in case the clipboard was very large.
+	
+	; If there wasn't any text selected, return clipboard contents instead.
+	if(!textFound && orClipboard)
+		textFound := clipboard
 	
 	return textFound
 }

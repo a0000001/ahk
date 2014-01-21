@@ -22,17 +22,17 @@
 		; Send, {Left}{Home}
 	return
 
-	; TLG Event Creation Macro.
-	$^n::
-		if(WinActive("Calendar - ") || WinActive("TLG - ")) {
-			Send, !hy
-		} else {
-			Send, ^n
-		}
-	return
-	^+n::
-		Send, ^n
-	return
+	; ; TLG Event Creation Macro.
+	; $^n::
+		; if(WinActive("Calendar - ") || WinActive("TLG - ")) {
+			; Send, !hy
+		; } else {
+			; Send, ^n
+		; }
+	; return
+	; ^+n::
+		; Send, ^n
+	; return
 
 	; Calendar view: for 3-day view - shifts one day back so today is center.
 	; ~^2::
@@ -94,11 +94,20 @@
 	^F1::^F12
 #If
 
-; Universal new email.
-!+e::
-	SetTitleMatchMode, 2
-	WinActivate, Microsoft Outlook
-	SetTitleMatchMode, 1
+; Universal new email. (Yanked from BWNHotKeys.ahk on wiki)
+^!m::
+{
+	olMailItem := 0
+	MailItem := ComObjActive("Outlook.Application").CreateItem(olMailItem)
+	MailItem.Display
+	WinActivate Untitled - Message
+	return
+}
+
+; !+e::
+	; SetTitleMatchMode, 2
+	; WinActivate, Microsoft Outlook
+	; SetTitleMatchMode, 1
 	
-	Send, ^+m
-return
+	; Send, ^+m
+; return

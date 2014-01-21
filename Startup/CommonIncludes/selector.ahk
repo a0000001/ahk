@@ -22,12 +22,14 @@ GuiEscape:
 GuiClose:
 	if(Selector.loaded) {
 		Gui, Cancel
+		Gui, Destroy
 		return
 	}
 
 ButtonSubmitSelectorChoice:
 	if(Selector.loaded) {
 		Gui, Submit
+		Gui, Destroy
 		return
 	}
 
@@ -37,7 +39,7 @@ Selector.loaded := true
 
 ; Selector class which reads in and stores data from a file, and given an index, abbreviation or action, does that action.
 class Selector {
-	; static debugOn := true
+	static debugNoRecurse := true
 	
 	; Constants and such.
 	static nameIndex := 1
@@ -55,14 +57,13 @@ class Selector {
 	static actionRowDef := ""
 	
 	
-	static debugNoRecurse := true
 	
 	; Constructor: take any characters they want to change and keep track of them, and read in the various files.
 	__New(filePath, chars = "") {
 		this.init(filePath, chars)
 	}
 	
-	init(fPath, chars) {
+	init(fPath, pfix, chars) {
 		; Various choice data objects.
 		this.choices := Object() ; Visible choices the user can pick from.
 		this.hiddenChoices := Object() ; Invisible choices the user can pick from.
@@ -83,6 +84,7 @@ class Selector {
 		this.title := "Please make a choice by either number or abbreviation:"
 		this.filePath := fPath
 		this.fileName := ""
+		this.prefix := pfix
 		
 		; Read in the choices file.
 		if(fPath != "" && FileExist(fPath)) {
@@ -102,28 +104,35 @@ class Selector {
 	}
 	
 	; Main function. Sets up and displays the selector gui, processes the choice, etc.
-	select(filePath, actionType = "", silentChoice = "", chars = "") {
+	select(filePath, actionType = "", silentChoice = "", prefix = "", chars = "") {
+		DEBUG.popupV(DEBUG.selector, filePath, "Filepath:", actionType, "Action Type:", silentChoice, "Silent Choice:", prefix, "Prefix:")
 		; MsgBox, % filePath "`n" actionType "`n" silentChoice
 		
 		; Set up our various information, read-ins, etc.
-		this.init(filePath, chars)
-		; debugPrint(this)
-		; DEBUG.popup(this, this.debugOn)
+		this.init(filePath, prefix, chars)
+		; DEBUG.popup(this, "", DEBUG.selector)
 		
-		; If they've given us a choice, run silently.
-		if(silentChoice != "")
-			userIn := silentChoice
-		else ; Prepare and show the GUI.
-			userIn := this.launchSelectorPopup()
-		
-		if(userIn = "") {
-			return ""
+		; Loop until we get good input.
+		while(rowToDo = "") {
+			; Get the choice.
+			if(silentChoice != "") { ; If they've given us a silent choice, run silently.
+				userIn := silentChoice
+				silentChoice := ""
+			} else { ; Otherwise, popup time.
+				userIn := this.launchSelectorPopup()
+			}
+			
+			; Blank input, we bail.
+			if(!userIn)
+				return ""
+			
+			if(DEBUG.selector)
+				userInOrig := userIn
+			
+			; Parse input to meaningful command.
+			rowToDo := this.parseChoice(userIn, actionType)
+			DEBUG.popupV(DEBUG.selector, userInOrig, "User Input Original:", userIn, "User Input:", rowToDo, "Row Parse Result:")
 		}
-		
-		; Parse input to meaningful command.
-		; MsgBox, % "UserIn: " userIn
-		rowToDo := this.parseChoice(userIn, actionType)
-		; MsgBox, % rowToDo.toDebugString()
 		
 		if(!rowToDo) {
 			return
@@ -158,12 +167,12 @@ class Selector {
 	loadChoicesFromFile(filePath) {
 		; Read the file into an array.
 		lines := fileLinesToArray(filePath)
-		DEBUG.popup(lines, "Lines from file:", this.debugOn)
+		DEBUG.popup(lines, "Lines from file:", DEBUG.selector)
 		
 		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		; list := cleanParseList(lines)
 		list := TableList.parseList(lines)
-		DEBUG.popup(list, "Parsed List:", this.debugOn)
+		DEBUG.popup(list, "Parsed List:", DEBUG.selector)
 		
 		For i,currItem in list {
 			; Parse this size-n array into a new SelectorRow object.
@@ -352,6 +361,12 @@ class Selector {
 		; Focus the edit control.
 		GuiControl, Focus, GuiUserInput
 		GuiControl, +0x800000, GuiUserInput
+		
+		; Fill in prefix if given.
+		GuiControl, Text, GuiUserInput, % this.prefix
+		
+		; Make sure we're at the end of the prefix.
+		Send, {End}
 		
 		; Wait for the user to submit the GUI.
 		WinWaitClose, ahk_id %GuiHWND%
