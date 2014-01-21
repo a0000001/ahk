@@ -20,7 +20,7 @@ global LIST_DEFAULT_IGNORE_MOD_CHAR := "/"
 
 ; Modification class for parsing lists.
 class TableListMod {
-	debugOn := true
+	; debugOn := true
 	debugNoRecurse := true
 	
 	mod := ""
@@ -83,7 +83,7 @@ class TableListMod {
 
 ; Generic custom class for parsing lists.
 class TableList {
-	static debugOn := true
+	; static debugOn := true
 	
 	static whiteSpaceChars := [A_Space, A_Tab]
 	
