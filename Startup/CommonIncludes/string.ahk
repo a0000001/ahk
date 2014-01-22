@@ -1,5 +1,13 @@
 ; String manipulation functions.
 
+global SPLIT_ESC_CHAR := 1
+global SPLIT_IGNORE_CHARS := 2
+global SPLIT_PLACEHOLDER_CHAR := 3
+
+global SPLIT_DEFAULT_ESC_CHAR := "\x"
+global SPLIT_DEFAULT_IGNORE_CHARS := []
+global SPLIT_DEFAULT_PLACEHOLDER_CHAR := "x"
+
 ; Strips the dollar sign/asterisk off of the front of hotkeys if it's there.
 stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 	if(!leaveDollarSign && InStr(hotkeyString, "$")) {
@@ -15,7 +23,15 @@ stripHotkeyString(hotkeyString, leaveDollarSign = 0, leaveStar = 0) {
 
 ; Splits a string on given delimeter, but ignores escaped delimeters.
 ; Note: making default non-blank so that if blank passed in, no esc chars at all.
-specialSplit(string, delimeter, escChar = "\x", placeholderChar = "x") {
+; specialSplit(string, delimeter, escChar = "\x", placeholderChar = "x") {
+specialSplit(string, delimeter, chars = "") {
+	; Process the chars array.
+	escChar := chars[SPLIT_ESC_CHAR] ? chars[SPLIT_ESC_CHAR] : SPLIT_DEFAULT_ESC_CHAR
+	ignoreChars := chars[SPLIT_IGNORE_CHARS] ? chars[SPLIT_IGNORE_CHARS] : SPLIT_DEFAULT_IGNORE_CHARS
+	placeHolderChar := chars[SPLIT_PLACEHOLDER_CHAR] ? chars[SPLIT_PLACEHOLDER_CHAR] : SPLIT_DEFAULT_PLACEHOLDER_CHAR
+	
+	DEBUG.popupV(DEBUG.stringDB, chars, "Chars", escChar, "EscChar", placeholderChar, "Placeholderchar")
+	
 	; Can't put a global as a true default, so making do here.
 	if(escChar = "\x") {
 		escChar := LIST_DEFAULT_ESC_CHAR

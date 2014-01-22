@@ -18,10 +18,10 @@ gitZipUnzip(zipOrUnzip) {
 	iniFile := "zipReferences.ini"
 	
 	lines := fileLinesToArray(iniFile)
-	DEBUG.popup(lines, "File lines", DEBUG.gitHelper)
+	DEBUG.popup(DEBUG.gitHelper, lines, "File lines")
 	
 	fileList := TableList.parseList(lines)
-	DEBUG.popup(fileList, "TableList", DEBUG.gitHelper)
+	DEBUG.popup(DEBUG.gitHelper, fileList, "TableList")
 	
 	For i,f in fileList {
 		if(zipOrUnzip = "z") {
@@ -36,7 +36,7 @@ gitZipUnzip(zipOrUnzip) {
 			ref := f[FC_ZIP_REF_LOC]
 		}
 		
-		DEBUG.popupV(DEBUG.gitHelper, f[FC_NAME], "Name:", curr, "Current:", ref, "Reference:", compareFiles(curr, ref), "Different:")
+		DEBUG.popupV(DEBUG.gitHelper, f[FC_NAME], "Name", curr, "Current", ref, "Reference", compareFiles(curr, ref), "Different")
 		
 		if(compareFiles(curr, ref)) {
 		

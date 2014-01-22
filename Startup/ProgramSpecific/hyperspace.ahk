@@ -47,33 +47,12 @@
 	
 	; Allow my save reflex to live on. Return to the field we were in when we finish.
 	^s::
-		; ControlGetFocus, currControl, A
-		; ; MsgBox, %currControl%
-		
-		; Send, !s
-		; Sleep, 100
-		
-		; ; Send, +{Tab}
-		; ControlFocus, %currControl%, A
-		; ; ControlFocus, ThunderRT6TextBox2, A
 		ControlSend_Return("", "!s")
 	return
 	
 	; Fill date in unit charge entry.
 	^+f::
 		ControlGet_Send_Return("ThunderRT6TextBox50", "ThunderRT6TextBox54")
-		; ControlGetFocus, currControl, A
-		; ; MsgBox, %currControl%
-		
-		; if(WinActive("", "Charge Entry - ")) {
-			; ControlGetText, date, ThunderRT6TextBox50, A
-			; ; MsgBox, % date
-			; ControlFocus, ThunderRT6TextBox54
-			; Send, %date%
-			; Sleep, 100
-		; }
-		
-		; ControlFocus, %currControl%, A
 	return
 	
 	
@@ -90,48 +69,56 @@
 		}
 	return
 	
-	; EMC2: Generate link using title for current object. (DLG, etc.)
+	; EMC2: Generate link using title for current object (DLG, etc.) and puts it on the clipboard.
 	^+l::
 		objectName := getEMC2ObjectFromTitle(true)
+		
 		objectSplit := specialSplit(objectName, A_Space)
-		DEBUG.popup(objectSplit, "EMC2 Object Name:", DEBUG.hyperspace)
+		DEBUG.popup(DEBUG.hyperspace, objectSplit, "EMC2 Object Name")
 		
 		; Get the link.
-		link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
-		DEBUG.popup(link, "Generated Link:", DEBUG.hyperspace)
+		link := generateEMC2ObjectLink(true, objectSplit[1], objectSplit[2], "..\Selector\emc2link.ini")
+		DEBUG.popup(DEBUG.hyperspace, link, "Generated Link")
+		
+		clipboard := link
 	return
 #If
 
-; Generic linker - will allow coming from clipboard or selected text, or input entirely.
+; Generic linker - will allow coming from clipboard or selected text, or input entirely. Puts the link on the clipboard.
 ^+!l::
 	; Grab the selected text/clipboard.
 	text := getSelectedText(true)
-	DEBUG.popup(text, "Silent Choice:", DEBUG.hyperspace)
 	
-	; Drop any leading whitespace.
+	; Drop any leading whitespace. (Note using = not :=)
 	cleanText = %text%
 	
-	; Grab the INI.
-	ini := SubStr(cleanText, 1, 3)
+	; Split the input.
+	inputSplit := specialSplit(cleanText, A_Space)
 	
-	; Allow of form XXX 123456 or XXX123456.
-	if(SubStr(cleanText, 4, 1) = A_Space)
-		num := SubStr(cleanText, 5)
-	else
-		num := SubStr(cleanText, 4)
+	; Figure out what we've got.
+	; Two parts, likely everything we need.
+	if(inputSplit.MaxIndex() = 2) {
+		; ini is 3 and not a number, num is a number.
+		if(!isNum(inputSplit[1]) && StrLen(inputSplit[1]) = 3 && isNum(inputSplit[2])) {
+			ini := inputSplit[1]
+			num := inputSplit[2]
+		}
 	
-	if(StrLen(ini) != 3) {
-		ini := ""
-		num := ""
+	; Only one. Possible ini or num on its own.
+	} else if(inputSplit.MaxIndex() = 1) {
+		if(isNum(inputSplit[1]))
+			num := inputSplit[1]
+		else if(StrLen(inputSplit[1]) = 3)
+			ini := inputSplit[1]
 	}
 	
-	If num Is Not Number
-		ini := ""
-		num := ""
+	DEBUG.popupV(DEBUG.hyperspace, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
 	
 	; Get the link.
 	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
-	DEBUG.popup(link, "Generated Link:", DEBUG.hyperspace)
+	DEBUG.popup(DEBUG.hyperspace, link, "Generated Link")
+	
+	clipboard := link
 	
 	; if(WinActive("ahk_class rctrl_renwnd32")) { ; Outlook.
 		; Send, ^k
@@ -151,23 +138,20 @@ return
 
 getEMC2ObjectFromTitle(includeINI = false) {
 	WinGetTitle, title
-	; MsgBox, % title
+	DEBUG.popupV(DEBUG.hyperspace, title, "Title", includeINI, "Include INI")
 	
 	; If the title doesn't have a number, we shouldn't be returning anything.
-	if(title != "EMC2") {
-		StringSplit, splitTitle, title, -, %A_Space%
-		; MsgBox, % splitTitle1
-		
-		if(includeINI)
-			return splitTitle1
-		
-		StringSplit, objectName, splitTitle1, %A_Space%
-		; MsgBox, %splitFirstPart1% - %splitFirstPart2%
-		
-		return objectName2
-	}
+	if(title = "EMC2")
+		return ""
 	
-	return ""
+	titleSplit := specialSplit(title, " - ")
+	DEBUG.popup(DEBUG.hyperspace, titleSplit, "Title split")
+	if(includeINI)
+		return titleSplit[1]
+	
+	objectNameSplit := specialSplit(titleSplit[1], A_Space)
+	DEBUG.popup(DEBUG.hyperspace, objectNameSplit, "Object name split")
+	return objectNameSplit[2]
 }
 
 #IfWinActive, Demand Claim Processing

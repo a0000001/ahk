@@ -9,8 +9,10 @@ class DEBUG {
 	; static commonVariables := true
 	; static data := true
 	; static debug := true
+	; static epic := true
 	; static graphics := true
 	; static io := true
+	; static number := true
 	; static privateVariables := true
 	; static runAsAdmin := true
 	; static selector := true
@@ -50,7 +52,8 @@ class DEBUG {
 	; static killUAC := true
 	; static timer := true
 	; static vimBindings := true
-	static gitHelper := true
+	; static gitHelper := true
+	; static setup := true
 	
 	; - System - ;
 	
@@ -66,8 +69,8 @@ class DEBUG {
 	
 	
 	
-	string(var, label = "", debugOn = true, numTabs = 0, child = true) {
-		if(debugOn) {
+	string(on, var, label = "", numTabs = 0, child = true) {
+		if(on) {
 			outStr := ""
 			varSize := var.MaxIndex()
 			
@@ -76,6 +79,8 @@ class DEBUG {
 				outStr .= label
 				if(varSize)
 					outStr .= " (" varSize ")"
+				else
+					outStr .= ":"
 				outStr .= "`n"
 				numTabs++
 			} else if(varSize) {
@@ -98,7 +103,7 @@ class DEBUG {
 			} else {
 				; MsgBox, % numTabs
 				For i,v in var
-					outStr .= getTabs(numTabs) "[" i "] " this.string(v, "", debugOn, numTabs) "`n"
+					outStr .= getTabs(numTabs) "[" i "] " this.string(on, v, "", numTabs) "`n"
 			}
 			
 			; MsgBox, % outStr
@@ -107,8 +112,8 @@ class DEBUG {
 		}
 	}
 	
-	stringV(debugOn, numTabs, params*) {
-		if(debugOn)
+	stringV(on, numTabs, params*) {
+		if(on)
 			return this.stringMultiHelper(params, numTabs)
 	}
 	
@@ -120,26 +125,21 @@ class DEBUG {
 		
 		i := 1
 		while(i <= paramsLen) {
-			outStr .= this.string(params[i], params[i + 1], true, numTabs, false) "`n"
+			outStr .= this.string(true, params[i], params[i + 1], numTabs, false) "`n"
 			i += 2
 		}
 		
 		return outStr
 	}
 	
-	popup(var, label = "", debugOn = true) {
-		if(debugOn) {
-			MsgBox, % this.string(var, label, debugOn, 0, false)
+	popup(on, var, label = "") {
+		if(on) {
+			MsgBox, % this.string(on, var, label, 0, false)
 		}
 	}
 	
-	popupV(debugOn, params*) {
-		if(debugOn)
+	popupV(on, params*) {
+		if(on)
 			MsgBox, % this.stringMultiHelper(params)
 	}
 }
-
-; Standalone function for state changes.
-; setDebug(state) {
-	; DEBUG.enabled := state
-; }

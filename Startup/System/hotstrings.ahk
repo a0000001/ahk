@@ -319,3 +319,11 @@ return
 	SendRaw, MsgBox, `% ""
 	Send, {Left}
 return
+:*:dbpop::
+	SendRaw, DEBUG.popup(DEBUG.
+	;)
+return
+:*:dvpop::
+	SendRaw, DEBUG.popupV(DEBUG.
+	;)
+return

@@ -1,7 +1,7 @@
 ; Modification class for parsing lists.
 class TableListMod {
-	; debugOn := true
 	debugNoRecurse := true
+	debugName := "TableListMod"
 	
 	mod := ""
 	bit := 1
@@ -10,12 +10,8 @@ class TableListMod {
 	text := ""
 	label := 0
 	
-	debugName := "Hi. This is mah name."
-	
-	; __New(m, b, s, l, t, a) {
 	__New(m, s, l, t, a) {
 		this.mod := m
-		; this.bit := b
 		this.start := s
 		this.len := l
 		this.text := t
@@ -26,11 +22,6 @@ class TableListMod {
 	executeMod(rowBits) {
 		rowBit := rowBits[this.bit]
 		
-		; MsgBox, % "Modification to apply: " this.mod "`nOn String: " rowBit
-		DEBUG.popupV(this.debugOn, this.mod, "Mod to apply:", rowBit, "On String:", rowBits, "")
-		
-		rowBitLen := StrLen(rowBit)
-		
 		startOffset := endOffset := 0
 		if(this.len > 0) {
 			endOffset := this.len
@@ -38,6 +29,7 @@ class TableListMod {
 			startOffset := this.len
 		}
 		
+		rowBitLen := StrLen(rowBit)
 		if(this.start > 0) {
 			startLen := this.start - 1
 		} else if(this.start < 0) {
@@ -46,9 +38,8 @@ class TableListMod {
 			startLen := rowBitLen // 2
 		}
 		
-		; MsgBox, % startLen " " startOffset " " startLen + 1 " " endOffset
 		outBit := SubStr(rowBit, 1, startLen + startOffset) . this.text . SubStr(rowBit, (startLen + 1) + endOffset)
-		; MsgBox, % "Row bit now: " . outBit
+		DEBUG.popupV(DEBUG.tableListMod, rowBits, "Row to apply to", this, "Mod applied", rowBit, "On row bit", outBit, "Finished bit", startLen, "Start len", startOffset, "Start offset", startLen + 1, "Start len + 1", endOffset, "End offset")
 		
 		; Put the bit back into the full row.
 		rowBits[this.bit] := outBit

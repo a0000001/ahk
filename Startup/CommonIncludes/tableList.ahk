@@ -18,9 +18,7 @@ global LIST_DEFAULT_IGNORE_MOD_CHAR := "/"
 
 ; Generic custom class for parsing lists.
 class TableList {
-	; static debugOn := true
-	
-	static whiteSpaceChars := [A_Space, A_Tab]
+	static whiteSpaceChars := [ A_Space, A_Tab ]
 	
 	__New(lines, chars = "") {
 		this.init(lines, chars)
@@ -41,6 +39,19 @@ class TableList {
 		this.table := Object()
 	}
 	
+	parseFile(fileName, chars = "") {
+		if(!fileName || !FileExist(fileName)) {
+			DEBUG.popup(DEBUG.tableList, fPath, "File does not exist")
+			return ""
+		}
+		
+		; Read the file into an array.
+		lines := fileLinesToArray(fileName)
+		DEBUG.popupV(DEBUG.tableList, fileName, "Filename", lines, "Lines from file")
+		
+		return this.parseList(lines, chars)
+	}
+	
 	parseList(lines, chars = "") {
 		this.init(lines, chars)
 		
@@ -51,45 +62,46 @@ class TableList {
 			; Strip off any leading whitespace.
 			Loop {
 				firstChar := SubStr(row, 1, 1)
-				; MsgBox, First char: z%firstChar%z
 			
 				if(!contains(TableList.whiteSpaceChars, firstChar)) {
-					; MsgBox, Break
+					DEBUG.popup(DEBUG.tableList, firstChar, "First not blank, moving on.")
 					Break
 				}
-				; MsgBox, trimming: z%row%z
+				
+				if(DEBUG.tableList)
+					originalRow := row
+				
 				StringTrimLeft, row, row, 1
-				; MsgBox, trimmed: z%row%z
+				
+				DEBUG.popupV(DEBUG.tableList, originalRow, "Row", firstChar, "First Char", row, "Trimmed")
 			}
 			
 			; Ignore it entirely if it's an empty line or beings with ; (a comment).
 			firstChar := SubStr(row, 1, 1)
-			; MsgBox, First char: z%firstChar%z
+			
 			if(firstChar = this.commentChar || firstChar = "") {
-				; MsgBox, Comment or blank, ignoring!
-				
+				DEBUG.popup(DEBUG.tableList, firstChar, "Comment or blank line")
+			
 			; Special row for modifying the current mod.
 			} else if(firstChar = "[") {
-				; MsgBox, Modifier line: %row%
-				; updateMods(this.mods, row, escChar, preChar, postChar, addChar, remChar, defaultBit)
-				; updateMods(this.mods, row, escChar, preChar, addChar, remChar, defaultBit)
+				DEBUG.popupV(DEBUG.tableList, row, "Modifier Line", firstChar, "First Char")
 				this.updateMods(row)
 			
 			; Special row for label/title later on, leave it unmolested.
 			} else if(firstChar = this.passChar) {
-				; MsgBox, Hash line: %row%
+				DEBUG.popupV(DEBUG.tableList, row, "Hash Line", firstChar, "First Char")
 				currItem := Object()
 				currItem.Insert(row)
 				this.table.Insert(currItem)
 			
 			; Your everyday line, the average Joe-Billy-Bob-Jacob.
 			} else {
-				; MsgBox, % row
+				if(DEBUG.tableList)
+					originalRow := row
 				
 				; Apply any active modifications.
-				; MsgBox, Row before: %row% `nMods: %currMods%
 				currItem := this.applyMods(row)
-				; MsgBox, % "Row after: " . row[1] . " " . row[2] . " " . row[3]
+				DEBUG.popupV(DEBUG.tableList, originalRow, "Normal Row", this.mods, "Current Mods", currItem, "Processed Row")
 				
 				this.table.Insert(currItem)
 			}
@@ -101,13 +113,13 @@ class TableList {
 
 	; Kill mods with the given label.
 	killMods(killLabel = 0) {
-		; MsgBox, Killing mods with label: %killLabel%
+		DEBUG.popup(DEBUG.tableList, killLabel, "Killing all mods with label")
 		
 		i := 1
 		modsLen := this.mods.MaxIndex()
 		Loop, %modsLen% {
 			if(this.mods[i].label = killLabel) {
-				; MsgBox, % "Removing mod: " mods[i].mod
+				DEBUG.popup(DEBUG.tableList, mods[i], "Removing Mod")
 				this.mods.Remove(i)
 				i--
 			}
@@ -116,12 +128,8 @@ class TableList {
 	}
 
 	; Update the given modifier string given the new one.
-	; updateMods(ByRef mods, new, escChar, preChar, postChar, addChar, remChar, defaultBit = 1) {
-	; updateMods(ByRef mods, new, escChar, preChar, addChar, remChar, defaultBit = 1) {
 	updateMods(newRow) {
-		; MsgBox, % "`nCur Mods: `n`n" mods[1].toDebugString() "`n`n" mods[2].toDebugString() "`n`n" mods[3].toDebugString() "`n`n" mods[4].toDebugString() "`n`n" mods[5].toDebugString() "`n`n"
-		; MsgBox, New Mod: %newRow%
-		DEBUG.popup(newRow, "New Mod:", this.debugOn)
+		DEBUG.popupV(DEBUG.tableList, this.mods, "Current Mods", newRow, "New Mod")
 		
 		label := 0
 		
@@ -136,7 +144,6 @@ class TableList {
 			; Assuming here that it will be the first and only thing in the mod row.
 			if(SubStr(newRow, 1, 1) = this.remChar) {
 				remLabel := SubStr(newRow, 2)
-				; MsgBox, % "Remove Label: " remLabel
 				this.killMods(remLabel)
 				label := 0
 				
@@ -144,11 +151,11 @@ class TableList {
 			}
 			
 			; Split new into individual mods.
-			newModsSplit := specialSplit(newRow, "|", this.escChar)
-			DEBUG.popup(newModsSplit, "Modline Split", this.debugOn)
+			newModsSplit := specialSplit(newRow, "|", [this.escChar])
+			; newModsSplit := specialSplit(newRow, "|", this.escChar)
+			DEBUG.popupV(DEBUG.listTable, newRow, "Row", newModsSplit, "Row Split")
 			For i,currMod in newModsSplit {
 				firstChar := SubStr(currMod, 1, 1)
-				; MsgBox, First char in mod line: %firstChar%
 				
 				; Check for an add row label.
 				if(i = 1 && firstChar = this.addChar) {
@@ -157,7 +164,9 @@ class TableList {
 				} else {
 					; Allow backwards stacking - that is, a later mod can go first in mod order.
 					if(firstChar = this.preChar) {
-						DEBUG.popup(currMod, "Pre-Mod:", this.debugOn)
+						if(DEBUG.listTable)
+							preMod := true
+						
 						newMod := this.parseModLine(SubStr(currMod, 2), label)
 						this.mods := insertFront(this.mods, newMod)
 					} else {
@@ -166,14 +175,16 @@ class TableList {
 					}
 				}
 				
-				DEBUG.popup(this.mods, "Current Mods", this.debugOn)
+				DEBUG.popupV(DEBUG.tableList, currMod, "Mod processed", firstChar, "First Char", label, "Label", preMod, "Premod", this.mods, "Current Mods")
 			}
 		}
 	}
 
 	; Takes a modifier string and spits out the mod object/array. Assumes no [] around it, and no special chars at start.
 	parseModLine(modLine, label = 0) {
-		; MsgBox, ModLine: %modLine%
+		if(DEBUG.tableList)
+			origModLine := modLine
+		
 		currMod := new TableListMod(modLine, 1, 0, "", label)
 		
 		; Next, check to see whether we have an explicit bit. Syntax: starts with {#}
@@ -221,39 +232,36 @@ class TableList {
 			currMod.text := modLine
 		}
 		
-		; MsgBox, % "Mod: " modLine "`nComma: " commaPos "`nCloseParenPos: " closeParenPos "`nStart: " currMod.start "`nLength: " currMod.len "`nInsert: " currMod.text "`nLabel: " currMod.label
-		; MsgBox, % currMod.toDebugString()
-		
+		DEBUG.popupV(DEBUG.tableList, origModLine, "Mod Line", currMod, "Mod processed", commaPos, "Comma position", closeParenPos, "Close paren position")
 		return currMod
 	}
 
 	; Apply currently active string modifications to given row.
 	applyMods(row) {
-		; MsgBox, Row to apply mods to: %row%
-		
 		; Split up the row by tabs.
-		rowBits := specialSplit(row, A_Tab, this.escChar)
-		; debugPrint(rowBits)
+		rowBits := specialSplit(row, A_Tab, [this.escChar])
+		; rowBits := specialSplit(row, A_Tab, this.escChar)
+		
+		DEBUG.popupV(DEBUG.tableList, row, "Row", rowBits, "Row bits")
+		if(DEBUG.tableList)
+			origBits := rowBits
 		
 		; If there aren't any mods, just split the row and send it on.
-		if(this.mods.MaxIndex() = "") {
-			return rowBits
-			
-		; Otherwise, we actually have work to do - time to get to work!
-		} else {
+		if(this.mods.MaxIndex() != "") {
 			; Apply the mods.
 			For i,currMod in this.mods {
-				; debugPrint(rowBits)
-				; debugPrint(currMod.mod)
+				if(DEBUG.tableList)
+					beforeBits := rowBits
+				
 				rowBits := currMod.executeMod(rowBits)
-				; debugPrint(rowBits)
-				; whichBit := currMod.bit
-				; ; MsgBox, % "Mod: " currMod.mod "`nWhichBit: " currMod.bit "`nRowBit: " rowBits[whichBit]
-				; rowBits[whichBit] := this.doMod(rowBits[whichBit], currMod)
+				
+				DEBUG.popupV(DEBUG.tableList, beforeBits, "Row bits", currMod, "Mod to apply", rowBits, "Processed bits")
 			}
 			
-			; MsgBox, % "Row bit finished: " rowBits[whichBit]
+			DEBUG.popupV(DEBUG.tableList, origBits, "Row bits", rowBits, "Finished bits")
 			return rowBits
 		}
+		
+		return rowBits
 	}
 }
