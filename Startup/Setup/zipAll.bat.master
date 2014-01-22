@@ -7,6 +7,8 @@ REM Zip the lot of them up.
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\privateVariables.7z <ROOT>\Startup\CommonIncludes\privateVariables.ahk -p%pass%
 
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\emc2.7z <ROOT>\Selector\emc2.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\emc2link.7z <ROOT>\Selector\emc2link.ini -p%pass%
+"C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\epicEnvironments.7z <ROOT>\Selector\epicEnvironments.ini -p%pass%
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\epicStudio.7z <ROOT>\Selector\epicStudio.ini -p%pass%
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\hyperspace.7z <ROOT>\Selector\hyperspace.ini -p%pass%
 "C:\Program Files\7-Zip\7z.exe" u <ROOT>\Zipped\outlookTLG.7z <ROOT>\Selector\outlookTLG.ini -p%pass%

@@ -7,6 +7,8 @@ REM Unzip the lot of them.
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\privateVariables.7z -o<ROOT>\Startup\CommonIncludes\ -aoa -p%pass%
 
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\emc2.7z -aoa -o<ROOT>\Selector\ -p%pass%
+"C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\emc2link.7z -aoa -o<ROOT>\Selector\ -p%pass%
+"C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\epicEnvironments.7z -aoa -o<ROOT>\Selector\ -p%pass%
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\epicStudio.7z -aoa -o<ROOT>\Selector\ -p%pass%
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\hyperspace.7z -aoa -o<ROOT>\Selector\ -p%pass%
 "C:\Program Files\7-Zip\7z.exe" e <ROOT>\Zipped\outlookTLG.7z -aoa -o<ROOT>\Selector\ -p%pass%

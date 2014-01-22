@@ -18,11 +18,10 @@ gitZipUnzip(zipOrUnzip) {
 	iniFile := "zipReferences.ini"
 	
 	lines := fileLinesToArray(iniFile)
-	; MsgBox, % arrayToDebugString(lines)
+	DEBUG.popup(lines, "File lines", DEBUG.gitHelper)
 	
 	fileList := TableList.parseList(lines)
-	; MsgBox, % "Filelist size: " fileList[1]
-	; MsgBox, % arrayToDebugString(fileList, 2)
+	DEBUG.popup(fileList, "TableList", DEBUG.gitHelper)
 	
 	For i,f in fileList {
 		if(zipOrUnzip = "z") {
@@ -36,7 +35,9 @@ gitZipUnzip(zipOrUnzip) {
 			curr := f[FC_ZIP_LOC]
 			ref := f[FC_ZIP_REF_LOC]
 		}
-		; MsgBox, % f[FC_NAME] "`n" curr "`n" ref "`n" compareFiles(curr, ref)
+		
+		DEBUG.popupV(DEBUG.gitHelper, f[FC_NAME], "Name:", curr, "Current:", ref, "Reference:", compareFiles(curr, ref), "Different:")
+		
 		if(compareFiles(curr, ref)) {
 		
 ; NOTE: GOOD OPPORTUNITY FOR MULTI-USE SELECTOR TEST/SETUP.

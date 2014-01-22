@@ -50,6 +50,7 @@ class DEBUG {
 	; static killUAC := true
 	; static timer := true
 	; static vimBindings := true
+	static gitHelper := true
 	
 	; - System - ;
 	
