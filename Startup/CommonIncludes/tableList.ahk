@@ -47,7 +47,7 @@ class TableList {
 		
 		; Read the file into an array.
 		lines := fileLinesToArray(fileName)
-		DEBUG.popupV(DEBUG.tableList, fileName, "Filename", lines, "Lines from file")
+		DEBUG.popup(DEBUG.tableList, fileName, "Filename", lines, "Lines from file")
 		
 		return this.parseList(lines, chars)
 	}
@@ -73,7 +73,7 @@ class TableList {
 				
 				StringTrimLeft, row, row, 1
 				
-				DEBUG.popupV(DEBUG.tableList, originalRow, "Row", firstChar, "First Char", row, "Trimmed")
+				DEBUG.popup(DEBUG.tableList, originalRow, "Row", firstChar, "First Char", row, "Trimmed")
 			}
 			
 			; Ignore it entirely if it's an empty line or beings with ; (a comment).
@@ -84,12 +84,12 @@ class TableList {
 			
 			; Special row for modifying the current mod.
 			} else if(firstChar = "[") {
-				DEBUG.popupV(DEBUG.tableList, row, "Modifier Line", firstChar, "First Char")
+				DEBUG.popup(DEBUG.tableList, row, "Modifier Line", firstChar, "First Char")
 				this.updateMods(row)
 			
 			; Special row for label/title later on, leave it unmolested.
 			} else if(firstChar = this.passChar) {
-				DEBUG.popupV(DEBUG.tableList, row, "Hash Line", firstChar, "First Char")
+				DEBUG.popup(DEBUG.tableList, row, "Hash Line", firstChar, "First Char")
 				currItem := Object()
 				currItem.Insert(row)
 				this.table.Insert(currItem)
@@ -101,7 +101,7 @@ class TableList {
 				
 				; Apply any active modifications.
 				currItem := this.applyMods(row)
-				DEBUG.popupV(DEBUG.tableList, originalRow, "Normal Row", this.mods, "Current Mods", currItem, "Processed Row")
+				DEBUG.popup(DEBUG.tableList, originalRow, "Normal Row", this.mods, "Current Mods", currItem, "Processed Row")
 				
 				this.table.Insert(currItem)
 			}
@@ -129,7 +129,7 @@ class TableList {
 
 	; Update the given modifier string given the new one.
 	updateMods(newRow) {
-		DEBUG.popupV(DEBUG.tableList, this.mods, "Current Mods", newRow, "New Mod")
+		DEBUG.popup(DEBUG.tableList, this.mods, "Current Mods", newRow, "New Mod")
 		
 		label := 0
 		
@@ -153,7 +153,7 @@ class TableList {
 			; Split new into individual mods.
 			newModsSplit := specialSplit(newRow, "|", [this.escChar])
 			; newModsSplit := specialSplit(newRow, "|", this.escChar)
-			DEBUG.popupV(DEBUG.listTable, newRow, "Row", newModsSplit, "Row Split")
+			DEBUG.popup(DEBUG.listTable, newRow, "Row", newModsSplit, "Row Split")
 			For i,currMod in newModsSplit {
 				firstChar := SubStr(currMod, 1, 1)
 				
@@ -175,7 +175,7 @@ class TableList {
 					}
 				}
 				
-				DEBUG.popupV(DEBUG.tableList, currMod, "Mod processed", firstChar, "First Char", label, "Label", preMod, "Premod", this.mods, "Current Mods")
+				DEBUG.popup(DEBUG.tableList, currMod, "Mod processed", firstChar, "First Char", label, "Label", preMod, "Premod", this.mods, "Current Mods")
 			}
 		}
 	}
@@ -232,7 +232,7 @@ class TableList {
 			currMod.text := modLine
 		}
 		
-		DEBUG.popupV(DEBUG.tableList, origModLine, "Mod Line", currMod, "Mod processed", commaPos, "Comma position", closeParenPos, "Close paren position")
+		DEBUG.popup(DEBUG.tableList, origModLine, "Mod Line", currMod, "Mod processed", commaPos, "Comma position", closeParenPos, "Close paren position")
 		return currMod
 	}
 
@@ -242,7 +242,7 @@ class TableList {
 		rowBits := specialSplit(row, A_Tab, [this.escChar])
 		; rowBits := specialSplit(row, A_Tab, this.escChar)
 		
-		DEBUG.popupV(DEBUG.tableList, row, "Row", rowBits, "Row bits")
+		DEBUG.popup(DEBUG.tableList, row, "Row", rowBits, "Row bits")
 		if(DEBUG.tableList)
 			origBits := rowBits
 		
@@ -255,10 +255,10 @@ class TableList {
 				
 				rowBits := currMod.executeMod(rowBits)
 				
-				DEBUG.popupV(DEBUG.tableList, beforeBits, "Row bits", currMod, "Mod to apply", rowBits, "Processed bits")
+				DEBUG.popup(DEBUG.tableList, beforeBits, "Row bits", currMod, "Mod to apply", rowBits, "Processed bits")
 			}
 			
-			DEBUG.popupV(DEBUG.tableList, origBits, "Row bits", rowBits, "Finished bits")
+			DEBUG.popup(DEBUG.tableList, origBits, "Row bits", rowBits, "Finished bits")
 			return rowBits
 		}
 		

@@ -323,7 +323,3 @@ return
 	SendRaw, DEBUG.popup(DEBUG.
 	;)
 return
-:*:dvpop::
-	SendRaw, DEBUG.popupV(DEBUG.
-	;)
-return

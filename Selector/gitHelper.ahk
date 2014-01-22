@@ -36,7 +36,7 @@ gitZipUnzip(zipOrUnzip) {
 			ref := f[FC_ZIP_REF_LOC]
 		}
 		
-		DEBUG.popupV(DEBUG.gitHelper, f[FC_NAME], "Name", curr, "Current", ref, "Reference", compareFiles(curr, ref), "Different")
+		DEBUG.popup(DEBUG.gitHelper, f[FC_NAME], "Name", curr, "Current", ref, "Reference", compareFiles(curr, ref), "Different")
 		
 		if(compareFiles(curr, ref)) {
 		

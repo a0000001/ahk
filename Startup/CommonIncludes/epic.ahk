@@ -8,7 +8,7 @@
 ;	Neither/num only:
 ;		General popup.
 generateEMC2ObjectLink(edit = true, ini = "", num = "", iniPath = "emc2link.ini") {
-	DEBUG.popupV(DEBUG.epic, edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
+	DEBUG.popup(DEBUG.epic, edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
 	
 	if(!ini || num) ; Generic popup, silent choice if INI given.
 		iniURL := Selector.select(iniPath, "RETURN", ini)

@@ -105,7 +105,7 @@ class Selector {
 	
 	; Main function. Sets up and displays the selector gui, processes the choice, etc.
 	select(filePath, actionType = "", silentChoice = "", prefix = "", chars = "") {
-		DEBUG.popupV(DEBUG.selector, filePath, "Filepath", actionType, "Action Type", silentChoice, "Silent Choice", prefix, "Prefix")
+		DEBUG.popup(DEBUG.selector, filePath, "Filepath", actionType, "Action Type", silentChoice, "Silent Choice", prefix, "Prefix")
 		; MsgBox, % filePath "`n" actionType "`n" silentChoice
 		
 		; Set up our various information, read-ins, etc.
@@ -131,7 +131,7 @@ class Selector {
 			
 			; Parse input to meaningful command.
 			rowToDo := this.parseChoice(userIn, actionType)
-			DEBUG.popupV(DEBUG.selector, userInOrig, "User Input Original", userIn, "User Input", rowToDo, "Row Parse Result")
+			DEBUG.popup(DEBUG.selector, userInOrig, "User Input Original", userIn, "User Input", rowToDo, "Row Parse Result")
 		}
 		
 		if(!rowToDo) {
@@ -167,7 +167,7 @@ class Selector {
 	loadChoicesFromFile(filePath) {
 		; Read the file into an array.
 		; lines := fileLinesToArray(filePath)
-		; DEBUG.popupV(DEBUG.selector, filePath, "Filename", lines, "Lines from file")
+		; DEBUG.popup(DEBUG.selector, filePath, "Filename", lines, "Lines from file")
 		
 		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		; list := TableList.parseList(lines)

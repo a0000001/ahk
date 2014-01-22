@@ -64,7 +64,7 @@
 			if(SubStr(A_LoopField, 1, 4) = "DLG ") {
 				objectName := A_LoopField
 				dlgNum := SubStr(objectName, 4)
-				DEBUG.popupV(DEBUG.epicStudio, A_Index, "On line", objectName, "Found object", dlgNum, "With DLG number")
+				DEBUG.popup(DEBUG.epicStudio, A_Index, "On line", objectName, "Found object", dlgNum, "With DLG number")
 				break
 			}
 		}

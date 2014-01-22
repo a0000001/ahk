@@ -132,13 +132,13 @@ class DEBUG {
 		return outStr
 	}
 	
-	popup(on, var, label = "") {
-		if(on) {
-			MsgBox, % this.string(on, var, label, 0, false)
-		}
-	}
+	; popup(on, var, label = "") {
+		; if(on) {
+			; MsgBox, % this.string(on, var, label, 0, false)
+		; }
+	; }
 	
-	popupV(on, params*) {
+	popup(on, params*) {
 		if(on)
 			MsgBox, % this.stringMultiHelper(params)
 	}

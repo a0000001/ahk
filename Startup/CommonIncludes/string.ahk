@@ -30,7 +30,7 @@ specialSplit(string, delimeter, chars = "") {
 	ignoreChars := chars[SPLIT_IGNORE_CHARS] ? chars[SPLIT_IGNORE_CHARS] : SPLIT_DEFAULT_IGNORE_CHARS
 	placeHolderChar := chars[SPLIT_PLACEHOLDER_CHAR] ? chars[SPLIT_PLACEHOLDER_CHAR] : SPLIT_DEFAULT_PLACEHOLDER_CHAR
 	
-	DEBUG.popupV(DEBUG.stringDB, chars, "Chars", escChar, "EscChar", placeholderChar, "Placeholderchar")
+	DEBUG.popup(DEBUG.stringDB, chars, "Chars", escChar, "EscChar", placeholderChar, "Placeholderchar")
 	
 	; Can't put a global as a true default, so making do here.
 	if(escChar = "\x") {

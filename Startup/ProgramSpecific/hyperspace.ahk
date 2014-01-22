@@ -112,7 +112,7 @@
 			ini := inputSplit[1]
 	}
 	
-	DEBUG.popupV(DEBUG.hyperspace, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
+	DEBUG.popup(DEBUG.hyperspace, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
 	
 	; Get the link.
 	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
@@ -138,7 +138,7 @@ return
 
 getEMC2ObjectFromTitle(includeINI = false) {
 	WinGetTitle, title
-	DEBUG.popupV(DEBUG.hyperspace, title, "Title", includeINI, "Include INI")
+	DEBUG.popup(DEBUG.hyperspace, title, "Title", includeINI, "Include INI")
 	
 	; If the title doesn't have a number, we shouldn't be returning anything.
 	if(title = "EMC2")
