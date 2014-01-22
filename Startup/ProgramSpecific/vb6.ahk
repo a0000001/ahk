@@ -331,6 +331,7 @@
 		}
 	return
 	
+	; Add function headers to all functions.
 	^!h::
 		WinGet, List, ControlList, A
 		

@@ -53,6 +53,30 @@
 		SendRaw, %line%
 		Send, {Home}
 	return
+	
+	; Link routine to currently open (in object explorer tab) DLG.
+	^+l::
+		WinGetText, text
+		DEBUG.popup(DEBUG.epicStudio, text, "Window Text")
+		
+		Loop, Parse, text, `n
+		{
+			if(SubStr(A_LoopField, 1, 4) = "DLG ") {
+				objectName := A_LoopField
+				dlgNum := SubStr(objectName, 4)
+				DEBUG.popupV(DEBUG.epicStudio, A_Index, "On line", objectName, "Found object", dlgNum, "With DLG number")
+				break
+			}
+		}
+		
+		if(!objectName)
+			return
+		
+		Send, ^l
+		WinWaitActive, Link DLG, , 5
+		Send, % dlgNum
+		Send, {Enter}
+	return
 
 	; ^q::Send, % commentStartString
 	
@@ -186,12 +210,12 @@
 		
 		Gui, Destroy
 	return
-#ifWinActive
+#IfWinActive
 
-#ifWinActive, New Object
+#IfWinActive, New Object
 	; Make ctrl+backspace act as expected.
 	^Backspace::
 		Send, ^+{Left}
 		Send, {Backspace}
 	return
-#ifWinActive
+#IfWinActive 
