@@ -1,7 +1,15 @@
 /*
 Author: Gavin Borg
+
 Description: Adds a number of shortcuts for VB6.
-Installation: Copy this containing folder (HeadersParserComment) to your desktop and run the .ahk file within.
+
+Installation:
+	1. If VB is set to run as admin, AutoHotkey must also be set to run as admin. To do this:
+		Find AutoHotkey.exe (Located in C:\Program Files\AutoHotkey)
+		Right-click -> Properties -> Compatibility Tab -> Run this program as an administrator
+
+	2. Copy this containing folder (HeadersParserComment) to your desktop and run the .ahk file within.
+
 Shortcuts:
 	Ctrl+Y/Ctrl+Shift+Z: 
 		These will now “redo”. This was created because by default, Ctrl+Y cuts a line.
@@ -17,12 +25,12 @@ Shortcuts:
 		Comments the current line or selected block of code. Note that the comment button (see screenshot in folder) must be visible.
 	Ctrl+Shift+Semicolon:
 		Uncomments the current line or selected block of code. Note that the uncomment button (see screenshot in folder) must be visible.
+
 Notes:
 	If you run VB6 as an admin, you need to also run AutoHotkey.exe (typically in C:\Program Files\AutoHotkey\) as an admin as well.
 		Failing to do so will result in this script not appearing to work at all.
 	The commenting hotkeys will only work if the toolbar buttons that they use are visible onscreen, as this script actually pushes them.
 	If only the commenting hotkeys don't work, you may need to take new screenshots for those two toolbar buttons and replace the ones in the folder (the folder on your desktop, that is, not the server folder).
-
 */
 
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.

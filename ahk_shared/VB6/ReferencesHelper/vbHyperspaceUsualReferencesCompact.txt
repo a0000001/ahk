@@ -1,4 +1,4 @@
-[ bEpic Systems |e (8.1)
+[ bEpic Systems |e (8.2)
 	ApplCore Common Record Interfaces
 	ApplCore Services Interfaces
 	Data Engine

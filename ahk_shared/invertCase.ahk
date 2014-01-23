@@ -1,4 +1,4 @@
-; Convert text to inverted
+; Convert text to inverted.
 ScrollLock::
 	Send, ^c
 	Sleep, 100

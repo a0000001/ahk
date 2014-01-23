@@ -1,11 +1,13 @@
 /*
 Author: Originally found at http://wiki.epic.com/main/AutoHotkey#Fill_in_DLG_numbers_for_SVN . Modified slightly by Gavin Borg.
+
 Description: Auto-fills the DLG field in tortoiseSVN.
+
 Installation: Copy this script (tortoiseSVN_dlgFiller.ahk) to your desktop and run it.
+
 Notes:
 	This works by running in the background, waiting for a window whose title matches the tortoiseSVN title regex below.
 	Since it operates based on the title of the window, it unfortunately won't work for repositories not in the C:\EpicSource\v#.#\<DLG#>\... format.
-
 */
 
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.

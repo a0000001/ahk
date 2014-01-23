@@ -1,7 +1,15 @@
 /*
 Author: Gavin Borg
+
 Description: Allows for searching for a single reference within the list, or selecting a number of them.
-Installation: Copy this containing folder (ReferencesHelper) to your desktop and run the .ahk file within.
+
+Installation:
+	1. If VB is set to run as admin, AutoHotkey must also be set to run as admin. To do this:
+		Find AutoHotkey.exe (Located in C:\Program Files\AutoHotkey)
+		Right-click -> Properties -> Compatibility Tab -> Run this program as an administrator
+	
+	2. Copy this containing folder (ReferencesHelper) to your desktop and run the .ahk file within.
+
 Shortcuts:
 	Ctrl+F:
 		Will prompt you for a reference to scroll to.
@@ -9,13 +17,13 @@ Shortcuts:
 		For convenience, you may use “*” instead of “Epic Systems” to save keystrokes.
 	Ctrl+A:
 		Will ask you to select a text file to read the list of references from.
+
 Notes:
 	If you run VB6 as an admin, you need to also run AutoHotkey.exe (typically in C:\Program Files\AutoHotkey\) as an admin as well.
 		Failing to do so will result in this script not appearing to work at all.
 	The simplest form that the input file can be in is a list of the full name of each reference, one per line.
 	Further details and formats for the list file can be found in “vbReferenceSelectorInputFormat.txt” in this folder, along with other examples in the other .txt files there.
 	Note that the script will finish considerably more quickly if the list is in alphabetical order.
-
 */
 
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
