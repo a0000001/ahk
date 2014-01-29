@@ -28,13 +28,13 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
-	arr0 := "a"
-	arr1 := ["b"]
-	arr2 := ["a", "b", "c"]
-	arr3 := [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]
-	arr4 := [ [ ["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"] ], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]]
+	; arr0 := "a"
+	; arr1 := ["b"]
+	; arr2 := ["a", "b", "c"]
+	; arr3 := [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]
+	; arr4 := [ [ ["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"] ], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]]
 	
-	
+	; Run, C:\Program Files (x86)\Attachmate\Reflection\r2win.exe /VBA ".ConnectionType = ""SECURE SHELL"" " /VBA ".ConnectionSettings = ""Host epic-cde UserName gborg"" " /VBA ".Connect" /VBA "Call .RunMacroFile(""G:\Desktop\genericLoginMacro.rma"")" /S G:\Desktop\Text\latestSettings.r2w /NOCONNECT
 return
 
 ^+!t::
