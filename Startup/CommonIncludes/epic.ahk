@@ -10,17 +10,26 @@
 generateEMC2ObjectLink(edit = true, ini = "", num = "", iniPath = "emc2link.ini") {
 	DEBUG.popup(DEBUG.epic, edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
 	
-	if(!ini || num) ; Generic popup, silent choice if INI given.
-		iniURL := Selector.select(iniPath, "RETURN", ini)
-	else ; Special case - prefix it.
+	; result := Selector.select(iniPath, "POPUP", "", ini, num)
+	; return
+	
+	if(ini && num) ; Silent choice.
+		iniURL := Selector.select(iniPath, "RETURN", ini "." num)
+	else if(ini && !num) ; INI only - prefix.
 		iniURL := Selector.select(iniPath, "RETURN", "", ini ".")
+	else if(!ini && num) ; Num only - postfix.
+		iniURL := Selector.select(iniPath, "RETURN", "", "", "." num)
+	else ; Generic case - nothing given yet, get it all from the user.
+		iniURL := Selector.select(iniPath, "RETURN")
 	
 	; Ditch if we don't have our needed beginning.
 	if(!iniURL)
 		return ""
 	
 	if(edit)
-		return iniURL num "?action=EDIT"
+		return iniURL "?action=EDIT"
+		; return iniURL num "?action=EDIT"
 	else
-		return iniURL num "?action=VIEW"
+		return iniURL "?action=VIEW"
+		; return iniURL num "?action=VIEW"
 }

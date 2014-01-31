@@ -63,7 +63,7 @@ class Selector {
 		this.init(filePath, chars)
 	}
 	
-	init(fPath, pfix, chars) {
+	init(fPath, pfix, psfix, chars) {
 		; Various choice data objects.
 		this.choices := Object() ; Visible choices the user can pick from.
 		this.hiddenChoices := Object() ; Invisible choices the user can pick from.
@@ -85,6 +85,7 @@ class Selector {
 		this.filePath := fPath
 		this.fileName := ""
 		this.prefix := pfix
+		this.postfix := psfix
 		
 		; Read in the choices file.
 		if(fPath != "" && FileExist(fPath)) {
@@ -104,12 +105,11 @@ class Selector {
 	}
 	
 	; Main function. Sets up and displays the selector gui, processes the choice, etc.
-	select(filePath, actionType = "", silentChoice = "", prefix = "", chars = "") {
-		DEBUG.popup(DEBUG.selector, filePath, "Filepath", actionType, "Action Type", silentChoice, "Silent Choice", prefix, "Prefix")
-		; MsgBox, % filePath "`n" actionType "`n" silentChoice
+	select(filePath, actionType = "", silentChoice = "", prefix = "", postfix = "", chars = "") {
+		DEBUG.popup(DEBUG.selector, filePath, "Filepath", actionType, "Action Type", silentChoice, "Silent Choice", prefix, "Prefix", postfix, "Postfix")
 		
 		; Set up our various information, read-ins, etc.
-		this.init(filePath, prefix, chars)
+		this.init(filePath, prefix, postfix, chars)
 		; DEBUG.popup(DEBUG.selector, this, "")
 		
 		; Loop until we get good input.
@@ -362,11 +362,13 @@ class Selector {
 		GuiControl, Focus, GuiUserInput
 		GuiControl, +0x800000, GuiUserInput
 		
-		; Fill in prefix if given.
-		GuiControl, Text, GuiUserInput, % this.prefix
+		; Fill in prefix/postfix if given.
+		GuiControl, Text, GuiUserInput, % this.prefix this.postfix
+		postFixLen := StrLen(this.postfix)
 		
 		; Make sure we're at the end of the prefix.
 		Send, {End}
+		Send, {Left %postFixLen%}
 		
 		; Wait for the user to submit the GUI.
 		WinWaitClose, ahk_id %GuiHWND%

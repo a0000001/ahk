@@ -86,6 +86,9 @@
 
 ; Generic linker - will allow coming from clipboard or selected text, or input entirely. Puts the link on the clipboard.
 ^+!l::
+	ini := ""
+	num := ""
+	
 	; Grab the selected text/clipboard.
 	text := getSelectedText(true)
 	
@@ -118,7 +121,8 @@
 	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
 	DEBUG.popup(DEBUG.hyperspace, link, "Generated Link")
 	
-	clipboard := link
+	if(link)
+		clipboard := link
 	
 	; if(WinActive("ahk_class rctrl_renwnd32")) { ; Outlook.
 		; Send, ^k
