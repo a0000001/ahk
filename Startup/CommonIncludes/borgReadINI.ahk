@@ -9,6 +9,6 @@ if(machineName = "THINKPAD") {
 } else if(machineName = "EPIC_DESKTOP") {
 	borgWhichMachine := EPIC_DESKTOP
 }
+
 ; borgWhichMachine := THINKPAD
-; MsgBox, % machineName
-; MsgBox, % borgWhichMachine
+DEBUG.popup(DEBUG.borgReadINI, machineName, "Machine name", borgWhichMachine, "Borg which machine")

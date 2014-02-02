@@ -41,12 +41,12 @@ specialSplit(string, delimeter, chars = "") {
 	escapeNext := false
 	currStr := ""
 	
-	; MsgBox, Splitting string: %string%
+	DEBUG.popup(DEBUG.string, string, "String to split")
 	
 	; Loop, one character at a time.
 	Loop, Parse, string
 	{
-		; MsgBox, % A_LoopField
+		DEBUG.popup(DEBUG.string, A_LoopField, "Current char")
 		
 		; If the last character was the escape character, replace this escaped sequence with the real thing.
 		if(escapeNext) {
@@ -62,11 +62,11 @@ specialSplit(string, delimeter, chars = "") {
 		; The next character is escaped, so we won't add this one in.
 		} else if(A_LoopField = escChar) {
 			escapeNext := true
-			; MsgBox, escape char caught!
+			DEBUG.popup(DEBUG.string, A_LoopField, "Escape char caught")
 		
 		; Stick this group into the array, move onto the next.
 		} else if(A_LoopField = delimeter) {
-			; MsgBox, Current string going in: %currStr%
+			DEBUG.popup(DEBUG.string, currStr, "Current string going in")
 			outArr.Insert(currStr)
 			currStr := ""
 		
@@ -84,7 +84,7 @@ specialSplit(string, delimeter, chars = "") {
 
 ; Prepends and postpends the given strings to the given input.
 expandLine(input, prepend = "", postpend = "") {
-	; MsgBox, Expanding `nPre: %prepend% `nInput: %input% `nApp: %postpend%
+	DEBUG.popup(DEBUG.string, prepend, "Pre", input, "Input", postpend, "Post")
 	return prepend . input . postpend
 }
 
@@ -114,7 +114,7 @@ parsePhone(input) {
 	nums := RegExReplace(input, "[^0-9]" , "")
 	StringLen, len, nums
 	
-	; MsgBox, % input " x " nums " x " len
+	DEBUG.popup(DEBUG.string, input, "Input", nums, "Nums", len, "Len")
 	
 	if(len=4) ; Old extension.
 		return "7"nums
@@ -141,7 +141,7 @@ getTextHeight(text) {
 	lineHeight := 17 ; play with this value
 	
 	height := lines * lineHeight
-	; MsgBox % lines " " height
+	DEBUG.popup(DEBUG.string, lines, "Lines", lineHeight, "Line height", height, "Height")
 	
 	return height
 }

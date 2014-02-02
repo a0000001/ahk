@@ -160,7 +160,7 @@ class TableList {
 				; Check for an add row label.
 				if(i = 1 && firstChar = this.addChar) {
 					label := SubStr(currMod, 2)
-					; MsgBox, % "Add Label: " label
+					DEBUG.popup(DEBUG.tableList, label, "Adding label")
 				} else {
 					; Allow backwards stacking - that is, a later mod can go first in mod order.
 					if(firstChar = this.preChar) {
@@ -192,11 +192,10 @@ class TableList {
 		if(firstChar = "{") {
 			closeCurlyPos := InStr(modLine, "}")
 			currMod.bit := SubStr(modLine, 2, closeCurlyPos - 2)
-
-			; MsgBox, % "Which Bit: " . currMod.bit
+			DEBUG.popup(DEBUG.tableList, currMod.bit, "Which bit")
 			
 			modLine := SubStr(modLine, closeCurlyPos + 1)
-			; MsgBox, % "Trimmed current currMod: " . modLine
+			DEBUG.popup(DEBUG.tableList, modLine, "Trimmed current mod")
 		}
 		
 		; First character of remaining string indicates what sort of operation we're dealing with: b, e, or m.

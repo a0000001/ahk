@@ -13,7 +13,7 @@ activateOpenMinimize(ahkClass, pathToExecutable) {
 			restoreActivateWindowSpecial()
 		}
 	} else {
-		; MsgBox, % pathToExecutable
+		DEBUG.popup(DEBUG.window, pathToExecutable, "Path to executable")
 		Run %pathToExecutable%
 	}
 }
@@ -198,7 +198,7 @@ getPreviousWindowID() {
 		WinGetClass, currClass, ahk_id %currID%
 		currParent := decimalToHex(DllCall("GetParent", "uint", currID))
 		WinGet, currParentStyle, Style, ahk_id %currParent%
-		; MsgBox, % currID "`n" currTitle "`n" currStyle "`n" currExStyle "`n" currClass "`n" currParentStyle "`n" currParent
+		DEBUG.popup(DEBUG.window, currID, "Current ID", currStyle, "Current style", currExStyle, "Current extended style", currParentStyle, "Current parent style", currParent, "Current parent")
 		
 		; Skip unimportant windows.
 		if((currStyle & WS_DISABLED) || !(currTitle))
@@ -224,7 +224,7 @@ getPreviousWindowID() {
 	
 	; WinActivate, ahk_id %currID%
 	; WinGetTitle, title, ahk_id %currID%
-	; MsgBox, % title "`n" currID "`n" currStyle "`n" currExStyle "`n" currClass
+	DEBUG.popup(DEBUG.window, title, "Title", currID, "Current ID", currStyle, "Current style", currExStyle, "Current extended style", currClass, "Current class")
 	
 	return, currID
 }
