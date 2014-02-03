@@ -128,17 +128,16 @@
 	; Code vs. design swap. Note: only works if mini-window within window is maximized within outer window.
 	Pause::
 		WinGetTitle, title
-		; MsgBox, % title
+		titleFull := title
 		
 		StringTrimRight, title, title, 2
+		titleRightTrimmed := title
 		
-		; MsgBox, % title
-		
-		; StringRight, title, title, 4
 		parenPos := InStr(title, "(")
 		StringTrimLeft, title, title, parenPos
+		titleLeftTrimmed := title
 		
-		; MsgBox, % title
+		DEBUG.popup(DEBUG.vb6, titleFull, "Window title", titleRightTrimmed, "Trimmed right", titleLeftTrimmed, "Trimmed left")
 		
 		if(title = "Code") {
 			Send, +{F7}
@@ -166,11 +165,11 @@
 			
 			; Test the first character.
 			if(SubStr(firstPart, 1, 1) = "'") {
-				; MsgBox, commented!
+				DEBUG.popup(DEBUG.vb6, firstPart, "Commented first part")
 				ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 				
 			} else {
-				; MsgBox, not commented.
+				DEBUG.popup(DEBUG.vb6, firstPart, "Uncommented first part")
 				ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 			}
 			
@@ -179,7 +178,7 @@
 		} else { ; Could be either, but we can look at what we've got to tell.
 			newLinePos := InStr(foundText, "`n")
 			if(newLinePos = 0) {
-				; MsgBox, single line.
+				DEBUG.popup(DEBUG.vb6, newLinePos, "Single line, number of newlines")
 				
 				; Get out of the highlight first.
 				Send, {Right}
@@ -191,28 +190,27 @@
 				
 				; Test the first character.
 				if(SubStr(firstPart, 1, 1) = "'") {
-					; MsgBox, commented!
+					DEBUG.popup(DEBUG.vb6, firstPart, "Commented first part")
 					ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 					
 				} else {
-					; MsgBox, not commented.
+					DEBUG.popup(DEBUG.vb6, firstPart, "Uncommented first part")
 					ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 				}
 				
 				; Calculate the distance to get back to the original highlight, and do so.
-				; firstPartLen := StrLen(firstPart)
 				foundTextLen := StrLen(foundText)
-				; MsgBox, % foundTextLen
+				DEBUG.popup(DEBUG.vb6, foundTextLen, "Found text length")
 				
 				Send, {Right}{Shift Down}{Left %foundTextLen%}{Shift Up}
 				
 			} else {
 				; MsgBox, multi line.
 				if(SubStr(foundText, newLinePos+1, 1)) = "'" {
-					; MsgBox, commented!
+					DEBUG.popup(DEBUG.vb6, foundText, "Commented found text")
 					ClickWhereFindImage(iSearchPath_vbUncomment, iSearchClass_vbToolbar2)
 				} else {
-					; MsgBox, not commented.
+					DEBUG.popup(DEBUG.vb6, foundText, "Uncommented found text")
 					ClickWhereFindImage(iSearchPath_vbComment, iSearchClass_vbToolbar2)
 				}
 			}
@@ -225,41 +223,40 @@
 	^+b::ClickWhereFindImage(iSearchPath_vbToolboxCommandButton, iSearchClass_vbToolbarPalette)
 	^+s::ClickWhereFindImage(iSearchPath_vbToolboxShape, iSearchClass_vbToolbarPalette)
 	^+e::ClickWhereFindImage(iSearchPath_vbToolboxChrontrol, iSearchClass_vbToolbarPalette)
-		
-	; Create all required procedure stubs from an interface.
-	^+f::
+	
+	; Obtains the classNNs for the two top comboboxes.
+	vbGetComboBoxClasses(ByRef firstField, ByRef secondField) {
 		WinGet, List, ControlList, A
-		
-		; MsgBox, % List
+		DEBUG.popup(DEBUG.vb6, List, "Control list in window")
 		
 		Loop, Parse, List, `n  ; Rows are delimited by linefeeds (`n).
 		{
 			if(InStr(A_LoopField, "ComboBox")) {
-				; MsgBox %className% is on row #%A_Index%.
-				; classRow := A_Index
-				; break
 				ControlGetPos, x, y, w, h, %A_LoopField%, A
-				; MsgBox, %x% %y%
+				DEBUG.popup(DEBUG.vb6, className, "Class name", A_Index, "On row", x, "X", y, "Y")
 				
 				; When two in a row have the same y value, they're what we're looking for.
 				if(y = yPast) {
-					; MsgBox, Got two! %x% %y% %yPast%
-					fieldName := A_LoopField
+					DEBUG.popup(DEBUG.vb6, x, "Got two! `nX", y, "Y", yPast, "Y past")
+					firstField := A_LoopField
 					
 					break
 				}
 				
 				yPast := y
-				fieldNamePast := A_LoopField
+				secondField := A_LoopField
 			}
 		}
 		
-		; MsgBox, %fieldNamePast% %fieldName%
+		DEBUG.popup(DEBUG.vb6, secondField, "Field 1", firstField, "Field 2")
+	}
+	
+	; Create all required procedure stubs from an interface.
+	^+f::
+		vbGetComboBoxClasses(ByRef firstField, ByRef secondField)
 		
-		
-		
-		ControlGet, CurrentProcedure, List, Selected, %fieldNamePast%
-		; MsgBox, % CurrentProcedure
+		ControlGet, CurrentProcedure, List, Selected, %secondField%
+		DEBUG.popup(DEBUG.vb6, CurrentProcedure, "Current procedure")
 		
 		; Allow being on "Implements ..." line instead of having left combobox correctly selected first.
 		if(CurrentProcedure = "(General)") {
@@ -271,8 +268,6 @@
 			Sleep, 100 ; Allow clipboard time to populate.
 			
 			lineString := clipboard
-			; MsgBox, % lineString
-			
 			clipboard := ClipSave ; Restore clipboard
 			
 			; Pull the class name from the implements statement.
@@ -281,91 +276,54 @@
 			; Trims trailing spaces via "Autotrim" behavior.
 			className = %className%
 			
-			; MsgBox, z%className%z
-			
 			; Open the dropdown so we can see everything.
-			ControlFocus, %fieldNamePast%, A
+			ControlFocus, %secondField%, A
 			Send, {Down}
 			Sleep, 100
 			
-			ControlGet, ObjectList, List, , %fieldNamePast%
-			; MsgBox, % ObjectList
+			ControlGet, ObjectList, List, , %secondField%
+			DEBUG.popup(DEBUG.vb6, ObjectList, "List of objects")
 			
 			classRow := 0
 			
 			Loop, Parse, ObjectList, `n  ; Rows are delimited by linefeeds (`n).
 			{
 				if(A_LoopField = className) {
-					; MsgBox %className% is on row #%A_Index%.
+					DEBUG.popup(DEBUG.vb6, className, "Class name", A_Index, "Is on row")
 					classRow := A_Index
 					break
 				}
 			}
 			
-			Control, Choose, %classRow%, %fieldNamePast%, A
+			Control, Choose, %classRow%, %secondField%, A
 		}
 		
 		LastItem := ""
 		SelectedItem := ""
 		
-		ControlFocus, %fieldName%, A
+		ControlFocus, %firstField%, A
 		Send, {Down}
 		
 		Sleep, 100
 		
-		ControlGet, List, List, , %fieldName%
-		
-		; MsgBox, % List
+		ControlGet, List, List, , %firstField%
+		DEBUG.popup(DEBUG.vb6, List, "List of functions")
 		
 		RegExReplace(List, "`n", "", countNewLines)
-		
-		; MsgBox, % countNewLines
-		
 		countNewLines++
 		
 		Loop %countNewLines% {			
-			; MsgBox, % A_Index
-			
-			ControlFocus, %fieldName%, A
-			Control, Choose, %A_Index%, %fieldName%, A
+			ControlFocus, %firstField%, A
+			Control, Choose, %A_Index%, %firstField%, A
 		}
 	return
 	
 	; Add function headers to all functions.
 	^!h::
-		WinGet, List, ControlList, A
+		vbGetComboBoxClasses(ByRef firstField, ByRef secondField)
 		
-		; MsgBox, % List
-		
-		Loop, Parse, List, `n  ; Rows are delimited by linefeeds (`n).
-		{
-			; MsgBox, %A_LoopField%
-			if(InStr(A_LoopField, "ComboBox")) {
-				; MsgBox %className% is on row #%A_Index%.
-				; classRow := A_Index
-				; break
-				ControlGetPos, x, y, w, h, %A_LoopField%, A
-				; MsgBox, %x% %y%
-				
-				; When two in a row have the same y value, they're what we're looking for.
-				if(y = yPast) {
-					; MsgBox, Got two! %x% %y% %yPast%
-					fieldName := A_LoopField
-					
-					break
-				}
-				
-				yPast := y
-				fieldNamePast := A_LoopField
-			}
-		}
-			
-		; MsgBox, %fieldNamePast% %fieldName%
-		
-	; return
-		
-		objectComboClass := fieldNamePast
-		procedureComboClass := fieldName
+		objectComboClass := secondField
+		procedureComboClass := firstField
 		
 		objectComboValue := ""
 		objectComboValuePast := ""
@@ -385,7 +343,7 @@
 			
 			ControlGetText, objectComboValue, %objectComboClass%, A
 			ControlGetText, procedureComboValue, %procedureComboClass%, A
-			; MsgBox, % objectComboValue . " " . procedureComboValue
+			DEBUG.popup(DEBUG.vb6, objectComboValue, "Object combo value", procedureComboValue, "Procedure combo value")
 			
 			if(objectComboValue = objectComboValuePast && procedureComboValue = procedureComboValuePast) {
 				break
