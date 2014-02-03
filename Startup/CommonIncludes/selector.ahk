@@ -148,7 +148,7 @@ class Selector {
 			if(this.historyChoices.MaxIndex() = 10) {
 				FileDelete, %historyFilePath%
 				Loop, 9 {
-					; MsgBox, % "Adding back in history choice: " this.historyChoices[A_Index + 1]
+					DEBUG.popup(DEBUG.selector, this.historyChoices[A_Index + 1], "Adding back in history choice")
 					FileAppend, % this.historyChoices[A_Index + 1] "`n", %historyFilePath%
 				}
 			}
@@ -165,12 +165,7 @@ class Selector {
 	
 	; Load the choices and other such things from a specially formatted file.
 	loadChoicesFromFile(filePath) {
-		; Read the file into an array.
-		; lines := fileLinesToArray(filePath)
-		; DEBUG.popup(DEBUG.selector, filePath, "Filename", lines, "Lines from file")
-		
 		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
-		; list := TableList.parseList(lines)
 		list := TableList.parseFile(filePath)
 		DEBUG.popup(DEBUG.selector, list, "Parsed List")
 		
@@ -178,19 +173,17 @@ class Selector {
 			; Parse this size-n array into a new SelectorRow object.
 			currRow := new SelectorRow()
 			currRow.parseArray(currItem)
-			; MsgBox, % currRow.toDebugString()
 			
 			firstChar := SubStr(currRow.get(1), 1, 1)
-			; MsgBox, % "First char: " firstChar
 			
 			; Popup title.
 			if(i = 1 && firstChar = this.titleChar) {
-				; MsgBox, Title row!
+				DEBUG.popup(DEBUG.selector, this.titleChar, "Title char", firstChar, "First char", currRow, "Row")
 				this.title := SubStr(currRow.name, 2)
 			
 			; Special: add a title and/or blank row in the list display.
 			} else if(firstChar = this.labelChar) {
-				; MsgBox, % this.labelChar currRow.name
+				DEBUG.popup(DEBUG.selector, this.labelChar, "Label char", firstChar, "First char", currRow, "Row")
 				
 				; If blank, extra newline.
 				if(StrLen(currRow.name) < 3) {
@@ -204,23 +197,22 @@ class Selector {
 					}
 					
 					this.nonChoices.Insert(idx + 1, SubStr(currRow.name, 3))
-					; MsgBox, % "Just added: " . this.nonChoices[this.nonChoices.MaxIndex()] . " at index: " . idx+1
+					DEBUG.popup(DEBUG.selector, this.nonChoices[this.nonChoices.MaxIndex()], "Just added nonchoice:", idx + 1, "At index")
 				}
 				
 			; Invisible, but viable, choice.
 			} else if(firstChar = this.hiddenChar) {
-				; MsgBox, It's a star row!
+				DEBUG.popup(DEBUG.selector, this.hiddenChar, "Hidden char", firstChar, "First char", currRow, "Row")
 				this.hiddenChoices.Insert(currRow)
 			
 			; Special model row that tells us how a file with more than 3 columns should be laid out.
 			} else if(firstChar = this.startModelRowChar) {
-				; MsgBox, Model row!
+				DEBUG.popup(DEBUG.selector, this.startModelRowChar, "Start model row char", firstChar, "First char", currRow, "Row")
 				this.parseModelRow(currRow)
 			
 			; Special row that tells us how to string together the action if it's not directly in there - used for more complex substitutions.
 			} else if(firstChar = this.startActionDefRowChar) {
 				; Strip off the bracket from the first element.
-				; currRow.set(1, SubStr(currRow.get(1), 2))
 				currRow.rowArr[1] := SubStr(currRow.rowArr[1], 2)
 				
 				this.actionRowDef := currRow
@@ -229,7 +221,8 @@ class Selector {
 			} else {
 				; Allow piped-together entries, but only show the first one.
 				if(inStr(currRow.abbrev, "|")) {
-					; MsgBox, % "pipe: " currRow.abbrev
+					DEBUG.popup(DEBUG.selector, currRow.abbrev, "Piped")
+					
 					splitAbbrev := specialSplit(currRow.abbrev, "|")
 					For i,a in splitAbbrev {
 						tempRow := currRow.clone()
@@ -242,13 +235,11 @@ class Selector {
 						}
 					}
 				} else {
-					; MsgBox, % "Choice added: `n" currRow.toDebugString()
+					DEBUG.popup(DEBUG.selector, currRow, "Choice added")
 					this.choices.Insert(currRow)
 				}
 			}
 		}
-		
-		; MsgBox, % this.toDebugString()
 	}
 	
 	; Function to deal with special model rows.
@@ -262,7 +253,6 @@ class Selector {
 		row.rowArr[1] := SubStr(row.rowArr[1], 2)
 		
 		For i,r in row.rowArr {
-			; MsgBox, % i "	" r
 			if(r = this.nameConstant)
 				this.nameIndex := i
 			else if(r = this.abbrevConstant)
@@ -273,10 +263,7 @@ class Selector {
 				this.dataIndices.insert(i)
 		}
 		
-		; outStr := "Model row results:" "`n`nName: " this.nameIndex "`nAbbreviation: " this.abbrevIndex "`nAction: " this.actionIndex "`nData: "
-		; For i,d in this.dataIndices
-			; outStr .= "`n	"d
-		; MsgBox, % outStr
+		DEBUG.popup(DEBUG.selector, this.nameIndex, "Model name", this.abbrevIndex, "Model abbreviation", this.actionIndex, "Model action", this.dataIndices, "Model data")
 	}
 	
 	; Generate the text for the GUI and display it, returning the user's response.
@@ -308,9 +295,8 @@ class Selector {
 		For i,c in this.choices {
 			; Extra newline if requested.
 			if(this.nonChoices[i]) {
-				; MsgBox, % i "	" this.nonChoices[i]
+				DEBUG.popup(DEBUG.selector, i, "Index", this.nonChoices[i], "Non choice")
 				if(this.nonChoices[i] != " " && i != 1) {
-					; displayText .= "`n"
 					currY += lineHeight
 				}
 				
@@ -344,7 +330,7 @@ class Selector {
 		; Show the window in order to get its width.
 		Gui, Show, , % this.title
 		WinGetPos, X, Y, W, H, A
-		; MsgBox, % "X: " X "`nY: " Y "`nW: " W "`nH: " H
+		DEBUG.popup(DEBUG.selector, X, "X", Y, "Y", W, "W", H, "H")
 		
 		; Add the edit control with almost the width of the window.
 		currY += lineHeight
@@ -373,21 +359,15 @@ class Selector {
 		; Wait for the user to submit the GUI.
 		WinWaitClose, ahk_id %GuiHWND%
 		
-		; MsgBox, % GuiUserInput
+		DEBUG.popup(DEBUG.selector, GuiUserInput, "GUI user input")
 		
 		return GuiUserInput
-		
-		; if(ErrorLevel)
-			; userIn := ""
-		
-		; return userIn
 	}
 	
 	; Function to turn the input into something useful.
 	parseChoice(ByRef userIn, ByRef actionType) {
 		histCharPos := InStr(userIn, this.historyChar)
 		arbCharPos := InStr(userIn, this.arbitChar)
-		; MsgBox, % histCharPos
 		
 		rowToDo := ""
 		rest := SubStr(userIn, 2)
@@ -404,7 +384,7 @@ class Selector {
 		} else if(histCharPos = 1) {
 			; Special case: historyChar+0 is the edit action, which will open the current INI file for editing.
 			if(contains(this.editStrings, rest)) {
-				; MsgBox, Edit action!
+				DEBUG.popup(DEBUG.selector, rest, "Edit action `nRest", this.editStrings, "Edit strings")
 				actionType := "EDIT"
 				rowToDo := new SelectorRow()
 				rowToDo.setAbbrev(userIn)
@@ -416,7 +396,6 @@ class Selector {
 			
 			; Normal case, get the history entry specified.
 			else {
-				; MsgBox, % arrayToDebugString(this.historyChoices)
 				rowToDo := this.parseChoice(this.historyChoices[ this.historyChoices.MaxIndex() + 1 - userIn ], actionType)
 			}
 		; ".yada" passes in "yada" as an arbitrary, meaninful command.
@@ -442,8 +421,9 @@ class Selector {
 				MsgBox, No matches found!
 			}
 		}
-
-		; MsgBox, % "Row To Do: `n`n" rowToDo.toDebugString()
+		
+		DEBUG.popup(DEBUG.selector, rowToDo, "Row to do")
+		
 		return rowToDo
 	}
 
@@ -465,10 +445,9 @@ class Selector {
 	; Function to search our generated table for a given index/shortcut.
 	searchTable(input, table) {
 		For i,t in table {
-			; MsgBox, % input ", " t.name " " t.abbrev " " t.action
+			DEBUG.popup(DEBUG.selector, input, "Input", t.name, "Current name", t.abbrev, "Current abbreviation", t.action, "Current Action")
 			if(input = i || input = t.abbrev || input = t.name) {
-				; MsgBox, Found: %input% at index: %i%
-				; MsgBox, % t.toDebugString()
+				DEBUG.popup(DEBUG.selector, input, "Found input", i, "At index", t, "Row")
 				return t.clone()
 			}
 		}
@@ -479,7 +458,6 @@ class Selector {
 	; Puts together the action for files in which it's not explicit, but pieced together.
 	processAction(def, row) {
 		action := ""
-		; MsgBox, % arrayToDebugString(def.rowArr, 2)
 		
 		For i,d in def.rowArr {
 			; MsgBox, % "Def: " d
@@ -498,7 +476,7 @@ class Selector {
 			} else
 				action .= d
 			
-			; MsgBox, % "Action: " action
+			DEBUG.popup(DEBUG.selector, action, "Action so far")
 		}
 		
 		return action
@@ -506,7 +484,7 @@ class Selector {
 
 	; Function to do what it is we want done, then exit.
 	doAction(rowToDo, actionType) {
-		; MsgBox, % "ActionType: " actionType "`n`nAction Row to run:`n" rowToDo.toDebugString()
+		DEBUG.popup(DEBUG.selector, actionType, "Action type", rowToDo, "Row to run")
 		
 		action := rowToDo.action
 		
@@ -554,7 +532,6 @@ class Selector {
 			URL := "http://guru/services/Webdialer.asmx/"
 			
 			if(action = "-") {
-				; MsgBox, Hanging up current call.
 				URL .= "HangUpCall?"
 				MsgText = Hanging up current call. `n`nContinue?
 			} else {

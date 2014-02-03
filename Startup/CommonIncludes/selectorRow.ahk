@@ -14,11 +14,8 @@ class SelectorRow {
 	}
 	
 	parseArray(arr) {
-		For i,a in arr {
-			; MsgBox, %"x " i "	" a
-			; MsgBox, Adding to row: %a%
+		For i,a in arr
 			this.rowArr.insert(a)
-		}
 		
 		; Variable access to needed pieces.
 		if(Selector.nameIndex)
@@ -28,7 +25,6 @@ class SelectorRow {
 		if(Selector.actionIndex)
 			this.action := this.rowArr[Selector.actionIndex]
 		For i,j in Selector.dataIndices {
-			; MsgBox, % this.rowArr[j]
 			this.data.insert(this.rowArr[j])
 			this.dataNums.insert(i)
 		}
@@ -36,9 +32,6 @@ class SelectorRow {
 	
 	; Deep copy function.
 	clone() {
-		; MsgBox, % this.toDebugString()
-		; MsgBox, % new SelectorRow(this.rowArr).toDebugString()
-		; return new SelectorRow(this.rowArr)
 		temp := new SelectorRow()
 		temp.name := this.name
 		temp.abbrev := this.abbrev
@@ -52,21 +45,18 @@ class SelectorRow {
 	}
 	
 	get(i) {
-		; MsgBox, % "Getting " i ": " rowArr[i]
-		if(i < 0) {
+		if(i < 0)
 			return this.rowArr[this.rowArr.MaxIndex()]
-		}
+		
 		return this.rowArr[i]
 	}
 	set(i, x) {
-		if(i < 0) {
-			; MsgBox, % i "	" this.rowArr.MaxIndex()
+		if(i < 0)
 			i := this.rowArr.MaxIndex()
-		}
+		
 		this.rowArr[i] := x
 		
 		; Update the special properties if needed, too.
-		; MsgBox, % i " " Selector.abbrevIndex
 		if(i = Selector.nameIndex) {
 			this.name := x
 		} else if(i = Selector.abbrevIndex) {
