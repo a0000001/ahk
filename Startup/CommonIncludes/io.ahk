@@ -6,7 +6,6 @@ fileLinesToArray(fileName) {
 	
 	Loop Read, %fileName% 
 	{
-		; MsgBox, Line %A_Index%: %A_LoopReadLine%
 		lines[A_Index] := A_LoopReadLine
 	}
 	
@@ -16,7 +15,9 @@ fileLinesToArray(fileName) {
 ; Get text from a control, send it to another, and focus a third.
 ControlGet_Send_Return(fromControl, toControl, retControl = "") {
 	ControlGetText, data, %fromControl%, A
-	; MsgBox, %data%
+	
+	DEBUG.popup(DEBUG.io, data, "Data from control")
+	
 	ControlSend_Return(toControl, data, retControl)
 }
 
@@ -25,14 +26,12 @@ ControlSend_Return(toControl, keys, retControl = "") {
 	if(!retControl) {
 		ControlGetFocus, retControl, A
 	}
-	; MsgBox, %retControl%
+	DEBUG.popup(DEBUG.io, toControl, "Control to send to", retControl, "Control to return to", keys, "Keys to send")
 	
-	; MsgBox, %toControl%
 	if(toControl) {
 		ControlFocus, %toControl%
 	}
 	
-	; MsgBox, %keys%
 	Sleep, 100
 	Send, %keys%
 	Sleep, 100
@@ -49,10 +48,10 @@ sendRawWithTabs(input) {
 		numTabs := 0
 		while SubStr(currLine, 1, 1) = A_Tab
 		{
-			; MsgBox, Before: %currLine% %numTabs%
+			DEBUG.popup(DEBUG.io, currLine, "Before currLine", numTabs, "Number of tabs")
 			numTabs++
 			StringTrimLeft, currLine, currLine, 1
-			; MsgBox, After: %currLine% %numTabs%
+			DEBUG.popup(DEBUG.io, currLine, "After currLine", numTabs, "Number of tabs")
 		}
 		
 		Send, {Tab %numTabs%}
@@ -86,7 +85,7 @@ getSelectedText(orClipboard = false) {
 
 ; Grabs the selected text using the clipboard, fixing the clipboard as it finishes.
 sendTextWithClipboard(text) {
-	; MsgBox, %text%
+	DEBUG.popup(DEBUG.io, text, "Text to send with clipboard")
 	
 	ClipSaved := ClipboardAll   ; Save the entire clipboard to a variable of your choice.
 	Clipboard := "" ; Clear the clipboard
@@ -108,7 +107,6 @@ runAndReturnOutput(command, outputFile = "testCMDoutput.txt") {
 	FileDelete, %outputFile%
 	
 	if(outputFileContents = "") {
-		; MsgBox, nope.
 		return 0
 	} else {
 		return outputFileContents
@@ -118,8 +116,6 @@ runAndReturnOutput(command, outputFile = "testCMDoutput.txt") {
 ; Compares two files.
 compareFiles(file1, file2) {
 	compared := runAndReturnOutput("fc " file1 " " file2)
-	
-	; MsgBox, % compared
 	
 	if(inStr(compared, "FC: no differences encountered")) {
 		return false
