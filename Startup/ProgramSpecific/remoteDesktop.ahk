@@ -1,4 +1,9 @@
-﻿#IfWinActive ahk_class TscShellContainerClass
+﻿; Disconnect hotkey.
+!Esc::
+	RunCommand("tsdiscon")
+return
+
+#IfWinActive ahk_class TscShellContainerClass
 	; Allow escape from remote desktop with hotkey.
 	!CapsLock::	; One of a few that maps back to the host.		
 		Suspend, Off

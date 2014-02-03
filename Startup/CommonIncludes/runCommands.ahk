@@ -1,3 +1,30 @@
+; Runs a command with cmd.exe.
+RunCommand(commandToRun = "", stayOpen = false) {
+	runString := "C:\Windows\System32\cmd.exe "
+	
+	; Allow either an array or just a string.
+	if(commandToRun.MaxIndex()) {
+		For i,c in commandToRun {
+			cmdString .= c A_Space
+		}
+		StringTrimRight, cmdString, cmdString, 1
+	} else {
+		cmdString := commandToRun
+	}
+	
+	; Set /C or /K (command and close, or command and stay up) based on input.
+	if(!cmdString || stayOpen || DEBUG.runCommands)
+		runString .= "/K "
+	else
+		runString .= "/C "
+	
+	; Add the command to the run string.
+	runString .= cmdString
+	DEBUG.popup(DEBUG.runCommands, cmdString, "Command string", runString, "Run string")
+	
+	Run, % runString
+}
+
 /*           ,---,                                          ,--,    
            ,--.' |                                        ,--.'|    
            |  |  :                      .--.         ,--, |  | :    
@@ -17,7 +44,6 @@ Function: To check if the user has Administrator rights and elevate it if needed
 URL: http://www.autohotkey.com/forum/viewtopic.php?t=50448
 ------------------------------------------------------------------
 */
-
 RunAsAdmin() {
   Loop, %0%  ; For each parameter:
     {

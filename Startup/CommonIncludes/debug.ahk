@@ -14,7 +14,7 @@ class DEBUG {
 	; static io := true
 	; static number := true
 	; static privateVariables := true
-	; static runAsAdmin := true
+	; static runCommands := true
 	; static selector := true
 	; static selectorRow := true
 	; static stringDB := true ; Special because of string function below.
@@ -49,10 +49,10 @@ class DEBUG {
 	; - Standalone - ;
 	
 	; static externalProgramLauncher := true
+	; static gitHelper := true
 	; static killUAC := true
 	; static timer := true
 	; static vimBindings := true
-	; static gitHelper := true
 	; static setup := true
 	
 	; - System - ;

@@ -35,6 +35,13 @@ return
 	; arr4 := [ [ ["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"] ], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]], [["z", "y", "x"], ["w", "v", "u"], ["t", "s", "r"]]]
 	
 	; Run, C:\Program Files (x86)\Attachmate\Reflection\r2win.exe /VBA ".ConnectionType = ""SECURE SHELL"" " /VBA ".ConnectionSettings = ""Host epic-cde UserName gborg"" " /VBA ".Connect" /VBA "Call .RunMacroFile(""G:\Desktop\genericLoginMacro.rma"")" /S G:\Desktop\Text\latestSettings.r2w /NOCONNECT
+	
+	; RunAsAdmin()
+	; Run, C:\Windows\System32\cmd.exe /C tsdiscon
+	
+	; RunCommand("tsdiscon")
+	
+	; Run, C:\Windows\System32\cmd.exe /C tsdiscon
 return
 
 ^+!t::

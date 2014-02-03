@@ -13,7 +13,7 @@ borgPathINI := "<ROOT>\Startup\borg.ini"
 #Include <ROOT>\Startup\CommonIncludes\io.ahk
 #Include <ROOT>\Startup\CommonIncludes\number.ahk
 #Include <ROOT>\Startup\CommonIncludes\privateVariables.ahk
-#Include <ROOT>\Startup\CommonIncludes\runAsAdmin.ahk
+#Include <ROOT>\Startup\CommonIncludes\runCommands.ahk
 #Include <ROOT>\Startup\CommonIncludes\selector.ahk
 #Include <ROOT>\Startup\CommonIncludes\selectorRow.ahk
 #Include <ROOT>\Startup\CommonIncludes\string.ahk

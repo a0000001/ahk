@@ -1,0 +1,1 @@
+Run, C:\Windows\System32\cmd.exe /C tsdiscon

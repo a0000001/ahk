@@ -10,17 +10,22 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include commonIncludesStandalone.ahk
 ; #Include ..\commonIncludesStandalone.ahk
 
-RunAsAdmin()
+; RunAsAdmin()
+; windir = C:\Windows
+; Run, C:\Windows\System32\cmd.exe /c %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f, , Min, pid
+; sys32Dir := "C:\Windows\System32"
+; Run, C:\Windows\System32\cmd.exe /c %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
 
-windir = C:\windows
+; RunCommandAsAdmin("%windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f")
+; RunCommandAsAdmin("reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f")
 
-Run, C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f, , Min, pid
+runCommand("reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f")
 
 ; MsgBox, % pid
 
-Sleep, 500
+; Sleep, 500
 
-WinClose, ahk_pid %pid%
+; WinClose, ahk_pid %pid%
 
 ExitApp
 
