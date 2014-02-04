@@ -61,6 +61,7 @@ class DEBUG {
 	; static input := true
 	; static kdeMoverSizer := true
 	; static media := true
+	; static mouse := true
 	; static mouseWheelEmulator := true
 	; static programLauncher := true
 	; static screen := true

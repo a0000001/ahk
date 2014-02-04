@@ -123,3 +123,21 @@ compareFiles(file1, file2) {
 		return true
 	}
 }
+
+; Grab the tooltip(s) shown onscreen. Based on http://www.autohotkey.com/board/topic/53672-get-the-text-content-of-a-tool-tip-window/?p=336440
+getTooltipText(all = false) {
+	outText := ""
+	
+	; Allow partial matching on ahk_class. (tooltips_class32, WindowsForms10.tooltips_class32.app.0.2bf8098_r13_ad1 so far)
+	SetTitleMatchMode, RegEx
+	WinGet, winIDs, LIST, ahk_class tooltips_class32
+	SetTitleMatchMode, 1
+	
+	Loop, %winIDs% {
+		currID := winIDs%A_Index%
+		ControlGetText, tooltipText, , ahk_id %currID%
+		outText .= tooltipText "`n"
+	}
+	
+	return outText
+}

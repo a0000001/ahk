@@ -4,6 +4,7 @@
 #Include System\input.ahk
 #Include System\kdeMoverSizer.ahk
 #Include System\media.ahk
+#Include System\mouse.ahk
 #Include System\mouseWheelEmulator.ahk
 #Include System\programLauncher.ahk
 #Include System\screen.ahk
