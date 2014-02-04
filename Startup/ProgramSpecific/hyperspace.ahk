@@ -82,6 +82,11 @@
 		
 		clipboard := link
 	return
+	
+	; EMC2: Open view (web) version of the current object.
+	^+w::
+		
+	return
 #If
 
 ; Generic linker - will allow coming from clipboard or selected text, or input entirely. Puts the link on the clipboard.
