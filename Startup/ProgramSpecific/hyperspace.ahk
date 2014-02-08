@@ -56,6 +56,11 @@
 	return
 	
 	
+	; EMC2: Make ^h for server object, similar to ^g for client object.
+	^h::
+		Send, ^5
+	return
+	
 	; EMC2: Get DLG number from title.
 	^+c::
 		clipboard := getEMC2ObjectFromTitle()
@@ -64,28 +69,25 @@
 	; EMC2: Take DLG # and pop up the DLG in EpicStudio sidebar.
 	^+o::
 		dlg := getEMC2ObjectFromTitle()
-		if(dlg) {
+		if(dlg)
 			Run, %pLaunchPath_EpicStudio% DLG-%dlg%
-		}
+		
 	return
 	
 	; EMC2: Generate link using title for current object (DLG, etc.) and puts it on the clipboard.
 	^+l::
-		objectName := getEMC2ObjectFromTitle(true)
-		
-		objectSplit := specialSplit(objectName, A_Space)
-		DEBUG.popup(DEBUG.hyperspace, objectSplit, "EMC2 Object Name")
-		
-		; Get the link.
-		link := generateEMC2ObjectLink(true, objectSplit[1], objectSplit[2], "..\Selector\emc2link.ini")
-		DEBUG.popup(DEBUG.hyperspace, link, "Generated Link")
-		
-		clipboard := link
+		copyCurrentEMC2ObjectLink(true)
+	return
+	
+	; EMC2: Generate (view-only) link using title for current object (DLG, etc.) and puts it on the clipboard.
+	^+w::
+		copyCurrentEMC2ObjectLink(false)
 	return
 	
 	; EMC2: Open view (web) version of the current object.
-	^+w::
-		
+	^!w::
+		link := getCurrentEMC2ObjectLink(false)
+		Run, % link
 	return
 #If
 
@@ -144,24 +146,6 @@
 		; SendRaw, (%link%) 
 	; }
 return
-
-getEMC2ObjectFromTitle(includeINI = false) {
-	WinGetTitle, title
-	DEBUG.popup(DEBUG.hyperspace, title, "Title", includeINI, "Include INI")
-	
-	; If the title doesn't have a number, we shouldn't be returning anything.
-	if(title = "EMC2")
-		return ""
-	
-	titleSplit := specialSplit(title, " - ")
-	DEBUG.popup(DEBUG.hyperspace, titleSplit, "Title split")
-	if(includeINI)
-		return titleSplit[1]
-	
-	objectNameSplit := specialSplit(titleSplit[1], A_Space)
-	DEBUG.popup(DEBUG.hyperspace, objectNameSplit, "Object name split")
-	return objectNameSplit[2]
-}
 
 #IfWinActive, Demand Claim Processing
 	; For demanding claims: Ctrl + Enter pops null unto the right box, tabs until accept is active, and accepts it.
