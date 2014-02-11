@@ -89,6 +89,14 @@
 		link := getCurrentEMC2ObjectLink(false)
 		Run, % link
 	return
+	
+	; Insert HB SU SmartText.
+	:*:hb.su::
+		Send, ^{F10}
+		WinWait, SmartText Selection
+		SendRaw, HB DEVELOPMENT APPROVAL
+		Send, {Enter 2}
+	return
 #If
 
 ; Generic linker - will allow coming from clipboard or selected text, or input entirely. Puts the link on the clipboard.

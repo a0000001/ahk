@@ -186,20 +186,26 @@ return
 	FormatTime, datetime, , h:mm M/d/yy
 	Send %datetime%
 return
+
+:*:didate::
+	FormatTime, date, , dddd`, M/d/yy
+	Send %date%
+return
+:*:iddate::
+	FormatTime, date, , M/d/yy`, dddd
+	Send %date%
+return
+
+:*:dyidate::
+	FormatTime, date, , dddd`, M/d/yy`, yyyy
+	Send, %date%
+return
+
 :*:iaddr::
 	Send, % homeAddress
 return
 :*:fiaddr::
 	Send, % homeAddressFull
-return
-:*:idated::
-:*:didate::
-	FormatTime, date, , dddd`, M/d/yy
-	Send %date%
-return
-:*:dyidate::
-	FormatTime, date, , dddd`, M/d/yy`, yyyy
-	Send, %date%
 return
 
 ; KOCR extensions
