@@ -1,5 +1,45 @@
 ; Epic-specific functions.
 
+; Generates a link from the selection or clipboard.
+getEMC2ObjectLink() {
+	ini := ""
+	num := ""
+	
+	; Grab the selected text/clipboard.
+	text := getSelectedText(true)
+	
+	; Drop any leading whitespace. (Note using = not :=)
+	cleanText = %text%
+	
+	; Split the input.
+	inputSplit := specialSplit(cleanText, A_Space)
+	
+	; Figure out what we've got.
+	; Two parts, likely everything we need.
+	if(inputSplit.MaxIndex() = 2) {
+		; ini is 3 and not a number, num is a number.
+		if(!isNum(inputSplit[1]) && StrLen(inputSplit[1]) = 3 && isNum(inputSplit[2])) {
+			ini := inputSplit[1]
+			num := inputSplit[2]
+		}
+	
+	; Only one. Possible ini or num on its own.
+	} else if(inputSplit.MaxIndex() = 1) {
+		if(isNum(inputSplit[1]))
+			num := inputSplit[1]
+		else if(StrLen(inputSplit[1]) = 3)
+			ini := inputSplit[1]
+	}
+	
+	DEBUG.popup(DEBUG.epic, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
+	
+	; Get the link.
+	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
+	DEBUG.popup(DEBUG.epic, link, "Generated Link")
+	
+	return link
+}
+
 ; If given:
 ;	Both:
 ;		Silently chooses, no popup.
