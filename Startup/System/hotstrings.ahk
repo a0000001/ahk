@@ -237,9 +237,9 @@ return
 
 ; :*:exfolder::C:\Program Files\Executor\
 
-:*:dsf::
-	Send, G:\Desktop\
-return
+:*:dsf::G:\Desktop\
+:*:ddsf::G:\Desktop\Dev\
+
 
 :*:varioustextsf::
 :*:vtf::
