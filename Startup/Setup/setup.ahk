@@ -21,6 +21,7 @@ zipPath := "..\..\Selector\zipAll.bat"
 unZipPath := "..\..\Selector\unZipAll.bat"
 rootTag := "<ROOT>"
 machineTag := "<WHICHMACHINE>"
+vimKeyTag := "<VIMCLOSEKEY>"
 versionTag := "<VERSION>"
 
 
@@ -39,6 +40,7 @@ if(machineInfo = "") {
 machineInfoSplit := specialSplit(machineInfo, "^")
 whichMachine := machineInfoSplit[1]
 editVersion := machineInfoSplit[2]
+vimKey := machineInfoSplit[3]
 ; MsgBox, % "Machine: " whichMachine "`nVersion: " editVersion
 
 
@@ -46,6 +48,7 @@ editVersion := machineInfoSplit[2]
 FileRead, borgINI, borg.ini.master
 ; MsgBox, % borgINI
 StringReplace, borgINI, borgINI, %machineTag%, %whichMachine%, A
+StringReplace, borgINI, borgINI, %vimKeyTag%, %vimKey%, A
 ; MsgBox, % borgINI
 FileDelete, %iniPath%
 FileAppend, %borgINI%, %iniPath%

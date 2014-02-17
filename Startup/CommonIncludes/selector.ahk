@@ -527,6 +527,10 @@ class Selector {
 		} else if(actionType = "EDIT") {
 			Run, %action%
 		
+		; Write to an ini file.
+		} else if(actionType = "INIWRITE") {
+			
+		
 		; Call the action.
 		} else if(actionType = "CALL") {
 			URL := "http://guru/services/Webdialer.asmx/"
