@@ -137,16 +137,16 @@ setVimState(toState, super = false) {
 		unpauseSpecial()
 	return
 
-#If chromeOrFirefoxActive() && borgWhichMachine = THINKPAD
-; #If chromeOrFirefoxActive() && borgVimBindingsCloseKey = vimBindingsF9
+; #If chromeOrFirefoxActive() && borgWhichMachine = THINKPAD
+#If chromeOrFirefoxActive() && borgVimBindingsCloseKey = vimBindingsF9
 	; Close Tab. Here because F9 is not a typically-pressed key.
 	F9::
 		Send, ^w
 	~^w::
 		setVimState(true)
 	return
-#If chromeOrFirefoxActive() && borgWhichMachine = EPIC_DESKTOP
-; #If chromeOrFirefoxActive() && borgVimBindingsCloseKey = vimBindingsF6
+; #If chromeOrFirefoxActive() && borgWhichMachine = EPIC_DESKTOP
+#If chromeOrFirefoxActive() && borgVimBindingsCloseKey = vimBindingsF6
 	; Close Tab. Here because F6 is not a typically-pressed key.
 	F6::
 		Send, ^w
