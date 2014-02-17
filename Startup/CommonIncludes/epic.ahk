@@ -54,13 +54,13 @@ generateEMC2ObjectLink(edit = true, ini = "", num = "", iniPath = "emc2link.ini"
 	; return
 	
 	if(ini && num) ; Silent choice.
-		iniURL := Selector.select(iniPath, "RETURN", ini "." num)
+		iniURL := Selector.select(iniPath, "RET", ini "." num)
 	else if(ini && !num) ; INI only - prefix.
-		iniURL := Selector.select(iniPath, "RETURN", "", ini ".")
+		iniURL := Selector.select(iniPath, "RET", "", ini ".")
 	else if(!ini && num) ; Num only - postfix.
-		iniURL := Selector.select(iniPath, "RETURN", "", "", "." num)
+		iniURL := Selector.select(iniPath, "RET", "", "", "." num)
 	else ; Generic case - nothing given yet, get it all from the user.
-		iniURL := Selector.select(iniPath, "RETURN")
+		iniURL := Selector.select(iniPath, "RET")
 	
 	; Ditch if we don't have our needed beginning.
 	if(!iniURL)

@@ -15,6 +15,8 @@ borgPathINI := "<ROOT>\Startup\borg.ini"
 #Include <ROOT>\Startup\CommonIncludes\privateVariables.ahk
 #Include <ROOT>\Startup\CommonIncludes\runCommands.ahk
 #Include <ROOT>\Startup\CommonIncludes\selector.ahk
+#Include <ROOT>\Startup\CommonIncludes\selectorActions.ahk
+#Include <ROOT>\Startup\CommonIncludes\selectorActionsPrivate.ahk
 #Include <ROOT>\Startup\CommonIncludes\selectorRow.ahk
 #Include <ROOT>\Startup\CommonIncludes\string.ahk
 #Include <ROOT>\Startup\CommonIncludes\tableList.ahk

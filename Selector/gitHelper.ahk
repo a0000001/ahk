@@ -43,7 +43,7 @@ gitZipUnzip(zipOrUnzip) {
 ; NOTE: GOOD OPPORTUNITY FOR MULTI-USE SELECTOR TEST/SETUP.
 
 			; Do the zip/unzip operation to ensure that the newest version is where it needs to be.
-			Selector.select("..\Selector\zip.ini", "RUNWAIT", f[FC_NAME] zipOrUnzip)
+			Selector.select("..\Selector\zip.ini", "DO_WAIT", f[FC_NAME] zipOrUnzip)
 			
 			; Update the reference versions of the file(s).
 			if(SubStr(curr, 1, 1) = "*") {

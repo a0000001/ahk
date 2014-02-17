@@ -17,7 +17,7 @@ class DEBUG {
 	; static runCommands := true
 	; static selector := true
 	; static selectorRow := true
-	; static stringDB := true ; Special because of string function below.
+	; static string := true
 	; static tableList := true
 	; static tableListRow := true
 	; static tray := true
@@ -66,11 +66,10 @@ class DEBUG {
 	; static programLauncher := true
 	; static screen := true
 	; static volume := true
-	; static windowDB := true ; Different because there's also a common include with this name.
 	
 	
 	
-	string(on, var, label = "", numTabs = 0, child = true) {
+	string1(on, var, label = "", numTabs = 0, child = true) {
 		if(on) {
 			outStr := ""
 			varSize := var.MaxIndex()
@@ -104,7 +103,7 @@ class DEBUG {
 			} else {
 				; MsgBox, % numTabs
 				For i,v in var
-					outStr .= getTabs(numTabs) "[" i "] " this.string(on, v, "", numTabs) "`n"
+					outStr .= getTabs(numTabs) "[" i "] " this.string1(on, v, "", numTabs) "`n"
 			}
 			
 			; MsgBox, % outStr
@@ -126,7 +125,7 @@ class DEBUG {
 		
 		i := 1
 		while(i <= paramsLen) {
-			outStr .= this.string(true, params[i], params[i + 1], numTabs, false) "`n"
+			outStr .= this.string1(true, params[i], params[i + 1], numTabs, false) "`n"
 			i += 2
 		}
 		
@@ -135,7 +134,7 @@ class DEBUG {
 	
 	; popup(on, var, label = "") {
 		; if(on) {
-			; MsgBox, % this.string(on, var, label, 0, false)
+			; MsgBox, % this.string1(on, var, label, 0, false)
 		; }
 	; }
 	
