@@ -1,3 +1,5 @@
+REM Remember to update the master files!
+
 @ECHO OFF
 
 REM Prompt user for password.

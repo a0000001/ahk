@@ -8,6 +8,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include ..\CommonIncludes\data.ahk
 #Include ..\CommonIncludes\HTTPRequest.ahk
 #Include ..\CommonIncludes\selector.ahk
+#Include ..\CommonIncludes\selectorActions.ahk
 #Include ..\CommonIncludes\selectorRow.ahk
 #Include ..\CommonIncludes\string.ahk
 #Include ..\CommonIncludes\tableList.ahk
