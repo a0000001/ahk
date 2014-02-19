@@ -83,6 +83,14 @@
 		Send, {Enter}
 	return
 	
+	:*:.lock::
+		SendRaw, w $$zlock^elibEALIB1(" ; Extra comment/quote here to fix syntax highlighting. "
+	return
+	
+	:*:.unlock::
+		SendRaw, w $$zunlock^elibEALIB1(" ; Extra comment/quote here to fix syntax highlighting. "
+	return
+	
 	; Fast Forward.
 	F1::
 		Send, {Home}

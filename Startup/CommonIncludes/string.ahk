@@ -161,3 +161,37 @@ getNewLines(i) {
 		outStr .= "`n"
 	return outStr
 }
+
+; Turns all double quotes (") into double double quotes ("").
+escapeDoubleQuotes(s) {
+	StringReplace, s, s, ", "", All		; For syntax! "
+	return s
+}
+
+; Wraps each line of the array in quotes, turning any quotes already there into double double quotes.
+quoteWrapArrayDouble(arr) {
+	outArr := []
+	
+	For i,a in arr {
+		outArr.insert("""" escapeDoubleQuotes(a) """")
+	}
+	
+	return outArr
+}
+
+; Given an array of strings, put them all together.
+arrayToString(arr, spacesBetween = true, preString = "", postString = "") {
+	outStr := ""
+	
+	For i,a in arr {
+		outStr .= preString a postString
+		
+		if(spacesBetween)
+			outStr .= " "
+	}
+	
+	; Take off the last, extraneous space.
+	StringTrimRight, outStr, outStr, 1
+	
+	return outStr
+}

@@ -153,8 +153,8 @@ minimizeWindowSpecial(case = 0) {
 	} else if(WinActive("Buddy List")) { ; Pidgin
 		WinClose
 
-	} else if(WinActive("ahk_class ahk_class CabinetWClass")) { ; Windows Explorer/QTTabbar.
-		Send, ^m
+	} else if(WinActive("ahk_class ahk_class CabinetWClass")) { ; Windows Explorer.
+		WinMinimize
 
 	} else if(WinActive("ahk_class TfcForm")) { ; FreeCommander.
 		WinHide
