@@ -376,16 +376,24 @@
 #IfWinActive
 
 ; Finds and checks a single reference.
-findReferenceLine(lineToFind, numToMatch = 0) {
+findReferenceLine(lineToFind, numToMatch = 0, shouldSelect = false) {
 	prevRow := ""
 	numSame := 1
 	foundPage := false
+	
+	if(WinActive("References - ")) {
+		buttonNN := "Button5"
+	} else if(WinActive("Components")) {
+		buttonNN := "Button1"
+	} else {
+		return false
+	}
 	
 	firstChar := SubStr(lineToFind, 1, 1)
 	; MsgBox, % firstChar . "`n" . lineToFind
 	
 	; If what we're currently on is after what we want, start at the top.
-	ControlGetText, currRow, Button5, A
+	ControlGetText, currRow, %buttonNN%, A
 	if(lineToFind < currRow, 1, StrLen(lineToFind)) {
 		Send, {Home}
 	}
@@ -404,16 +412,15 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		
 		; Grab current item's identity.
 		Sleep, 1
-		; ControlGetText, currRow, Button5, A
-		ControlGetText, currRow, Button1, A
-		; MsgBox, %currRow%
+		ControlGetText, currRowFull, %buttonNN%, A
+		; MsgBox, %currRowFull%
 		
 		; Trim it down to size to allow partial matching.
-		currRow := SubStr(currRow, 1, StrLen(lineToFind))
+		currRow := SubStr(currRowFull, 1, StrLen(lineToFind))
 		; MsgBox, %currRow%
 		
 		; Just in case we hit the end of the listbox: if we see the same row VB_REF_SAME_THRESHOLD times, finish.
-		if(currRow = prevRow) {
+		if(currRowFull = prevRow) {
 			numSame++
 		} else {
 			numSame := 1
@@ -422,7 +429,7 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 		if(numSame = VB_REF_SAME_THRESHOLD) {
 			return false
 		}
-		prevRow := currRow
+		prevRow := currRowFull
 		
 		; If it matches our input, finish.
 		if(lineToFind = currRow) {
@@ -433,7 +440,8 @@ findReferenceLine(lineToFind, numToMatch = 0) {
 			}
 			
 			; Check and finish.
-			Send, {Space}
+			if(shouldSelect)
+				Send, {Space}
 			return true
 		
 		; If we overshot it, back up a page and start going by single rows.
@@ -459,8 +467,8 @@ convertStarToES(string) {
 	return string
 }
 
-; References window.
-#IfWinActive, References - 
+; References/components windows.
+#If WinActive("References - ") || WinActive("Components")
 	^f::
 		; Get user input.
 		InputBox, userIn, Partial Search, Please enter the first portion of the row to find. You may replace "Epic Systems " with "* "
@@ -470,6 +478,8 @@ convertStarToES(string) {
 		
 		; Expand it as needed.
 		userIn := convertStarToES(userIn)
+		if(!userIn)
+			return
 		
 		; Crawl the list and check it.
 		if(!findReferenceLine(userIn)) {
@@ -480,6 +490,8 @@ convertStarToES(string) {
 	^a::
 		; Get user input.
 		FileSelectFile, fileName
+		if(!fileName)
+			return
 		
 		; Read in the list of names.
 		referenceLines := fileLinesToArray(fileName)
@@ -495,58 +507,8 @@ convertStarToES(string) {
 		Loop, %refsLen% {
 			textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
 			; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
-			findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
+			findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM], true)
 		}
-		
-		MsgBox, Selected References: `n`n%textOut%
-	return
-#IfWinActive
-
-; Components window.
-#IfWinActive, Components
-	^f::
-		; Get user input.
-		InputBox, userIn, Partial Search, Please enter the first portion of the row to find. You may replace "Epic Systems " with "* "
-		if(ErrorLevel) {
-			return
-		}
-		
-		; Expand it as needed.
-		userIn := convertStarToES(userIn)
-		
-		; Crawl the list and check it.
-		if(!findReferenceLine(userIn)) {
-			MsgBox, Reference not found in list!
-		}
-	return
-	
-	^a::
-		; Get user input.
-		FileSelectFile, fileName
-		
-		; Read in the list of names.
-		referenceLines := fileLinesToArray(fileName)
-		; MsgBox, % arrayToDebugString(referenceLines)
-		
-		; Parse the list into nice, uniform reference lines.
-		; references := cleanParseList(referenceLines)
-		references := TableList.parseList(referenceLines)
-		; MsgBox, % arrayToDebugString(references, 2)
-		
-		textOut := ""
-		For i,r in References {
-			textOut .= r[1] . "	" . r[2] . "`n"
-			; MsgBox, % r[1] . "	" . r[2] . "`n"
-			; findReferenceLine(r[1], r[2])
-		}
-		
-		; textOut := ""
-		; refsLen := references.MaxIndex()
-		; Loop, %refsLen% {
-			; textOut .= references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM] . "`n"
-			; MsgBox, % references[A_Index, LIST_ITEM] . "	" . references[A_Index, LIST_NUM]
-			; findReferenceLine(references[A_Index, LIST_ITEM], references[A_Index, LIST_NUM])
-		; }
 		
 		MsgBox, Selected References: `n`n%textOut%
 	return

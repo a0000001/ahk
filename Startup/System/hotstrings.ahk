@@ -279,6 +279,10 @@ return
 	Send, G:\Desktop\MultiplePreCopays\
 return
 
+:*:.ecid::
+	Send, % epicComputerName
+return
+
 ; :*:tsf::
 ; :*:testf::
 	; Send, G:\TestStuff
