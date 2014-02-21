@@ -39,7 +39,7 @@ class TableListMod {
 		}
 		
 		outBit := SubStr(rowBit, 1, startLen + startOffset) . this.text . SubStr(rowBit, (startLen + 1) + endOffset)
-		DEBUG.popup(DEBUG.tableListMod, rowBits, "Row to apply to", this, "Mod applied", rowBit, "On row bit", outBit, "Finished bit", startLen, "Start len", startOffset, "Start offset", startLen + 1, "Start len + 1", endOffset, "End offset")
+		DEBUG.popup(debugTableListMod, rowBits, "Row to apply to", this, "Mod applied", rowBit, "On row bit", outBit, "Finished bit", startLen, "Start len", startOffset, "Start offset", startLen + 1, "Start len + 1", endOffset, "End offset")
 		
 		; Put the bit back into the full row.
 		rowBits[this.bit] := outBit

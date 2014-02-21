@@ -31,11 +31,11 @@ getEMC2ObjectLink() {
 			ini := inputSplit[1]
 	}
 	
-	DEBUG.popup(DEBUG.epic, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
+	DEBUG.popup(debugEpic, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
 	
 	; Get the link.
 	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
-	DEBUG.popup(DEBUG.epic, link, "Generated Link")
+	DEBUG.popup(debugEpic, link, "Generated Link")
 	
 	return link
 }
@@ -48,7 +48,7 @@ getEMC2ObjectLink() {
 ;	Neither/num only:
 ;		General popup.
 generateEMC2ObjectLink(edit = true, ini = "", num = "", iniPath = "emc2link.ini") {
-	DEBUG.popup(DEBUG.epic, edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
+	DEBUG.popup(debugEpic, edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
 	
 	; result := Selector.select(iniPath, "POPUP", "", ini, num)
 	; return

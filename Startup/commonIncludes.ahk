@@ -2,8 +2,9 @@
 
 borgPathINI := "borg.ini"
 
-#Include CommonIncludes\AHKHID.ahk
 #Include CommonIncludes\borgReadINI.ahk
+
+#Include CommonIncludes\AHKHID.ahk
 #Include CommonIncludes\commonVariables.ahk
 #Include CommonIncludes\data.ahk
 #Include CommonIncludes\debug.ahk

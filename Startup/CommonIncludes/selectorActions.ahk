@@ -43,7 +43,7 @@ TEST(actionRow) {
 
 ; Change a value in an ini file.
 INI_WRITE(actionRow) {
-	offStrings := ["o", "f", "off"]
+	offStrings := ["o", "f", "off", "0"]
 	
 	if(actionRow.data[4]) {
 		file := actionRow.data[4]
@@ -67,5 +67,5 @@ INI_WRITE(actionRow) {
 		}
 	}
 	
-	DEBUG.popup(DEBUG.selector, actionRow, "Row", file, "File", sect, "Section", key, "Key", val, "Value")
+	DEBUG.popup(debugSelectorActions, actionRow, "Row", file, "File", sect, "Section", key, "Key", val, "Value")
 }

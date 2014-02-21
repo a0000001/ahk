@@ -4,7 +4,7 @@
 insertFront(ByRef arr, new) {
 	arr2 := Object()
 	arr2.Insert(new)
-	DEBUG.popup(DEBUG.data, arr2, "Array 2")
+	DEBUG.popup(debugData, arr2, "Array 2")
 	
 	arrLen := arr.MaxIndex()
 	Loop, %arrLen% {

@@ -1,3 +1,5 @@
 [Main]
 MachineName=<WHICHMACHINE>
 VimBindingsCloseKey=<VIMCLOSEKEY>
+
+[Debug]

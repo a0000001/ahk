@@ -22,6 +22,20 @@ IniRead, borgVimBindingsCloseKey, %borgPathINI%, Main, VimBindingsCloseKey
 if(!borgVimBindingsCloseKey)
 	borgVimBindingsCloseKey := vimBindingsF9
 
+; Read in which debug flags should be on.
+IniRead, sectionList, ..\Startup\borg.ini, Debug
+
+Loop, Parse, sectionList, `n
+{
+	splitLine := specialSplit(A_LoopField, "=")
+	currKey := "debug" splitLine[1]
+	%currKey% := splitLine[2]
+}
+
+DEBUG.popup(debugBorgReadINI, sectionList, "Debug INI settings")
+
+
 ; borgWhichMachine := THINKPAD
 ; borgWhichMachine := vimBindingsF9
-DEBUG.popup(DEBUG.borgReadINI, machineName, "Machine name", borgWhichMachine, "Borg which machine")
+; DEBUG.popup(DEBUG.borgReadINI, machineName, "Machine name", borgWhichMachine, "Borg which machine")
+DEBUG.popup(debugBorgReadINI, machineName, "Machine name", borgWhichMachine, "Borg which machine")
