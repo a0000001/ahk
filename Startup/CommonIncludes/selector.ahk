@@ -50,6 +50,7 @@ class Selector {
 	static abbrevConstant := "ABBREV"
 	static actionConstant := "ACTION"
 	static dataConstant := "DATA"
+	static userInputConstant := "USERIN"
 	
 	static editStrings := ["0", "e", "edit"]
 	
@@ -125,7 +126,7 @@ class Selector {
 			if(!userIn)
 				return ""
 			
-			if(DEBUG.selector)
+			if(debugSelector)
 				userInOrig := userIn
 			
 			; Parse input to meaningful command.
@@ -247,10 +248,12 @@ class Selector {
 		this.nameIndex := ""
 		this.abbrevIndex := ""
 		this.actionIndex := ""
+		this.userInputIndex := ""
 		
 		; Strip off the paren from the first element.
 		row.rowArr[1] := SubStr(row.rowArr[1], 2)
 		
+		finalIndex := 0
 		For i,r in row.rowArr {
 			if(r = this.nameConstant)
 				this.nameIndex := i
@@ -258,11 +261,18 @@ class Selector {
 				this.abbrevIndex := i
 			else if(r = this.actionConstant)
 				this.actionIndex := i
+			else if(r = this.userInputConstant)
+				this.userInputIndex := i
 			else if(InStr(r, this.dataConstant))
 				this.dataIndices.insert(i)
+			
+			finalIndex := i
 		}
 		
-		DEBUG.popup(debugSelector, this.nameIndex, "Model name", this.abbrevIndex, "Model abbreviation", this.actionIndex, "Model action", this.dataIndices, "Model data")
+		if(!this.userInputIndex)
+			this.userInputIndex := finalIndex + 1
+		
+		DEBUG.popup(debugSelector, this.nameIndex, "Model name", this.abbrevIndex, "Model abbreviation", this.actionIndex, "Model action", this.userInputIndex, "Model user input", this.dataIndices, "Model data")
 	}
 	
 	; Generate the text for the GUI and display it, returning the user's response.
@@ -411,6 +421,7 @@ class Selector {
 			}
 			rowToDo.setAbbrev(splitBits1 . this.arbitChar . splitBits2) ; Update the return so that first half of x+y is the shortcut.
 			rowToDo.action .= splitBits2
+			rowToDo.userInput .= splitBits2
 			
 		; Otherwise, we search through the data structure by both number and shortcut and look for a match.
 		} else {

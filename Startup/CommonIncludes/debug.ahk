@@ -1,27 +1,69 @@
 ; Debugger object and functions.
 
+; Common Includes
+global debugBorgReadINI
+global debugCommonVariables
+global debugData
+global debugDebug
+global debugEpic
+global debugGraphics
+global debugIO
+global debugNumber
+global debugPrivateVariables
+global debugRunCommands
+global debugSelector
+global debugSelectorActions
+global debugSelectorActionsPrivate
+global debugSelectorRow
+global debugString
+global debugTableList
+global debugTableListRow
+global debugTray
+global debugWindow
+
+; Program Specific
+global debugChrome
+global debugEpicStudio
+global debugExcel
+global debugFoobar
+global debugFreeCommander
+global debugHyperspace
+global debugNotepad
+global debugNotepadPP
+global debugOneNote
+global debugOutlook
+global debugPowerPoint
+global debugReflections
+global debugRemoteDesktop
+global debugSites
+global debugSkype
+global debugSumatraPDF
+global debugTortoiseSVN
+global debugVB6
+global debugVLC
+global debugWord
+
+; Standalone
+global debugExternalProgramLauncher
+global debugGitHelper
+global debugKillUAC
+global debugTimer
+global debugVimBindings
+global debugSetup
+
+; System
+global debugHotstrings
+global debugInput
+global debugKDEMoverSizer
+global debugMedia
+global debugMouse
+global debugMouseWheelEmulator
+global debugProgramLauncher
+global debugScreen
+global debugVolume
+
 class DEBUG {
 	; -- Enabled/disabled flags. -- ;
-	
-	; - Common Includes. - ;
-	
-	; static borgReadINI := true
-	; static commonVariables := true
-	; static data := true
-	; static debug := true
-	; static epic := true
-	; static graphics := true
-	; static io := true
-	; static number := true
-	; static privateVariables := true
-	; static runCommands := true
-	; static selector := true
-	; static selectorRow := true
-	; static string := true
-	; static tableList := true
-	; static tableListRow := true
-	; static tray := true
-	; static window := true
 	
 	; - Programs - ;
 	

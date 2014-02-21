@@ -58,7 +58,7 @@ INI_WRITE(actionRow) {
 		file := actionRow.data[2]
 		sect := actionRow.data[1]
 		key := actionRow.name
-		val := !contains(offStrings, actionRow.action)
+		val := !contains(offStrings, actionRow.userInput)
 		
 		if(!val) { ; Came from post-pended arbitrary piece.
 			IniDelete, %file%, %sect%, %key%

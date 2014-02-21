@@ -24,12 +24,14 @@ if(!borgVimBindingsCloseKey)
 
 ; Read in which debug flags should be on.
 IniRead, sectionList, ..\Startup\borg.ini, Debug
+; MsgBox, % sectionList
 
 Loop, Parse, sectionList, `n
 {
 	splitLine := specialSplit(A_LoopField, "=")
 	currKey := "debug" splitLine[1]
 	%currKey% := splitLine[2]
+	; MsgBox, % currKey "`n" splitLine[2]
 }
 
 DEBUG.popup(debugBorgReadINI, sectionList, "Debug INI settings")

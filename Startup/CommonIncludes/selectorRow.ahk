@@ -4,6 +4,7 @@ class SelectorRow {
 	name := ""
 	abbr := ""
 	action := ""
+	userInput := ""
 	dataNums := []
 	data := []
 	
@@ -24,6 +25,8 @@ class SelectorRow {
 			this.abbrev := this.rowArr[Selector.abbrevIndex]
 		if(Selector.actionIndex)
 			this.action := this.rowArr[Selector.actionIndex]
+		if(Selector.userInputIndex)
+			this.userInput := this.rowArr[Selector.userInputIndex]
 		For i,j in Selector.dataIndices {
 			this.data.insert(this.rowArr[j])
 			this.dataNums.insert(i)
@@ -36,6 +39,7 @@ class SelectorRow {
 		temp.name := this.name
 		temp.abbrev := this.abbrev
 		temp.action := this.action
+		temp.userInput := this.userInput
 		For i,d in this.dataNums {
 			temp.dataNums.insert(d)
 			temp.data.insert(this.data[i])
@@ -63,6 +67,8 @@ class SelectorRow {
 			this.abbrev := x
 		} else if(i = Selector.actionIndex) {
 			this.action := x
+		} else if(i = Selector.userInputIndex) {
+			this.userInput := x
 		}
 	}
 	
@@ -74,12 +80,17 @@ class SelectorRow {
 	setAbbrev(a) {
 		this.abbrev := a
 		if(Selector.abbrevIndex)
-			this.rowArr[Selector.abbrevIndex] := n
+			this.rowArr[Selector.abbrevIndex] := a
 	}
 	setAction(a) {
 		this.action := a
 		if(Selector.actionIndex)
-			this.rowArr[Selector.actionIndex] := n
+			this.rowArr[Selector.actionIndex] := a
+	}
+	setUserInput(ui) {
+		this.userInput := ui
+		if(Selector.userInputIndex)
+			this.rowArr[Selector.userInputIndex] := ui
 	}
 	
 	getData(n) {
@@ -107,6 +118,10 @@ class SelectorRow {
 		Loop, %numTabs%
 			outStr .= "`t"
 		outStr .= "Action: " this.action "`n"
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "User Input: " this.userInput "`n"
 		
 		Loop, %numTabs%
 			outStr .= "`t"
