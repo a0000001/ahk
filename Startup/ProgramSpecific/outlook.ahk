@@ -17,7 +17,8 @@
 		Send, od
 		
 		; Set view as desired.
-		Send, !3 ; 3 days.
+		; Send, !3 ; 3 days.
+		Send, !2 ; 2 days.
 		; Send, ^!3 ; Week, not 3 days.
 		; Send, {Left}{Home}
 	return
