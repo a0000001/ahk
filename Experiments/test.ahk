@@ -28,6 +28,9 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
+	x := "as""sd"
+	MsgBox, % x
+	
 	; arr0 := "a"
 	; arr1 := ["b"]
 	; arr2 := ["a", "b", "c"]
@@ -94,9 +97,9 @@ return
 	; ; Run, C:\Windows\System32\cmd.exe /C tsdiscon
 return
 
-^y::
-	MsgBox, % debugBorgReadINI
-return
+; ^y::
+	; MsgBox, % debugBorgReadINI
+; return
 
 ^+!t::
 	; Get user input.

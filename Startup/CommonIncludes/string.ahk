@@ -162,9 +162,15 @@ getNewLines(i) {
 	return outStr
 }
 
-; Turns all double quotes (") into double double quotes ("").
-escapeDoubleQuotes(s) {
-	StringReplace, s, s, ", "", All		; For syntax! "
+; Turns all double quotes (") into double double quotes ("") or more, if second argument given.
+escapeDoubleQuotes(s, num = 2) {
+	replString := ""
+	while(num > 0) {
+		replString .= """"
+		num--
+	}
+	
+	StringReplace, s, s, ", %replString%, All		; For syntax! "
 	return s
 }
 

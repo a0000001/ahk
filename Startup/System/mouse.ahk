@@ -1,4 +1,4 @@
 ; Puts the contents of the tooltip on the clipboard.
-^!#m::
+^+m::
 	clipboard := getTooltipText()
 return
