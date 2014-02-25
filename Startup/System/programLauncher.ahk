@@ -7,7 +7,7 @@
 #b::activateOpenMinimize(pLaunchClass_Media, pLaunchPath_Media)
 !`::activateOpenMinimize(pLaunchClass_TaskManager, pLaunchPath_TaskManager)
 
-$#e::activateOpenMinimize(pLaunchClass_FileManager, pLaunchPath_FileManager)
+; $#e::activateOpenMinimize(pLaunchClass_FileManager, pLaunchPath_FileManager)
 
 #1::activateOpenMinimize(pLaunchClass_1, pLaunchPath_1)
 #2::activateOpenMinimize(pLaunchClass_2, pLaunchPath_2)
