@@ -4,7 +4,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force ; Force just one instance, we don't want muliple of this running around.
 ; #NoTrayIcon
 
-; #Include CommonIncludes\tray.ahk
+; #Include ..\commonIncludesStandalone.ahk
 #Include commonIncludesStandalone.ahk
 
 ; State flags.

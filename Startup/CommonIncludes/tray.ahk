@@ -24,7 +24,7 @@ getValuesFromNames(names) {
 updateTrayIcon() {
 	global vars, mapping
 	values := getValuesFromNames(vars)
-	DEBUG.popup(debugTray, values, "Values")
+	DEBUG.popup(debugTray, vars, "Vars", values, "Values")
 	
 	temp := mapping
 	while(temp.HasKey(0)) {
