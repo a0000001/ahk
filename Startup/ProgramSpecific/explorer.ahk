@@ -1,4 +1,9 @@
-#ifWinActive, ahk_class CabinetWClass
+; Since win+e is ceded to FreeCommander, give explorer something different.
+!#e::
+	Send, #e
+return
+
+#IfWinActive, ahk_class CabinetWClass
 
 ; New folder: modding hotkey
 ^n::^+n
