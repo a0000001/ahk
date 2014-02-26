@@ -121,12 +121,14 @@
 	; }
 return
 
-; Generic opener - generates and launches the link created.
-^!#o::
-	link := getEMC2ObjectLink()
-	if(link)
-		Run, % link
-return
+#If borgWhichMachine = EPIC_DESKTOP
+	; Generic opener - generates and launches the link created.
+	^!#o::
+		link := getEMC2ObjectLink()
+		if(link)
+			Run, % link
+	return
+#If
 
 #IfWinActive, Demand Claim Processing
 	; For demanding claims: Ctrl + Enter pops null unto the right box, tabs until accept is active, and accepts it.
