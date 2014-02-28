@@ -6,6 +6,10 @@ global LIST_PRE_CHAR := 4
 global LIST_ADD_MOD_LABEL_CHAR := 5
 global LIST_REMOVE_MOD_LABEL_CHAR := 6
 global LIST_IGNORE_MOD_CHAR := 7
+global LIST_MOD_BEGIN_CHAR := 8
+global LIST_MOD_MODIFY_CHAR := 9
+global LIST_MOD_INSERT_CHAR := 10
+global LIST_MOD_END_CHAR := 11
 
 ; Default chars.
 global LIST_DEFAULT_ESC_CHAR := "\"
@@ -15,6 +19,10 @@ global LIST_DEFAULT_PRE_CHAR := "*"
 global LIST_DEFAULT_ADD_MOD_LABEL_CHAR := "+"
 global LIST_DEFAULT_REMOVE_MOD_LABEL_CHAR := "-"
 global LIST_DEFAULT_IGNORE_MOD_CHAR := "/"
+global LIST_DEFAULT_MOD_BEGIN_CHAR := "b"
+global LIST_DEFAULT_MOD_MODIFY_CHAR := "m"
+global LIST_DEFAULT_MOD_INSERT_CHAR := "i"
+global LIST_DEFAULT_MOD_END_CHAR := "e"
 
 ; Generic custom class for parsing lists.
 class TableList {
@@ -33,6 +41,10 @@ class TableList {
 		this.addChar := chars[LIST_ADD_MOD_LABEL_CHAR] ? chars[LIST_ADD_MOD_LABEL_CHAR] : LIST_DEFAULT_ADD_MOD_LABEL_CHAR
 		this.remChar := chars[LIST_REMOVE_MOD_LABEL_CHAR] ? chars[LIST_REMOVE_MOD_LABEL_CHAR] : LIST_DEFAULT_REMOVE_MOD_LABEL_CHAR
 		this.ignoreModChar := chars[LIST_IGNORE_MOD_CHAR] ? chars[LIST_IGNORE_MOD_CHAR] : LIST_DEFAULT_IGNORE_MOD_CHAR
+		this.modBeginChar := chars[LIST_MOD_BEGIN_CHAR] ? chars[LIST_MOD_BEGIN_CHAR] : LIST_DEFAULT_MOD_BEGIN_CHAR
+		this.modModifyChar := chars[LIST_MOD_MODIFY_CHAR] ? chars[LIST_MOD_MODIFY_CHAR] : LIST_DEFAULT_MOD_MODIFY_CHAR
+		this.modInsertChar := chars[LIST_MOD_INSERT_CHAR] ? chars[LIST_MOD_INSERT_CHAR] : LIST_DEFAULT_MOD_INSERT_CHAR
+		this.modEndChar := chars[LIST_DEFAULT_MOD_END_CHAR] ? chars[LIST_DEFAULT_MOD_END_CHAR] : LIST_DEFAULT_MOD_END_CHAR
 		
 		; Initialize the objects.
 		this.mods := Object()
@@ -200,9 +212,9 @@ class TableList {
 		
 		; First character of remaining string indicates what sort of operation we're dealing with: b, e, or m.
 		op := Substr(modLine, 1, 1)
-		if(op = "b") {
+		if(op = this.modBeginChar) {
 			currMod.start := 1
-		} else if(op = "e") {
+		} else if(op = this.modEndChar) {
 			currMod.start := -1
 		}
 		
@@ -220,7 +232,7 @@ class TableList {
 					currMod.start := SubStr(modLine, 2, commaPos - 2)
 					currMod.len := SubStr(modLine, commaPos + 1, closeParenPos - (commaPos + 1))
 				} else {
-					if(op = "m") {
+					if(op = this.modModifyChar) {
 						currMod.start := SubStr(modLine, 2, closeParenPos - 2)
 						currMod.len := 0
 					} else {
