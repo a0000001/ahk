@@ -197,7 +197,7 @@ class TableList {
 		if(debugTableList)
 			origModLine := modLine
 		
-		currMod := new TableListMod(modLine, 1, 0, "", label)
+		currMod := new TableListMod(modLine, 1, 0, "", label, "")
 		
 		; Next, check to see whether we have an explicit bit. Syntax: starts with {#}
 		firstChar := SubStr(modLine, 1, 1)
@@ -211,10 +211,10 @@ class TableList {
 		}
 		
 		; First character of remaining string indicates what sort of operation we're dealing with: b, e, or m.
-		op := Substr(modLine, 1, 1)
-		if(op = this.modBeginChar) {
+		currMod.operation := Substr(modLine, 1, 1)
+		if(currMod.operation = this.modBeginChar) {
 			currMod.start := 1
-		} else if(op = this.modEndChar) {
+		} else if(currMod.operation = this.modEndChar) {
 			currMod.start := -1
 		}
 		
@@ -232,7 +232,7 @@ class TableList {
 					currMod.start := SubStr(modLine, 2, commaPos - 2)
 					currMod.len := SubStr(modLine, commaPos + 1, closeParenPos - (commaPos + 1))
 				} else {
-					if(op = this.modModifyChar) {
+					if(operation = this.modModifyChar) {
 						currMod.start := SubStr(modLine, 2, closeParenPos - 2)
 						currMod.len := 0
 					} else {

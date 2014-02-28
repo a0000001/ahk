@@ -9,17 +9,23 @@ class TableListMod {
 	len := 0
 	text := ""
 	label := 0
+	operation := ""
 	
-	__New(m, s, l, t, a) {
+	__New(m, s, l, t, a, o) {
 		this.mod := m
 		this.start := s
 		this.len := l
 		this.text := t
 		this.label := a
+		this.operation := o
 	}
 	
 	; Actually do what this mod describes to the given row.
 	executeMod(rowBits) {
+		; For 'insert' operation - insert a blank slate at the given spot, but still operate on that spot.
+		if(this.operation = "i")
+			rowBits.insert(this.bit, "")
+		
 		rowBit := rowBits[this.bit]
 		
 		startOffset := endOffset := 0
@@ -48,6 +54,6 @@ class TableListMod {
 	}
 	
 	toDebugString() {
-		return "Mod: " this.mod "`nBit: " this.bit "`nStart: " this.start "`nLength: " this.len "`nText: " this.text "`nLabel: " this.label
+		return "Mod: " this.mod "`nBit: " this.bit "`nStart: " this.start "`nLength: " this.len "`nText: " this.text "`nLabel: " this.label "`nOperation: " this.operation
 	}
 }
