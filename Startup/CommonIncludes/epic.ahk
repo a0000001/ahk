@@ -1,5 +1,21 @@
 ; Epic-specific functions.
 
+; Returns true if the given number could be a DLG (pure number, or starting with I, M, or Y).
+isDLGNum(num) {
+	dlgLetters := ["i", "m", "y"]
+	
+	if(isNum(num))
+		return true
+	
+	firstChar := SubStr(num, 1, 1)
+	rest := SubStr(num, 2)
+	; MsgBox, % firstChar "`n" rest "`n" contains(dlgLetters, firstChar) "`n" isNum(rest)
+	if(contains(dlgLetters, firstChar) && isNum(rest))
+		return true
+	
+	return false
+}
+
 ; Generates a link from the selection or clipboard.
 getEMC2ObjectLink() {
 	ini := ""
@@ -18,14 +34,14 @@ getEMC2ObjectLink() {
 	; Two parts, likely everything we need.
 	if(inputSplit.MaxIndex() = 2) {
 		; ini is 3 and not a number, num is a number.
-		if(!isNum(inputSplit[1]) && StrLen(inputSplit[1]) = 3 && isNum(inputSplit[2])) {
+		if(!isDLGNum(inputSplit[1]) && StrLen(inputSplit[1]) = 3 && isDLGNum(inputSplit[2])) {
 			ini := inputSplit[1]
 			num := inputSplit[2]
 		}
 	
 	; Only one. Possible ini or num on its own.
 	} else if(inputSplit.MaxIndex() = 1) {
-		if(isNum(inputSplit[1]))
+		if(isDLGNum(inputSplit[1]))
 			num := inputSplit[1]
 		else if(StrLen(inputSplit[1]) = 3)
 			ini := inputSplit[1]
