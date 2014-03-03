@@ -9,6 +9,7 @@ borgPathINI := "borg.ini"
 #Include CommonIncludes\data.ahk
 #Include CommonIncludes\debug.ahk
 #Include CommonIncludes\epic.ahk
+#Include CommonIncludes\git.ahk
 #Include CommonIncludes\graphics.ahk
 #Include CommonIncludes\HTTPRequest.ahk
 #Include CommonIncludes\io.ahk

@@ -5,7 +5,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 
 ; #Include ..\commonIncludesStandalone.ahk
-#Include commonIncludesStandalone.ahk
+#Include %A_ScriptDir%\..\
+#Include commonIncludes.ahk
 
 ; State flags.
 global suspended := 0

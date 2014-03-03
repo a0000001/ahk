@@ -320,6 +320,6 @@ return
 	Send, {Left}
 return
 :*:dbpop::
-	SendRaw, DEBUG.popup(DEBUG.
+	SendRaw, DEBUG.popup(debug
 	;)
 return
