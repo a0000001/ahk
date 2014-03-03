@@ -24,6 +24,9 @@ return
 :*:feaddr::
 	Send, % epicAddressFill
 return
+::ezip::
+	Send, % epicAddressZip
+return
 
 ; Usernames
 :*:uname::
@@ -216,16 +219,14 @@ return
 ; Folders
 
 ; Script related
-:*:ahkf::A:\
-:*:eahkf::A:\Experiments
-:*:sahkf::A:\Startup
-:*:csahkf::A:\Startup\CommonIncludes
-:*:psahkf::A:\Startup\ProgramSpecific
-:*:ssahkf::A:\Startup\System
-:*:tsahkf::A:\Startup\Standalone
+:*:aef::A:\Experiments
+:*:asf::A:\Startup
+:*:acif::A:\Startup\CommonIncludes
+:*:apsf::A:\Startup\ProgramSpecific
+:*:asyf::A:\Startup\System
+:*:astf::A:\Startup\Standalone
 
 ; Others
-; :*:dloads::
 :*:dlf::
 	Send, G:\Downloads\
 return
@@ -239,17 +240,6 @@ return
 
 :*:dsf::G:\Desktop\
 :*:ddsf::G:\Desktop\Dev\
-
-
-:*:varioustextsf::
-:*:vtf::
-	Send, G:\Various Texts\
-return
-
-:*:swfolder::
-:*:wwf::
-	Send, G:\WFU Work\
-return
 
 :*:pff::C:\Program Files
 :*:xpff::C:\Program Files (x86)
