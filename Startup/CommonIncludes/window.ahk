@@ -67,7 +67,6 @@ activateByName(name) {
 
 ; Function to close windows - used by multiple hotkeys in slightly different ways.
 closeWindowSpecial(case = 0) {
-	
 	SetTitleMatchMode, 2
 	
 	;WinActive("ahk_class tSkMainForm.UnicodeClass") ; Skype-related?
@@ -93,7 +92,7 @@ closeWindowSpecial(case = 0) {
 		send !{F4}
 	}
 
-	if WinActive("ahk_class CabinetWClass") ; Windows Explorer
+	else if WinActive("ahk_class CabinetWClass") ; Windows Explorer
 	or WinActive("ahk_class Notepad++") ; Notepad++
 	or WinActive("MightyText") ; MightyText Popup Window
 	; or WinActive("Source of: ") ; Firefox Source View
@@ -105,62 +104,53 @@ closeWindowSpecial(case = 0) {
 		send ^w
 	}
 	
-	else if(WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}")) {
-		; WinTraymin()
-		; Send, !q
+	else if WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}") ; Foobar.
+	{
 		PostMessage, 0x112, 0xF020
 	}
 	
-	else if(WinActive("ahk_class TfcForm")) { ; FreeCommander.
+	else if WinActive("ahk_class TfcForm") ; FreeCommander.
+	{
 		minimizeWindowSpecial()
 	}
-	
-	; if((WinActive("ahk_class MozillaWindowClass")) ; Firefox - tabs. Only if CapsLock was held.
-	; and case == 1)
-	; {
-		; sleep, 10
-		; send ^w
-	; }
-	
-	; if((WinActive("ahk_class Chrome_WidgetWin_1")) ; Chrome - tabs. Only if CapsLock was held.
-	; and case == 1)
-	; {
-		; sleep, 10
-		; send ^w
-	; }
 	
 	SetTitleMatchMode, 1
 }
 
 
 minimizeWindowSpecial(case = 0) {
-	if(WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}")) { ; Foobar.
+	if WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}") ; Foobar.
+	|| WinActive("ahk_class wndclass_desked_gsk") ; VB.
+	|| WinActive("ahk_class TfrmMain") ; SyncBack.
+	{
+		; Special minimize message.
 		PostMessage, 0x112, 0xF020
-
-	} else if(WinActive("ahk_class TfrmMain")) { ; SyncBack
-		PostMessage, 0x112, 0xF020
-
-	} else if(WinActive("ahk_class EVERYTHING")) {
+	}
+	
+	else if WinActive("ahk_class EVERYTHING") ; Everything.
+	{
 		if(case = 1) {
 			Send, {Esc}
 		} else {
 			WinMinimize, A
 		}
-
-	} else if(WinActive("ahk_class PROCEXPL")) {
+	}
+	
+	else if WinActive("ahk_class PROCEXPL") ; Process Explorer.
+	|| WinActive("Buddy List") ; Pidgin.
+	{
 		WinClose
-
-	} else if(WinActive("Buddy List")) { ; Pidgin
-		WinClose
-
-	} else if(WinActive("ahk_class ahk_class CabinetWClass")) { ; Windows Explorer.
-		WinMinimize
-
-	} else if(WinActive("ahk_class TfcForm")) { ; FreeCommander.
+	}
+	
+	else if WinActive("ahk_class TfcForm") ; FreeCommander.
+	{
 		WinHide
 		activateLastWindow()
-		
-	} else {
+	}
+	
+	else
+	{
+		; Generic case - just minimize it.
 		WinMinimize, A
 	}
 }
