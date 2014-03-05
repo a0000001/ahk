@@ -265,8 +265,13 @@ return
 return
 
 ; Multiple Copays
-:*:mcf::
-	Send, G:\Desktop\MultiplePreCopays\
+:*:mcf::G:\Desktop\MultiplePreCopays\
+
+:*:hesf::
+	Send, % epicSourceAppQA82 epicHBFolder
+return
+:*:efsf::
+	Send, % epicSourceAppQA82 epicFoundationProject
 return
 
 :*:.ecid::
