@@ -5,6 +5,14 @@
 		Send, %epicID%
 	return
 	
+	; Back and (sort of) forward like ES.
+	!Left::
+		Send, ^+{F2}
+	return
+	!Right::
+		Send, +{F2}
+	return
+	
 	; Redo, not yank.
 	^y::
 	^+z::
@@ -67,6 +75,17 @@
 		Send, ^t
 	return
 	
+	; Contact comment hotkey.
+	^+8::
+		FormatTime, date, , MM/yy
+		ControlGetText, projectName, PROJECT1
+		splitName := specialSplit(projectName, " ")
+		dlgName := splitName[splitName.MaxIndex()]
+		
+		outStr := " ' *gdb " date " " SubStr(dlgName, 4) " - "
+		SendRaw, %outStr%
+		; MsgBox, % outStr
+	return
 	
 	; Show/hide project explorer.
 	$F1::
