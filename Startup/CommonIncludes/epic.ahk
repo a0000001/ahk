@@ -16,6 +16,13 @@ isDLGNum(num) {
 	return false
 }
 
+; Generates and copies a link to the clipboard.
+copyEMC2ObjectLink() {
+	link := getEMC2ObjectLink()
+	if(link)
+		clipboard := link
+}
+
 ; Generates a link from the selection or clipboard.
 getEMC2ObjectLink() {
 	ini := ""
@@ -90,9 +97,12 @@ generateEMC2ObjectLink(edit = true, ini = "", num = "", iniPath = "emc2link.ini"
 		; return iniURL num "?action=VIEW"
 }
 	
+
 ; Copies a link to the object currently open in EMC2 to the clipboard.
 copyCurrentEMC2ObjectLink(edit = true) {
-	clipboard := getCurrentEMC2ObjectLink(edit)
+	link := getCurrentEMC2ObjectLink(edit)
+	if(link)
+		clipboard := link
 }
 
 ; Gets a link to the object currently open in EMC2.

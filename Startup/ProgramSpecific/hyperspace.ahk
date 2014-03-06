@@ -58,8 +58,9 @@
 	
 	; EMC2: Make ^h for server object, similar to ^g for client object.
 	^h::
-		Send, ^5
+		Send, ^6
 	return
+	
 	
 	; EMC2: Get DLG number from title.
 	^+c::
@@ -101,9 +102,11 @@
 
 ; Generic linker - will allow coming from clipboard or selected text, or input entirely. Puts the link on the clipboard.
 ^+!l::
-	link := getEMC2ObjectLink()
-	if(link)
-		clipboard := link
+	copyEMC2ObjectLink()
+	
+	; link := getEMC2ObjectLink()
+	; if(link)
+		; clipboard := link
 	
 	; if(WinActive("ahk_class rctrl_renwnd32")) { ; Outlook.
 		; Send, ^k
@@ -130,20 +133,20 @@ return
 	return
 #If
 
-#IfWinActive, Demand Claim Processing
-	; For demanding claims: Ctrl + Enter pops null unto the right box, tabs until accept is active, and accepts it.
-	^NumPadEnter::
-	^Enter::
-		ControlGetFocus, currControl, A
-		; MsgBox, % currControl
-		if(currControl = "ThunderRT6CommandButton10") {
-			Send, +{Tab 3}
-			Send, null
-			Send, {Tab 3}
-			Send, {Enter}
-		}
-	return
-#IfWinActive
+; #IfWinActive, Demand Claim Processing
+	; ; For demanding claims: Ctrl + Enter pops null unto the right box, tabs until accept is active, and accepts it.
+	; ^NumPadEnter::
+	; ^Enter::
+		; ControlGetFocus, currControl, A
+		; ; MsgBox, % currControl
+		; if(currControl = "ThunderRT6CommandButton10") {
+			; Send, +{Tab 3}
+			; Send, null
+			; Send, {Tab 3}
+			; Send, {Enter}
+		; }
+	; return
+; #IfWinActive
 
 ; Activiation for when hyperspace hides from Alt+Tab b/c of a popup.
 !+h::

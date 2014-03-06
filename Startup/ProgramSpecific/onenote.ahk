@@ -33,6 +33,15 @@ return
 	Send, !8
 return
 
+; Turn link a more reasonable color (assuming selected) and pop up linkbox.
+^+k::
+	Send, !h
+	Send, fc
+	Send, {Down 7}{Right}
+	Send, {Enter}
+	Send, ^k
+return
+
 ; Adds a new sub-bullet that won't disappear.
 ^+a::
 	Send, {End}{Enter}{Tab}A{Backspace}
