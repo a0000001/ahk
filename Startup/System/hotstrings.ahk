@@ -219,12 +219,12 @@ return
 ; Folders
 
 ; Script related
-:*:aef::A:\Experiments
-:*:asf::A:\Startup
-:*:acif::A:\Startup\CommonIncludes
-:*:apsf::A:\Startup\ProgramSpecific
-:*:asyf::A:\Startup\System
-:*:astf::A:\Startup\Standalone
+:*:aef::A:\Experiments\
+:*:asf::A:\Startup\
+:*:acif::A:\Startup\CommonIncludes\
+:*:apsf::A:\Startup\ProgramSpecific\
+:*:asyf::A:\Startup\System\
+:*:astf::A:\Startup\Standalone\
 
 ; Others
 :*:dlf::
@@ -241,8 +241,8 @@ return
 :*:dsf::G:\Desktop\
 :*:ddsf::G:\Desktop\Dev\
 
-:*:pff::C:\Program Files
-:*:xpff::C:\Program Files (x86)
+:*:pff::C:\Program Files\
+:*:xpff::C:\Program Files (x86)\
 :*:.x8:: (x86)
 
 ; Epic

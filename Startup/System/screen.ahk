@@ -30,7 +30,7 @@ return
 
 ; On computer lock, black out screen.
 #l::
-	Sleep, 100
+	Sleep, 5000
 	SendMessage, 0x112, 0xF170, 2,, Program Manager	; Kill screen.
 	; No lock needed, windows has got it.
 return
