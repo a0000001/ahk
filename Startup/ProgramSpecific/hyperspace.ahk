@@ -91,6 +91,17 @@
 		Run, % link
 	return
 	
+	; EMC2: Send text for usual current log email notifications.
+	^+e::
+		Send, !n
+		WinWait, E-mail Notification
+		Send, % epicID
+		Send, {Tab}main
+		Send, {Tab}qa c
+		Send, {Tab}rel
+		Send, !a
+	return
+	
 	; Insert HB SU SmartText.
 	:*:hb.su::
 		Send, ^{F10}
