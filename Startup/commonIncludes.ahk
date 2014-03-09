@@ -1,6 +1,6 @@
 ﻿; === Various functions and libraries. === ;
 
-borgPathINI := "borg.ini"
+borgPathINI := borgFolderINI "borg.ini"
 
 #Include CommonIncludes\borgReadINI.ahk
 

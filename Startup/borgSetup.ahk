@@ -24,3 +24,6 @@ setupTrayIcons(v, m)
 ; Menu, Tray, Icon, %borgIconPath%
 ; activeTrayIcon := true
 ; Menu, Tray, icon, , , 1 ; Keep suspend from changing it to the AHK default.
+
+; For use of common inclues: this variable is blank for here, but will precede the borg.ini path if given.
+borgFolderINI := ""
