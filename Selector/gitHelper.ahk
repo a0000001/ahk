@@ -11,7 +11,17 @@ borgFolderINI := "..\Startup"
 
 commandLineArg = %1%
 if(commandLineArg) {
-	gitZipUnzip(commandLineArg)
+	differences := gitZipUnzip(commandLineArg)
+	if(differences.maxIndex()) {
+		outStr := "AHK zipfiles that have changed: `n"
+		For i,d in differences
+			outStr .= "`t" d "`n"
+		MsgBox, % outStr
+	}
+	
+	ExitApp
+	
+	; DEBUG.popup(1, , "Results")
 	ExitApp
 }
 
