@@ -28,8 +28,10 @@ return
 ; ----- Other arbitrary constants. ----- ;
 if(borgWhichMachine = THINKPAD) {
 	chrome_TopHeight := 90
+	cygwinHomePath := "C:\cygwin\home\gborg\"
 } else if(borgWhichMachine = EPIC_DESKTOP) {
 	chrome_TopHeight := 100
+	cygwinHomePath := "C:\cygwin64\home\gborg\"
 }
 
 

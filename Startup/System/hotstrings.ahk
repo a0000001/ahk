@@ -304,6 +304,10 @@ return
 
 :*:ex.::explorer.exe
 
+:*:chf::
+	Send, % cygwinHomePath
+return
+
 ; ; URLs
 
 ; Epic
