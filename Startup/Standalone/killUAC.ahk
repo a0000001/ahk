@@ -13,25 +13,7 @@ borgFolderINI := "..\"
 #Include %A_ScriptDir%\..\
 #Include commonIncludes.ahk
 
-; #Include commonIncludesStandalone.ahk
-; #Include ..\commonIncludesStandalone.ahk
-
-; RunAsAdmin()
-; windir = C:\Windows
-; Run, C:\Windows\System32\cmd.exe /c %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f, , Min, pid
-; sys32Dir := "C:\Windows\System32"
-; Run, C:\Windows\System32\cmd.exe /c %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
-
-; RunCommandAsAdmin("%windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f")
-; RunCommandAsAdmin("reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f")
-
 runCommand("reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f")
-
-; MsgBox, % pid
-
-; Sleep, 500
-
-; WinClose, ahk_pid %pid%
 
 ExitApp
 
@@ -39,5 +21,3 @@ ExitApp
 ~^+!#r::
 	ExitApp
 return
-
-; Suspend hotkey.

@@ -4,7 +4,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 #SingleInstance force
 
-; #Include %A_ScriptDir%\..\Startup\commonIncludesStandalone.ahk
+; For use of common inclues: Path to precede the borg.ini path.
+borgFolderINI := "..\Startup"
 #Include %A_ScriptDir%\..\Startup\
 #Include commonIncludes.ahk
 

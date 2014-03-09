@@ -5,7 +5,10 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-#Include ..\Startup\commonIncludesStandalone.ahk
+; For use of common inclues: Path to precede the borg.ini path.
+borgFolderINI := "..\Startup\"
+#Include %A_ScriptDir%\..\Startup\
+#Include commonIncludes.ahk
 
 filePath = %1%
 actionType = %2%

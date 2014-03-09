@@ -5,12 +5,8 @@
 
 ; For use of common inclues: Path to precede the borg.ini path.
 borgFolderINI := "..\"
-
-; #Include %A_ScriptDir%\..\commonIncludesStandalone.ahk
 #Include %A_ScriptDir%\..\
 #Include commonIncludes.ahk
-
-; #Include ..\commonIncludesStandalone.ahk
 
 programToLaunch = %1%
 

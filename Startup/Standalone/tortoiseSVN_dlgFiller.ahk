@@ -8,8 +8,6 @@ borgFolderINI := "..\"
 #Include %A_ScriptDir%\..\
 #Include commonIncludes.ahk
 
-; #Include commonIncludesStandalone.ahk
-
 ; Tray icon setup.
 global suspended := 0
 v := Object()
