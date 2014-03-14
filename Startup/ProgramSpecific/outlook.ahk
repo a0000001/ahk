@@ -17,10 +17,11 @@
 		Send, od
 		
 		; Set view as desired.
-		; Send, !3 ; 3 days.
-		Send, !2 ; 2 days.
+		Send, !3 ; 3 days.
+		; Send, !2 ; 2 days.
 		; Send, ^!3 ; Week, not 3 days.
 		; Send, {Left}{Home}
+		Send, {Left}{Right}
 	return
 
 	; ; TLG Event Creation Macro.
@@ -36,9 +37,9 @@
 	; return
 
 	; Calendar view: for 3-day view - shifts one day back so today is center.
-	; ~^2::
-		; Send, {Left}
-	; return
+	~^2::
+		Send, {Left}{Right}
+	return
 	
 	; Send whitespace character that outlook checks the body of the message for in order to skip delay send.
 	!x::
