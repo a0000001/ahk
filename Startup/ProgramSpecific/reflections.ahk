@@ -53,18 +53,23 @@
 		Send, {Enter}
 	return
 	
-	^+e::
-		SendRaw, d ^EAVIEWID
-		Send, {Enter}
-	return
-	
 	$!e::
 		SendRaw, d ^EPIC
 		Send, {Enter}
 	return
 	
+	^+e::
+		SendRaw, d ^EAVIEWID
+		Send, {Enter}
+	return
+	
 	^a::
 		SendRaw, d ^`%ZeADMIN
+		Send, {Enter}
+	return
+	
+	^+d::
+		SendRaw, d ^`%ZdTOOLS
 		Send, {Enter}
 	return
 	

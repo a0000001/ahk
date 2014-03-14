@@ -4,10 +4,10 @@
 		Send, %epicID%
 	return
 
-	; Better access to INTermediate code.
-	^+i::
-		ControlSend, , ^+v
-	return
+	; ; Better access to INTermediate code.
+	; ^+i::
+		; ControlSend, , ^+v
+	; return
 
 	; Reopen recently closed file.
 	^+t::
@@ -25,34 +25,45 @@
 		; SendRaw, %line%
 		; Send, {Up}{End}
 	; return
-		
-	; Toggle comment. 
-	^+c::
-		Send, {End}{Shift Down}{Home}{Shift Up}
-		; Send, ^c
-		; Sleep, 100
-		; line := clipboard
-		; MsgBox, % line
-		line := getSelectedText()
-		
-		; Determine if the line is currenly commented.
-		commented = false
-		firstChar := SubStr(line,1,1)
-		
-		if(firstChar = ";") {
-			; MsgBox, commented!
-			line := SubStr(line,2)
-			if(SubStr(line,1,1) = " ") {
-				line := SubStr(line,2)
-			}
-		} else {
-			; MsgBox, not commented!
-			line := "; "line
-		}
-		
-		SendRaw, %line%
-		Send, {Home}
+	
+	; Debug, auto-search for workstation ID.
+	~F3::
+		WinWait, Attach to Process, , 5
+		if(!ErrorLevel) {
+			Send, {Tab}{Down 2}
+			Send, % epicComputerName
+			Send, {Enter}{Down}
+		} else
+			DEBUG.popup(debugEpicStudio,ErrorLevel,"ES Debug WinWait ErrorLevel")
 	return
+	
+	; ; Toggle comment. 
+	; ^+c::
+		; Send, {End}{Shift Down}{Home}{Shift Up}
+		; ; Send, ^c
+		; ; Sleep, 100
+		; ; line := clipboard
+		; ; MsgBox, % line
+		; line := getSelectedText()
+		
+		; ; Determine if the line is currenly commented.
+		; commented = false
+		; firstChar := SubStr(line,1,1)
+		
+		; if(firstChar = ";") {
+			; ; MsgBox, commented!
+			; line := SubStr(line,2)
+			; if(SubStr(line,1,1) = " ") {
+				; line := SubStr(line,2)
+			; }
+		; } else {
+			; ; MsgBox, not commented!
+			; line := "; "line
+		; }
+		
+		; SendRaw, %line%
+		; Send, {Home}
+	; return
 	
 	; Link routine to currently open (in object explorer tab) DLG.
 	^+l::
