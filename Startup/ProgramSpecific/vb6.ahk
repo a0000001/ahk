@@ -13,6 +13,9 @@
 		Send, +{F2}
 	return
 	
+	^g::Send, {F3}
+	^+g::Send, +{F3}
+	
 	; Redo, not yank.
 	^y::
 	^+z::
@@ -121,28 +124,28 @@
 		DetectHiddenText, On
 	return
 	
-	; Show/hide toolbox bar.
-	$F3::
-		DetectHiddenText, Off
+	; ; Show/hide toolbox bar.
+	; $F3::
+		; DetectHiddenText, Off
 		
-		If(toggleToolbox) {
-			toggleToolbox := false
+		; If(toggleToolbox) {
+			; toggleToolbox := false
 			
-			good := ClickWhereFindImage(iSearchPath_vbGenericClose, iSearchClass_vbToolbarPalette)
+			; good := ClickWhereFindImage(iSearchPath_vbGenericClose, iSearchClass_vbToolbarPalette)
 			
-			if(!good) {
-				MsgBox, Not Found...
-			}
-		} else {
-			toggleToolbox := true
+			; if(!good) {
+				; MsgBox, Not Found...
+			; }
+		; } else {
+			; toggleToolbox := true
 			
-			Send, !v
-			Sleep, 100
-			Send, x
-		}
+			; Send, !v
+			; Sleep, 100
+			; Send, x
+		; }
 		
-		DetectHiddenText, On
-	return
+		; DetectHiddenText, On
+	; return
 	
 	; Code vs. design swap. Note: only works if mini-window within window is maximized within outer window.
 	Pause::
