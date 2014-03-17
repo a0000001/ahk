@@ -28,7 +28,10 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
-
+	; DetectHiddenWindows, On
+	; if(WinExist("ahk_class FreeCommanderXE.SingleInst.1")) {
+		; WinActivate
+	; }
 return
 
 ; ^y::

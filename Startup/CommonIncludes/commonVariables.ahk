@@ -55,8 +55,10 @@ if(borgWhichMachine = THINKPAD) {
 pLaunchClass_Explorer := "CabinetWClass"
 pLaunchPath_Explorer := "C:\Windows\explorer.exe"
 
-pLaunchClass_FreeCommander := "TfcForm"
-pLaunchPath_FreeCommander := "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
+; pLaunchClass_FreeCommander := "TfcForm"
+pLaunchClass_FreeCommander := "FreeCommanderXE.SingleInst.1"
+; pLaunchPath_FreeCommander := "C:\Program Files (x86)\FreeCommander\FreeCommander.exe"
+pLaunchPath_FreeCommander := "C:\Program Files (x86)\FreeCommander XE\FreeCommander.exe"
 
 pLaunchClass_EpicStudio := "WindowsForms10.Window.8.app.0.2bf8098_r13_ad1"
 pLaunchPath_EpicStudio := "C:\Program Files (x86)\EpicStudio\EpicStudio.exe"

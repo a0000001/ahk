@@ -31,28 +31,23 @@ winExistSpecial(inClass) {
 
 ; Returns whether a program is active, with special exceptions.
 winActiveSpecial(inClass) {
-	if(inClass = "TfcForm") { ; FreeCommander.
-		; Grab the style so we can tell if it's already hidden.
-		WinGet, style, Style, ahk_class TfcForm
-		if(WinActive("ahk_class TfcForm") && !(style = "0x07CF0000" || style = "0x06CF0000" || style = "0x36CF0000")) {
-			return true
-		} else {
-			return false
-		}
+	; if(inClass = "TfcForm") { ; FreeCommander.
+		; ; Grab the style so we can tell if it's already hidden.
+		; WinGet, style, Style, ahk_class TfcForm
+		; if(WinActive("ahk_class TfcForm") && !(style = "0x07CF0000" || style = "0x06CF0000" || style = "0x36CF0000")) {
+			; return true
+		; } else {
+			; return false
+		; }
 		
-		return XXXXX
-	}
+		; return XXXXX
+	; }
 	
 	return WinActive(inClass)
 }
 
 ; Activates/shows the last found window, with special exceptions.
 restoreActivateWindowSpecial() {
-	; if(inClass = "") { ; 
-		
-		; return
-	; }
-	
 	; Normal case.
 	WinShow
 	WinActivate
@@ -109,7 +104,12 @@ closeWindowSpecial(case = 0) {
 		PostMessage, 0x112, 0xF020
 	}
 	
-	else if WinActive("ahk_class TfcForm") ; FreeCommander.
+	; else if WinActive("ahk_class TfcForm") ; FreeCommander.
+	; {
+		; minimizeWindowSpecial()
+	; }
+	
+	else if WinActive("ahk_class FreeCommanderXE.SingleInst.1") ; FreeCommander.
 	{
 		minimizeWindowSpecial()
 	}
@@ -117,7 +117,7 @@ closeWindowSpecial(case = 0) {
 	SetTitleMatchMode, 1
 }
 
-
+; 
 minimizeWindowSpecial(case = 0) {
 	if WinActive("ahk_class {97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}") ; Foobar.
 	|| WinActive("ahk_class wndclass_desked_gsk") ; VB.
@@ -142,10 +142,15 @@ minimizeWindowSpecial(case = 0) {
 		WinClose
 	}
 	
-	else if WinActive("ahk_class TfcForm") ; FreeCommander.
+	; else if WinActive("ahk_class TfcForm") ; FreeCommander.
+	; {
+		; WinHide
+		; activateLastWindow()
+	; }
+	
+	else if WinActive("ahk_class FreeCommanderXE.SingleInst.1") ; FreeCommander.
 	{
-		WinHide
-		activateLastWindow()
+		Send, !{F4}
 	}
 	
 	else
