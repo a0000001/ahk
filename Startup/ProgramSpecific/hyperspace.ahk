@@ -6,17 +6,19 @@
 	
 	; Login hotkey.
 	^+t::		
-		Send, %epicID%{Tab}
-		Send, %epicHyperspacePass%{Enter}
-		Sleep, 250
-		if(hyperspaceNotLoadedYet()) {
-			Send, {Enter}
-		}
-		Sleep, 250
-		If(hyperspaceNotLoadedYet()) {
-			Send, {Enter}
-		}
+		hyperspaceLogin(epicID,epicHyperspacePass)
 	return
+	
+	^!t::
+		hyperspaceLogin(epicID,epicHyperspacePass,1)
+	return
+	
+	hyperspaceLogin(id, pass, extraEnter = 0) {
+		Send, %id%{Tab}
+		Send, %pass%{Enter}
+		if(extraEnter)
+			Send, {Enter}
+	}
 	
 	hyperspaceNotLoadedYet() {
 		if(WinActive("Hyperspace - Test") ; Hyperspace 2012, FNDEX.

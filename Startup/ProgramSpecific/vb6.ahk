@@ -38,11 +38,37 @@
 		Send, g
 	return
 	
-	; Stop when running.
-	$F12::
-		Send, !r
-		Sleep, 100
-		Send, e
+	; ; Stop when running.
+	; $F12::
+		; Send, !r
+		; Sleep, 100
+		; Send, e
+	; return
+	
+	; Make debug hotkeys same as in ES.
+	; Start debugging.
+	$F3::
+		Send, {F5}
+	return
+	
+	; Step over.
+	F10::
+		Send, +{F8}
+	return
+	
+	; Step into.
+	F11::
+		Send, {F8}
+	return
+	
+	; Step out of.
+	+F11::
+		Send, ^+{F8}
+	return
+	
+	; Run to cursor.
+	F12::
+		Send, ^{F8}
 	return
 	
 	; Options.
