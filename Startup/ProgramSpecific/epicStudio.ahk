@@ -27,15 +27,36 @@
 	; return
 	
 	; Debug, auto-search for workstation ID.
-	~F3::
+	$F5::
+		esRunDebug("ws:" epicComputerName)
+	return
+	
+	; Debug, auto-search for workstation ID and EpicD exe.
+	F6::
+		esRunDebug("ws:" epicComputerName " exe:" epicReflectionExe)
+	return
+	
+	; Debug, auto-search for workstation ID and Reflection exe.
+	F7::
+		esRunDebug("ws:" epicComputerName " exe:" epicHyperspaceExeStart)
+	return
+	
+	; Debug, auto-search for workstation ID and VB exe.
+	F8::
+		esRunDebug("ws:" epicComputerName " exe:" epicVBExe)
+	return
+	
+	esRunDebug(searchString) {
+		Send, {F5}
 		WinWait, Attach to Process, , 5
 		if(!ErrorLevel) {
 			Send, {Tab}{Down 2}
-			Send, % epicComputerName
+			SendRaw, % searchString
 			Send, {Enter}{Down}
-		} else
+		} else {
 			DEBUG.popup(debugEpicStudio,ErrorLevel,"ES Debug WinWait ErrorLevel")
-	return
+		}
+	}
 	
 	; ; Toggle comment. 
 	; ^+c::
