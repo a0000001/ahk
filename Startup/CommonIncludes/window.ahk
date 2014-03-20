@@ -1,3 +1,40 @@
+; See if a window exists or is active with a given TitleMatchMode.
+isWindowInStates(states, titles, texts, matchMode = 1, speed = "Fast") {
+	DEBUG.popup(debugWindow, states, "Window states to check", titles, "Window titles to match", texts, "Window texts to match", matchMode, "Title match mode", retVal, "Result")
+	
+	retVal := false
+	For i,s in states {
+		For j,t in titles {
+			For k,x in texts {
+				if(isWindowInState(s, t, x, matchMode, speed)) {
+					return true
+				}
+			}
+		}
+	}
+	
+	return false
+}
+
+isWindowInState(state, title, text, matchMode = 1, speed = "Fast") {
+	SetTitleMatchMode, % matchMode
+	SetTitleMatchMode, % speed
+	
+	retVal := false
+	if(state = "active") {
+		retVal := WinActive(title, text)
+	} else if(stringContains(state, "exist")) {
+		retVal := WinExist(title, text)
+	}
+	
+	SetTitleMatchMode, 1
+	SetTitleMatchMode, Fast
+	
+	DEBUG.popup(debugWindow, state, "Window state to check", title, "Window title to match", text, "Window text to match", matchMode, "Title match mode", retVal, "Result")
+	
+	return retVal
+}
+
 ; Either focus or open a program.
 activateOpenMinimize(ahkClass, pathToExecutable) {
 	if(SubStr(ahkClass, 1, 8) = "_{NAME}_") {

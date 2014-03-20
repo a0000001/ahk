@@ -201,3 +201,8 @@ arrayToString(arr, spacesBetween = true, preString = "", postString = "") {
 	
 	return outStr
 }
+
+; Wrapper for InStr() that I can remember easier.
+stringContains(haystack, needle) {
+	return InStr(haystack, needle)
+}

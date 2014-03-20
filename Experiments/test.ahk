@@ -32,6 +32,14 @@ return
 	; if(WinExist("ahk_class FreeCommanderXE.SingleInst.1")) {
 		; WinActivate
 	; }
+	
+	; SetTitleMatchMode, 2
+	
+	; test := WinExist("", ["XKESPFEN"])
+	
+	; SetTitleMatchMode, 1
+	
+	; MsgBox, % test
 return
 
 ; ^y::

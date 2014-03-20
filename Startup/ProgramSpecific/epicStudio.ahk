@@ -46,16 +46,34 @@
 		esRunDebug("ws:" epicComputerName " exe:" epicVBExe)
 	return
 	
+	; Run EpicStudio in debug mode, given a particular string to search for.
 	esRunDebug(searchString) {
-		Send, {F5}
-		WinWait, Attach to Process, , 5
-		if(!ErrorLevel) {
-			Send, {Tab}{Down 2}
-			SendRaw, % searchString
-			Send, {Enter}{Down}
-		} else {
-			DEBUG.popup(debugEpicStudio,ErrorLevel,"ES Debug WinWait ErrorLevel")
+		; Don't try and debug again if ES is already doing so.
+		if(!isESDebugging()) {
+		
+			Send, {F5}
+			
+			WinWait, Attach to Process, , 5
+			if(!ErrorLevel) {
+				Send, {Tab}{Down 2}
+				SendRaw, % searchString
+				Send, {Enter}{Down}
+			} else {
+				DEBUG.popup(debugEpicStudio,ErrorLevel,"ES Debug WinWait ErrorLevel")
+			}
+		
 		}
+	}
+	
+	; Checks if ES is already in debug mode or not.
+	isESDebugging() {
+		global epicReflectionExe, epicHyperspaceExeStart, epicVBExe
+		
+		states := ["active"]
+		titles := ["", "[Debug]"]
+		texts := [epicReflectionExe, epicHyperspaceExeStart, epicVBExe]
+		
+		return isWindowInStates(states, titles, texts, 2, "Slow")
 	}
 	
 	; ; Toggle comment. 
