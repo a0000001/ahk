@@ -94,6 +94,13 @@
 	
 	; Category application: Make ^F1 usable.
 	^F1::^F12
+	
+	; Show a popup for picking an arbitrary calendar to display.
+	^a::
+		Send, !h
+		Send, oc
+		Send, a
+	return
 #If
 
 ; Universal new email. (Yanked from BWNHotKeys.ahk on wiki)

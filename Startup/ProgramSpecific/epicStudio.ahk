@@ -48,11 +48,12 @@
 	
 	; Run EpicStudio in debug mode, given a particular string to search for.
 	esRunDebug(searchString) {
+		; Always send F5, even in debug mode - continue.
+		Send, {F5}
+		
 		; Don't try and debug again if ES is already doing so.
 		if(!isESDebugging()) {
 		
-			Send, {F5}
-			
 			WinWait, Attach to Process, , 5
 			if(!ErrorLevel) {
 				Send, {Tab}{Down 2}
