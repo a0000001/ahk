@@ -270,6 +270,9 @@ return
 :*:hesf::
 	Send, % epicSourceAppQA82 epicHBFolder
 return
+:*:eesf::
+	Send, % epicSourceAppQA82 epicEBFolder
+return
 :*:efsf::
 	Send, % epicSourceAppQA82 epicFoundationProject
 return
