@@ -19,6 +19,7 @@
 #Include ProgramSpecific\notepad++.ahk
 #Include ProgramSpecific\onenote.ahk
 #Include ProgramSpecific\outlook.ahk
+#Include ProgramSpecific\oxygenXML.ahk
 #Include ProgramSpecific\pidgin.ahk
 #Include ProgramSpecific\powerpoint.ahk
 ; #Include ProgramSpecific\processExplorer.ahk

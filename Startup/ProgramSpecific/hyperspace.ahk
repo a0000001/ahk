@@ -4,13 +4,12 @@
 		Send, %epicID%
 	return
 	
-	; Login hotkey.
-	^+t::		
-		hyperspaceLogin(epicID,epicHyperspacePass)
-	return
-	
-	^!t::
+	; Login hotkeys.	
+	^+t::
 		hyperspaceLogin(epicID,epicHyperspacePass,1)
+	return
+	^!t::		
+		hyperspaceLogin(epicID,epicHyperspacePass)
 	return
 	
 	hyperspaceLogin(id, pass, extraEnter = 0) {
