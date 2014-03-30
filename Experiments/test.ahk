@@ -28,6 +28,9 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
+	; RegWrite REG_SZ, HKCR, AutoHotkeyScript\Shell\Debug,, Debug Script
+	; RegWrite REG_SZ, HKCR, AutoHotkeyScript\Shell\Debug\Command,, "%A_AhkPath%" /Debug "`%l"
+	
 	; DetectHiddenWindows, On
 	; if(WinExist("ahk_class FreeCommanderXE.SingleInst.1")) {
 		; WinActivate
@@ -40,6 +43,11 @@ return
 	; SetTitleMatchMode, 1
 	
 	; MsgBox, % test
+	
+	x := 5
+	x += x
+	MsgBox, % x
+	
 return
 
 ; ^y::

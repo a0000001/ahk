@@ -1,5 +1,5 @@
 ; See if a window exists or is active with a given TitleMatchMode.
-isWindowInStates(states, titles, texts, matchMode = 1, speed = "Fast") {
+isWindowInStates(states, titles, texts, matchMode = 1, speed = "Fast", findHidden = "Off") {
 	DEBUG.popup(debugWindow, states, "Window states to check", titles, "Window titles to match", texts, "Window texts to match", matchMode, "Title match mode", retVal, "Result")
 	
 	retVal := false
