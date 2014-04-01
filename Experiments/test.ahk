@@ -44,9 +44,26 @@ return
 	
 	; MsgBox, % test
 	
-	x := 5
-	x += x
-	MsgBox, % x
+	; x := 5
+	; x += x
+	; MsgBox, % x
+	
+	Send, ^+s
+	WinWait, Save As
+	
+	Send, ..{Enter}
+	Sleep, 250
+	
+	Send, {Tab}p
+	Sleep, 100
+	
+	Send, {Enter}
+	Sleep, 100
+	
+	Send, y
+	
+	
+	Send, {Enter}
 	
 return
 
