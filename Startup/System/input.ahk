@@ -1,5 +1,8 @@
 ; Input change/fixing functions.
 
+; Select all with exceptions.
+$^a::selectAllSpecial()
+
 ; Executor normally uses CapsLock, but (very) occasionally, we need to use it for its intended purpose.
 ^!CapsLock::
 	SetCapsLockState, On

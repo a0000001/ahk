@@ -1,13 +1,23 @@
 ; Launcher for programs linked to Win+1, Win+2, etc.
 
-#g::activateOpenMinimize(pLaunchClass_HomeWeb, pLaunchPath_HomeWeb)
+#g::
+^+!g::
+	activateOpenMinimize(pLaunchClass_HomeWeb, pLaunchPath_HomeWeb)
+return
+
 #f::activateOpenMinimize(pLaunchClass_Search, pLaunchPath_Search)
+
 #m::activateOpenMinimize(pLaunchClass_Mail, pLaunchPath_Mail)
 
 #b::activateOpenMinimize(pLaunchClass_Media, pLaunchPath_Media)
 !`::activateOpenMinimize(pLaunchClass_TaskManager, pLaunchPath_TaskManager)
 
 $#e::activateOpenMinimize(pLaunchClass_FileManager, pLaunchPath_FileManager)
+
+^+!o::
+#o::
+	activateOpenMinimize(pLaunchClass_OneNote, pLaunchPath_OneNote)
+return
 
 #1::activateOpenMinimize(pLaunchClass_1, pLaunchPath_1)
 #2::activateOpenMinimize(pLaunchClass_2, pLaunchPath_2)

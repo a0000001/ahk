@@ -62,7 +62,6 @@
 		Send, ^6
 	return
 	
-	
 	; EMC2: Get DLG number from title.
 	^+c::
 		clipboard := getEMC2ObjectFromTitle()

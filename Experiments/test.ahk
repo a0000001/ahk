@@ -25,9 +25,37 @@ setupTrayIcons(v, m)
 	Run, C:\Program Files (x86)\Notepad++\notepad++.exe A:\Experiments\test.ahk
 return
 
+; Hotkeys that pop up/copy some useful info about the active window.
+F1::
+	WinGetClass, currClass, A
+	WinGetTitle, currTitle, A
+	ControlGetFocus, currControl, A
+	DEBUG.popup(1, currClass, "Class", currTitle, "Title", currControl, "Control")
+return
+F2::
+	WinGetClass, currClass, A
+	clipboard := currClass
+return
+F3::
+	WinGetTitle, currTitle, A
+	clipboard := currTitle
+return
+F4::
+	clipboard := getFocusedControl()
+return
+
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
+	x := 5
+	y := 5
+	z := 6
+	
+	MsgBox, % matches(x, y) matches(y, z)
+	
+	; WinGetClass, test
+	; MsgBox, % test
+	
 	; RegWrite REG_SZ, HKCR, AutoHotkeyScript\Shell\Debug,, Debug Script
 	; RegWrite REG_SZ, HKCR, AutoHotkeyScript\Shell\Debug\Command,, "%A_AhkPath%" /Debug "`%l"
 	
@@ -48,22 +76,22 @@ return
 	; x += x
 	; MsgBox, % x
 	
-	Send, ^+s
-	WinWait, Save As
+	; Send, ^+s
+	; WinWait, Save As
 	
-	Send, ..{Enter}
-	Sleep, 250
+	; Send, ..{Enter}
+	; Sleep, 250
 	
-	Send, {Tab}p
-	Sleep, 100
+	; Send, {Tab}p
+	; Sleep, 100
 	
-	Send, {Enter}
-	Sleep, 100
+	; Send, {Enter}
+	; Sleep, 100
 	
-	Send, y
+	; Send, y
 	
 	
-	Send, {Enter}
+	; Send, {Enter}
 	
 return
 
@@ -71,18 +99,18 @@ return
 	; MsgBox, % debugBorgReadINI
 ; return
 
-^+!t::
-	; Get user input.
-	FileSelectFile, fileName
+; ^+!t::
+	; ; Get user input.
+	; FileSelectFile, fileName
 	
-	; Read in the list of names.
-	referenceLines := fileLinesToArray(fileName)
-	MsgBox, % arrayToDebugString(referenceLines)
+	; ; Read in the list of names.
+	; referenceLines := fileLinesToArray(fileName)
+	; MsgBox, % arrayToDebugString(referenceLines)
 	
-	; Parse the list into nice, uniform reference lines.
-	references := TableList.parse(referenceLines)
-	MsgBox, % arrayToDebugString(references, 2)	
-return
+	; ; Parse the list into nice, uniform reference lines.
+	; references := TableList.parse(referenceLines)
+	; MsgBox, % arrayToDebugString(references, 2)	
+; return
 
 ; ----------------------------------------------------------------------------------------------------------------------
 

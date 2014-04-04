@@ -35,6 +35,35 @@ isWindowInState(state, title, text, matchMode = 1, speed = "Fast") {
 	return retVal
 }
 
+; Get current control in a functional wrapper.
+getFocusedControl() {
+	ControlGetFocus, outControl, A
+	return outControl
+}
+
+; Check current control for a match.
+isFocusedControl(testControl) {
+	if(testControl = getFocusedControl())
+		return true
+	return false
+}
+
+; Select all text in a control. Used for special cases.
+selectAllSpecial() {
+	WinGetClass, currClass, A
+	WinGetTitle, currTitle, A
+	currControl := getFocusedControl()
+	
+	if matches(currClass, "ThunderRT6FormDC", currControl, "ThunderRT6TextBox1") ; EMC2 Email box
+	or matches(currClass, "AU3Reveal", currControl, "Edit1") ; AHK Spy Window
+	{
+		Send, ^{Home}
+		Send, ^+{End}
+	} else {
+		Send, ^a
+	}
+}
+
 ; Either focus or open a program.
 activateOpenMinimize(ahkClass, pathToExecutable) {
 	if(SubStr(ahkClass, 1, 8) = "_{NAME}_") {

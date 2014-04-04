@@ -1,4 +1,4 @@
-#ifWinActive, ahk_class Notepad++
+#IfWinActive, ahk_class Notepad++
 
 ; Ctrl+Shift+t browser-like behavior.
 ^+t::
@@ -25,7 +25,7 @@ $F5::
 	
 	; If the debugger isn't running, start it.
 	if(!isWindowInState("Active", "", "DBGp")) {
-		Send, {F3}
+		Send, {F6}
 		
 		SetTitleMatchMode, Slow
 		WinWaitActive, , Disconnected..., 5
@@ -41,7 +41,7 @@ $F5::
 	
 	; If debugger is running, but script is not, run script.
 	if(isWindowInState("Active", "", "Disconnected...", 1, "Slow")) {
-		ControlSend, Scintilla1, {F4}
+		ControlSend, Scintilla1, {F7}
 		
 		SetTitleMatchMode, Slow
 		WinWaitNotActive, , Disconnected..., 5
@@ -62,4 +62,4 @@ $F5::
 	}
 return
 
-#ifWinActive
+#IfWinActive

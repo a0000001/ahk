@@ -42,3 +42,19 @@ decimalToHex(var) {
 	SetFormat, integer, d
 	return var
 }
+
+; Contained, single call for multiple equality tests.
+matches(vars*) {
+	varsLen := vars.MaxIndex()
+	if(mod(varsLen, 2) = 1)
+		return -1
+	
+	for i,v in vars {
+		if(mod(i, 2) = 1) {
+			if(v != vars[i+1])
+				return false
+		}
+	}
+	
+	return true
+}
