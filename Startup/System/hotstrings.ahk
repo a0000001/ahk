@@ -332,6 +332,6 @@ return
 	Send, {Left}
 return
 :*:dbpop::
-	SendRaw, DEBUG.popup(debug
+	SendRaw, DEBUG.popup(
 	;)
 return

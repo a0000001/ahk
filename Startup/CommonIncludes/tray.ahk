@@ -15,7 +15,7 @@ getValuesFromNames(names) {
 		currName := names[A_Index - 1]
 		currVal := %currName%
 		values[A_Index - 1] := currVal
-		DEBUG.popup(debugTray, currName, "Current name", currVal, "Current value")
+		; DEBUG.popup(currName, "Current name", currVal, "Current value")
 }
 	
 	return values
@@ -24,13 +24,13 @@ getValuesFromNames(names) {
 updateTrayIcon() {
 	global vars, mapping
 	values := getValuesFromNames(vars)
-	DEBUG.popup(debugTray, vars, "Vars", values, "Values")
+	; DEBUG.popup(vars, "Vars", values, "Values")
 	
 	temp := mapping
 	while(temp.HasKey(0)) {
 		temp := temp[values[A_Index - 1]]
 	}
-	DEBUG.popup(debugTray, temp, "Temp")
+	; DEBUG.popup(temp, "Temp")
 	
 	Menu, Tray, Icon, % temp
 }
@@ -153,7 +153,7 @@ TrayIcons(sExeName = "") {
 	idxTB := GetTrayBar()
 	SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class Shell_TrayWnd ; TB_BUTTONCOUNT
 	
-	DEBUG.popup(debugTray, pidTaskbar, "Taskbar PID", hProc, "Process handle", pProc, "Process p", idxTB, "Taskbar Index", ErrorLevel, "Error Level")
+	; DEBUG.popup(pidTaskbar, "Taskbar PID", hProc, "Process handle", pProc, "Process p", idxTB, "Taskbar Index", ErrorLevel, "Error Level")
 	
 	Loop, %ErrorLevel%
 	{
@@ -171,7 +171,7 @@ TrayIcons(sExeName = "") {
 			iString :=NumGet(btn,24,"int64")
 		}
 		
-		DEBUG.popup(debugTray, iBitmap, "iBitmap", idn, "idn", Statyle, "Statyle", dwData, "dwData", iString, "iString")
+		; DEBUG.popup(iBitmap, "iBitmap", idn, "idn", Statyle, "Statyle", dwData, "dwData", iString, "iString")
 		
 		DllCall("ReadProcessMemory", "Uint", hProc, "Uint", dwData, "Uint", &nfo, "Uint", 32, "Uint", 0)
 		
@@ -190,7 +190,7 @@ TrayIcons(sExeName = "") {
 		WinGet, sProcess, ProcessName, ahk_id %hWnd%
 		WinGetClass, sClass, ahk_id %hWnd%
 		
-		DEBUG.popup(debugTray, hWnd, "Window handle", uID, "uID", nMsg, "nMsg", hIcon, "hIcon", sExeName, "sExeName", pid, "pid", sProcess, "sProcess", sClass, "sClass")
+		; DEBUG.popup(hWnd, "Window handle", uID, "uID", nMsg, "nMsg", hIcon, "hIcon", sExeName, "sExeName", pid, "pid", sProcess, "sProcess", sClass, "sClass")
 		
 		if(!sExeName || (sExeName = sProcess) || (sExeName = pid)) {
 			VarSetCapacity(sTooltip,128)
@@ -200,7 +200,7 @@ TrayIcons(sExeName = "") {
 			sTrayIcons .= "idx: " . A_Index-1 . " | idn: " . idn . " | Pid: " . pid . " | uID: " . uID . " | MessageID: " . nMsg . " | hWnd: " . hWnd . " | Class: " . sClass . " | Process: " . sProcess . "`n" . "   | Tooltip: " . sTooltip . "`n"
 		}
 		
-		DEBUG.popup(debugTray, hWnd, "Window handle", uID, "uID", nMsg, "nMsg", hIcon, "hIcon", sExeName, "sExeName", pid, "pid", sProcess, "sProcess", sClass, "sClass")
+		; DEBUG.popup(hWnd, "Window handle", uID, "uID", nMsg, "nMsg", hIcon, "hIcon", sExeName, "sExeName", pid, "pid", sProcess, "sProcess", sClass, "sClass")
 	}
 	
 	DllCall("VirtualFreeEx", "Uint", hProc, "Uint", pProc, "Uint", 0, "Uint", 0x8000)
@@ -234,7 +234,7 @@ doubleClickTrayIcon(exeName) {
 	Msg  := RegExReplace( TIV5, "MessageID: " )
 	hWnd := RegExReplace( TIV6, "hWnd: " )
 	
-	DEBUG.popup(debugTray, TI, "TI", uID, "uID", Msg, "Msg", hWnd, "hWnd")
+	; DEBUG.popup(TI, "TI", uID, "uID", Msg, "Msg", hWnd, "hWnd")
 	
 	PostMessage, Msg, uID, 0x0203, , ahk_id %hWnd% ; Double Click Icon
 }

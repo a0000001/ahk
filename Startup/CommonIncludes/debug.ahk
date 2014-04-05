@@ -1,118 +1,71 @@
 ; Debugger object and functions.
 
-; Common Includes
-global debugBorgReadINI
-global debugCommonVariables
-global debugData
-global debugDebug
-global debugEpic
-global debugGraphics
-global debugIO
-global debugNumber
-global debugPrivateVariables
-global debugRunCommands
-global debugSelector
-global debugSelectorActions
-global debugSelectorActionsPrivate
-global debugSelectorRow
-global debugString
-global debugTableList
-global debugTableListRow
-global debugTray
-global debugWindow
+; ; Common Includes
+; global debugBorgReadINI
+; global debugCommonVariables
+; global debugData
+; global debugDebug
+; global debugEpic
+; global debugGraphics
+; global debugIO
+; global debugNumber
+; global debugPrivateVariables
+; global debugRunCommands
+; global debugSelector
+; global debugSelectorActions
+; global debugSelectorActionsPrivate
+; global debugSelectorRow
+; global debugString
+; global debugTableList
+; global debugTableListRow
+; global debugTray
+; global debugWindow
 
-; Program Specific
-global debugChrome
-global debugEpicStudio
-global debugExcel
-global debugFoobar
-global debugFreeCommander
-global debugHyperspace
-global debugNotepad
-global debugNotepadPP
-global debugOneNote
-global debugOutlook
-global debugPowerPoint
-global debugReflections
-global debugRemoteDesktop
-global debugSites
-global debugSkype
-global debugSumatraPDF
-global debugTortoiseSVN
-global debugVB6
-global debugVLC
-global debugWord
+; ; Program Specific
+; global debugChrome
+; global debugEpicStudio
+; global debugExcel
+; global debugFoobar
+; global debugFreeCommander
+; global debugHyperspace
+; global debugNotepad
+; global debugNotepadPP
+; global debugOneNote
+; global debugOutlook
+; global debugPowerPoint
+; global debugReflections
+; global debugRemoteDesktop
+; global debugSites
+; global debugSkype
+; global debugSumatraPDF
+; global debugTortoiseSVN
+; global debugVB6
+; global debugVLC
+; global debugWord
 
-; Standalone
-global debugExternalProgramLauncher
-global debugGitHelper
-global debugKillUAC
-global debugTimer
-global debugVimBindings
-global debugSetup
+; ; Standalone
+; global debugExternalProgramLauncher
+; global debugGitHelper
+; global debugKillUAC
+; global debugTimer
+; global debugVimBindings
+; global debugSetup
 
-; System
-global debugHotstrings
-global debugInput
-global debugKDEMoverSizer
-global debugMedia
-global debugMouse
-global debugMouseWheelEmulator
-global debugProgramLauncher
-global debugScreen
-global debugVolume
+; ; System
+; global debugHotstrings
+; global debugInput
+; global debugKDEMoverSizer
+; global debugMedia
+; global debugMouse
+; global debugMouseWheelEmulator
+; global debugProgramLauncher
+; global debugScreen
+; global debugVolume
 
 class DEBUG {
-	; -- Enabled/disabled flags. -- ;
-	
-	; - Programs - ;
-	
-	; static chrome := true
-	; static epicStudio := true
-	; static excel := true
-	; static foobar := true
-	; static freeCommander := true
-	; static hyperspace := true
-	; static notepad := true
-	; static notepadPP := true
-	; static onenote := true
-	; static outlook := true
-	; static powerpoint := true
-	; static reflections := true
-	; static remoteDesktop := true
-	; static sites := true
-	; static skype := true
-	; static sumatraPDF := true
-	; static tortoiseSVN := true
-	; static vb6 := true
-	; static vlc := true
-	; static word := true
-	
-	; - Standalone - ;
-	
-	; static externalProgramLauncher := true
-	; static gitHelper := true
-	; static killUAC := true
-	; static timer := true
-	; static vimBindings := true
-	; static setup := true
-	
-	; - System - ;
-	
-	; static hotstrings := true
-	; static input := true
-	; static kdeMoverSizer := true
-	; static media := true
-	; static mouse := true
-	; static mouseWheelEmulator := true
-	; static programLauncher := true
-	; static screen := true
-	; static volume := true
-	
-	
-	
-	string1(on, var, label = "", numTabs = 0, child = true) {
-		if(on) {
+	; string1(on, var, label = "", numTabs = 0, child = true) {
+	string1(var, label = "", numTabs = 0, child = true) {
+		; if(on) {
 			outStr := ""
 			varSize := var.MaxIndex()
 			
@@ -151,11 +104,12 @@ class DEBUG {
 			; MsgBox, % outStr
 			
 			return outStr
-		}
+		; }
 	}
 	
-	stringV(on, numTabs, params*) {
-		if(on)
+	; stringV(on, numTabs, params*) {
+	stringV(numTabs, params*) {
+		; if(on)
 			return this.stringMultiHelper(params, numTabs)
 	}
 	
@@ -180,8 +134,9 @@ class DEBUG {
 		; }
 	; }
 	
-	popup(on, params*) {
-		if(on)
+	; popup(on, params*) {
+	popup(params*) {
+		; if(on)
 			MsgBox, % this.stringMultiHelper(params)
 	}
 }

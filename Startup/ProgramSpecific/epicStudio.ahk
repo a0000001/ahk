@@ -60,7 +60,7 @@
 				SendRaw, % searchString
 				Send, {Enter}{Down}
 			} else {
-				DEBUG.popup(debugEpicStudio,ErrorLevel,"ES Debug WinWait ErrorLevel")
+				; DEBUG.popup(ErrorLevel, "ES Debug WinWait ErrorLevel")
 			}
 		
 		}
@@ -108,14 +108,14 @@
 	; Link routine to currently open (in object explorer tab) DLG.
 	^+l::
 		WinGetText, text
-		DEBUG.popup(DEBUG.epicStudio, text, "Window Text")
+		; DEBUG.popup(text, "Window Text")
 		
 		Loop, Parse, text, `n
 		{
 			if(SubStr(A_LoopField, 1, 4) = "DLG ") {
 				objectName := A_LoopField
 				dlgNum := SubStr(objectName, 4)
-				DEBUG.popup(DEBUG.epicStudio, A_Index, "On line", objectName, "Found object", dlgNum, "With DLG number")
+				; DEBUG.popup(A_Index, "On line", objectName, "Found object", dlgNum, "With DLG number")
 				break
 			}
 		}

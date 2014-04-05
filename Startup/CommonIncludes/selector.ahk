@@ -106,11 +106,11 @@ class Selector {
 	
 	; Main function. Sets up and displays the selector gui, processes the choice, etc.
 	select(filePath, actionType = "", silentChoice = "", prefix = "", postfix = "", chars = "") {
-		DEBUG.popup(debugSelector, filePath, "Filepath", actionType, "Action Type", silentChoice, "Silent Choice", prefix, "Prefix", postfix, "Postfix")
+		; DEBUG.popup(filePath, "Filepath", actionType, "Action Type", silentChoice, "Silent Choice", prefix, "Prefix", postfix, "Postfix")
 		
 		; Set up our various information, read-ins, etc.
 		this.init(filePath, prefix, postfix, chars)
-		; DEBUG.popup(debugSelector, this, "")
+		; DEBUG.popup(this, "")
 		
 		; Loop until we get good input.
 		while(rowToDo = "") {
@@ -131,7 +131,7 @@ class Selector {
 			
 			; Parse input to meaningful command.
 			rowToDo := this.parseChoice(userIn, actionType)
-			DEBUG.popup(debugSelector, userInOrig, "User Input Original", userIn, "User Input", rowToDo, "Row Parse Result")
+			; DEBUG.popup(userInOrig, "User Input Original", userIn, "User Input", rowToDo, "Row Parse Result")
 		}
 		
 		if(!rowToDo) {
@@ -148,7 +148,7 @@ class Selector {
 			if(this.historyChoices.MaxIndex() = 10) {
 				FileDelete, %historyFilePath%
 				Loop, 9 {
-					DEBUG.popup(debugSelector, this.historyChoices[A_Index + 1], "Adding back in history choice")
+					; DEBUG.popup(this.historyChoices[A_Index + 1], "Adding back in history choice")
 					FileAppend, % this.historyChoices[A_Index + 1] "`n", %historyFilePath%
 				}
 			}
@@ -167,7 +167,7 @@ class Selector {
 	loadChoicesFromFile(filePath) {
 		; Parse those lines into a N x N array, where the meaningful lines have become a size 3 array (Name, Abbrev, Action) each.
 		list := TableList.parseFile(filePath)
-		DEBUG.popup(debugSelector, list, "Parsed List")
+		; DEBUG.popup(list, "Parsed List")
 		
 		For i,currItem in list {
 			; Parse this size-n array into a new SelectorRow object.
@@ -178,12 +178,12 @@ class Selector {
 			
 			; Popup title.
 			if(i = 1 && firstChar = this.titleChar) {
-				DEBUG.popup(debugSelector, this.titleChar, "Title char", firstChar, "First char", currRow, "Row")
+				; DEBUG.popup(this.titleChar, "Title char", firstChar, "First char", currRow, "Row")
 				this.title := SubStr(currRow.name, 2)
 			
 			; Special: add a title and/or blank row in the list display.
 			} else if(firstChar = this.labelChar) {
-				DEBUG.popup(debugSelector, this.labelChar, "Label char", firstChar, "First char", currRow, "Row")
+				; DEBUG.popup(this.labelChar, "Label char", firstChar, "First char", currRow, "Row")
 				
 				; If blank, extra newline.
 				if(StrLen(currRow.name) < 3) {
@@ -197,17 +197,17 @@ class Selector {
 					}
 					
 					this.nonChoices.Insert(idx + 1, SubStr(currRow.name, 3))
-					DEBUG.popup(debugSelector, this.nonChoices[this.nonChoices.MaxIndex()], "Just added nonchoice:", idx + 1, "At index")
+					; DEBUG.popup(this.nonChoices[this.nonChoices.MaxIndex()], "Just added nonchoice:", idx + 1, "At index")
 				}
 				
 			; Invisible, but viable, choice.
 			} else if(firstChar = this.hiddenChar) {
-				DEBUG.popup(debugSelector, this.hiddenChar, "Hidden char", firstChar, "First char", currRow, "Row")
+				; DEBUG.popup(this.hiddenChar, "Hidden char", firstChar, "First char", currRow, "Row")
 				this.hiddenChoices.Insert(currRow)
 			
 			; Special model row that tells us how a file with more than 3 columns should be laid out.
 			} else if(firstChar = this.startModelRowChar) {
-				DEBUG.popup(debugSelector, this.startModelRowChar, "Start model row char", firstChar, "First char", currRow, "Row")
+				; DEBUG.popup(this.startModelRowChar, "Start model row char", firstChar, "First char", currRow, "Row")
 				this.parseModelRow(currRow)
 			
 			; ; Special row that tells us how to string together the action if it's not directly in there - used for more complex substitutions.
@@ -221,7 +221,7 @@ class Selector {
 			} else {
 				; Allow piped-together entries, but only show the first one.
 				if(inStr(currRow.abbrev, "|")) {
-					DEBUG.popup(debugSelector, currRow.abbrev, "Piped")
+					; DEBUG.popup(currRow.abbrev, "Piped")
 					
 					splitAbbrev := specialSplit(currRow.abbrev, "|")
 					For i,a in splitAbbrev {
@@ -235,7 +235,7 @@ class Selector {
 						}
 					}
 				} else {
-					DEBUG.popup(debugSelector, currRow, "Choice added")
+					; DEBUG.popup(currRow, "Choice added")
 					this.choices.Insert(currRow)
 				}
 			}
@@ -272,7 +272,7 @@ class Selector {
 		if(!this.userInputIndex)
 			this.userInputIndex := finalIndex + 1
 		
-		DEBUG.popup(debugSelector, this.nameIndex, "Model name", this.abbrevIndex, "Model abbreviation", this.actionIndex, "Model action", this.userInputIndex, "Model user input", this.dataIndices, "Model data")
+		; DEBUG.popup(this.nameIndex, "Model name", this.abbrevIndex, "Model abbreviation", this.actionIndex, "Model action", this.userInputIndex, "Model user input", this.dataIndices, "Model data")
 	}
 	
 	; Generate the text for the GUI and display it, returning the user's response.
@@ -304,7 +304,7 @@ class Selector {
 		For i,c in this.choices {
 			; Extra newline if requested.
 			if(this.nonChoices[i]) {
-				DEBUG.popup(debugSelector, i, "Index", this.nonChoices[i], "Non choice")
+				; DEBUG.popup(i, "Index", this.nonChoices[i], "Non choice")
 				if(this.nonChoices[i] != " " && i != 1) {
 					currY += lineHeight
 				}
@@ -339,7 +339,7 @@ class Selector {
 		; Show the window in order to get its width.
 		Gui, Show, , % this.title
 		WinGetPos, X, Y, W, H, A
-		DEBUG.popup(debugSelector, X, "X", Y, "Y", W, "W", H, "H")
+		; DEBUG.popup(X, "X", Y, "Y", W, "W", H, "H")
 		
 		; Add the edit control with almost the width of the window.
 		currY += lineHeight
@@ -368,7 +368,7 @@ class Selector {
 		; Wait for the user to submit the GUI.
 		WinWaitClose, ahk_id %GuiHWND%
 		
-		DEBUG.popup(debugSelector, GuiUserInput, "GUI user input")
+		; DEBUG.popup(GuiUserInput, "GUI user input")
 		
 		return GuiUserInput
 	}
@@ -393,7 +393,7 @@ class Selector {
 		} else if(histCharPos = 1) {
 			; Special case: historyChar+0 is the edit action, which will open the current INI file for editing.
 			if(contains(this.editStrings, rest)) {
-				DEBUG.popup(debugSelector, rest, "Edit action `nRest", this.editStrings, "Edit strings")
+				; DEBUG.popup(rest, "Edit action `nRest", this.editStrings, "Edit strings")
 				actionType := "DO"
 				rowToDo := new SelectorRow()
 				rowToDo.setAbbrev(userIn)
@@ -432,7 +432,7 @@ class Selector {
 			}
 		}
 		
-		DEBUG.popup(debugSelector, rowToDo, "Row to do")
+		; DEBUG.popup(rowToDo, "Row to do")
 		
 		return rowToDo
 	}
@@ -455,9 +455,9 @@ class Selector {
 	; Function to search our generated table for a given index/shortcut.
 	searchTable(input, table) {
 		For i,t in table {
-			DEBUG.popup(debugSelector, input, "Input", t.name, "Current name", t.abbrev, "Current abbreviation", t.action, "Current Action")
+			; DEBUG.popup(input, "Input", t.name, "Current name", t.abbrev, "Current abbreviation", t.action, "Current Action")
 			if(input = i || input = t.abbrev || input = t.name) {
-				DEBUG.popup(debugSelector, input, "Found input", i, "At index", t, "Row")
+				; DEBUG.popup(input, "Found input", i, "At index", t, "Row")
 				return t.clone()
 			}
 		}
@@ -486,7 +486,7 @@ class Selector {
 			; } else
 				; action .= d
 			
-			; DEBUG.popup(debugSelector, action, "Action so far")
+			; DEBUG.popup(action, "Action so far")
 		; }
 		
 		; return action
@@ -494,7 +494,7 @@ class Selector {
 
 	; Function to do what it is we want done, then exit.
 	doAction(rowToDo, actionType) {
-		; DEBUG.popup(debugSelector, actionType, "Action type", rowToDo, "Row to run")
+		; DEBUG.popup(actionType, "Action type", rowToDo, "Row to run")
 		
 		action := rowToDo.action
 		

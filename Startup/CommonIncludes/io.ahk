@@ -16,7 +16,7 @@ fileLinesToArray(fileName) {
 ControlGet_Send_Return(fromControl, toControl, retControl = "") {
 	ControlGetText, data, %fromControl%, A
 	
-	DEBUG.popup(debugIO, data, "Data from control")
+	; DEBUG.popup(data, "Data from control")
 	
 	ControlSend_Return(toControl, data, retControl)
 }
@@ -26,7 +26,7 @@ ControlSend_Return(toControl, keys, retControl = "") {
 	if(!retControl) {
 		ControlGetFocus, retControl, A
 	}
-	DEBUG.popup(debugIO, toControl, "Control to send to", retControl, "Control to return to", keys, "Keys to send")
+	; DEBUG.popup(toControl, "Control to send to", retControl, "Control to return to", keys, "Keys to send")
 	
 	if(toControl) {
 		ControlFocus, %toControl%
@@ -48,10 +48,10 @@ sendRawWithTabs(input) {
 		numTabs := 0
 		while SubStr(currLine, 1, 1) = A_Tab
 		{
-			DEBUG.popup(debugIO, currLine, "Before currLine", numTabs, "Number of tabs")
+			; DEBUG.popup(currLine, "Before currLine", numTabs, "Number of tabs")
 			numTabs++
 			StringTrimLeft, currLine, currLine, 1
-			DEBUG.popup(debugIO, currLine, "After currLine", numTabs, "Number of tabs")
+			; DEBUG.popup(currLine, "After currLine", numTabs, "Number of tabs")
 		}
 		
 		Send, {Tab %numTabs%}
@@ -85,7 +85,7 @@ getSelectedText(orClipboard = false) {
 
 ; Grabs the selected text using the clipboard, fixing the clipboard as it finishes.
 sendTextWithClipboard(text) {
-	DEBUG.popup(debugIO, text, "Text to send with clipboard")
+	; DEBUG.popup(text, "Text to send with clipboard")
 	
 	ClipSaved := ClipboardAll   ; Save the entire clipboard to a variable of your choice.
 	Clipboard := "" ; Clear the clipboard

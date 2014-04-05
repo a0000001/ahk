@@ -30,7 +30,7 @@ specialSplit(string, delimeter, chars = "") {
 	ignoreChars := chars[SPLIT_IGNORE_CHARS] ? chars[SPLIT_IGNORE_CHARS] : SPLIT_DEFAULT_IGNORE_CHARS
 	placeHolderChar := chars[SPLIT_PLACEHOLDER_CHAR] ? chars[SPLIT_PLACEHOLDER_CHAR] : SPLIT_DEFAULT_PLACEHOLDER_CHAR
 	
-	DEBUG.popup(debugString, chars, "Chars", escChar, "EscChar", placeholderChar, "Placeholderchar")
+	; DEBUG.popup(chars, "Chars", escChar, "EscChar", placeholderChar, "Placeholderchar")
 	
 	; Can't put a global as a true default, so making do here.
 	if(escChar = "\x") {
@@ -41,12 +41,12 @@ specialSplit(string, delimeter, chars = "") {
 	escapeNext := false
 	currStr := ""
 	
-	DEBUG.popup(debugString, string, "String to split")
+	; DEBUG.popup(string, "String to split")
 	
 	; Loop, one character at a time.
 	Loop, Parse, string
 	{
-		DEBUG.popup(debugString, A_LoopField, "Current char")
+		; DEBUG.popup(A_LoopField, "Current char")
 		
 		; If the last character was the escape character, replace this escaped sequence with the real thing.
 		if(escapeNext) {
@@ -62,11 +62,11 @@ specialSplit(string, delimeter, chars = "") {
 		; The next character is escaped, so we won't add this one in.
 		} else if(A_LoopField = escChar) {
 			escapeNext := true
-			DEBUG.popup(debugString, A_LoopField, "Escape char caught")
+			; DEBUG.popup(A_LoopField, "Escape char caught")
 		
 		; Stick this group into the array, move onto the next.
 		} else if(A_LoopField = delimeter) {
-			DEBUG.popup(debugString, currStr, "Current string going in")
+			; DEBUG.popup(currStr, "Current string going in")
 			outArr.Insert(currStr)
 			currStr := ""
 		
@@ -84,7 +84,7 @@ specialSplit(string, delimeter, chars = "") {
 
 ; Prepends and postpends the given strings to the given input.
 expandLine(input, prepend = "", postpend = "") {
-	DEBUG.popup(debugString, prepend, "Pre", input, "Input", postpend, "Post")
+	; DEBUG.popup(prepend, "Pre", input, "Input", postpend, "Post")
 	return prepend . input . postpend
 }
 
@@ -114,7 +114,7 @@ parsePhone(input) {
 	nums := RegExReplace(input, "[^0-9]" , "")
 	StringLen, len, nums
 	
-	DEBUG.popup(debugString, input, "Input", nums, "Nums", len, "Len")
+	; DEBUG.popup(input, "Input", nums, "Nums", len, "Len")
 	
 	if(len=4) ; Old extension.
 		return "7"nums
@@ -141,7 +141,7 @@ getTextHeight(text) {
 	lineHeight := 17 ; play with this value
 	
 	height := lines * lineHeight
-	DEBUG.popup(debugString, lines, "Lines", lineHeight, "Line height", height, "Height")
+	; DEBUG.popup(lines, "Lines", lineHeight, "Line height", height, "Height")
 	
 	return height
 }

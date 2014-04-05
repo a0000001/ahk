@@ -15,10 +15,10 @@ gitZipUnzip(zipOrUnzip) {
 	results := []
 	
 	lines := fileLinesToArray(iniFile)
-	DEBUG.popup(debugGit, lines, "File lines")
+	; DEBUG.popup(lines, "File lines")
 	
 	fileList := TableList.parseList(lines)
-	DEBUG.popup(debugGit, fileList, "TableList")
+	; DEBUG.popup(fileList, "TableList")
 	
 	; Status will act as zip, but not actually zip, instead compile results.
 	if(zipOrUnzip = "s") {
@@ -39,7 +39,7 @@ gitZipUnzip(zipOrUnzip) {
 			ref := f[FC_ZIP_REF_LOC]
 		}
 		
-		DEBUG.popup(debugGit, f[FC_NAME], "Name", curr, "Current", ref, "Reference", compareFiles(curr, ref), "Different")
+		; DEBUG.popup(f[FC_NAME], "Name", curr, "Current", ref, "Reference", compareFiles(curr, ref), "Different")
 		
 		if(compareFiles(curr, ref)) {
 		

@@ -1,6 +1,6 @@
 ; See if a window exists or is active with a given TitleMatchMode.
 isWindowInStates(states, titles, texts, matchMode = 1, speed = "Fast", findHidden = "Off") {
-	DEBUG.popup(debugWindow, states, "Window states to check", titles, "Window titles to match", texts, "Window texts to match", matchMode, "Title match mode", retVal, "Result")
+	; DEBUG.popup(states, "Window states to check", titles, "Window titles to match", texts, "Window texts to match", matchMode, "Title match mode", retVal, "Result")
 	
 	retVal := false
 	For i,s in states {
@@ -30,7 +30,7 @@ isWindowInState(state, title, text, matchMode = 1, speed = "Fast") {
 	SetTitleMatchMode, 1
 	SetTitleMatchMode, Fast
 	
-	DEBUG.popup(debugWindow, state, "Window state to check", title, "Window title to match", text, "Window text to match", matchMode, "Title match mode", retVal, "Result")
+	; DEBUG.popup(state, "Window state to check", title, "Window title to match", text, "Window text to match", matchMode, "Title match mode", retVal, "Result")
 	
 	return retVal
 }
@@ -79,7 +79,7 @@ activateOpenMinimize(ahkClass, pathToExecutable) {
 			restoreActivateWindowSpecial()
 		}
 	} else {
-		DEBUG.popup(debugWindow, pathToExecutable, "Path to executable")
+		; DEBUG.popup(pathToExecutable, "Path to executable")
 		Run %pathToExecutable%
 	}
 }
@@ -259,7 +259,7 @@ getPreviousWindowID() {
 		WinGetClass, currClass, ahk_id %currID%
 		currParent := decimalToHex(DllCall("GetParent", "uint", currID))
 		WinGet, currParentStyle, Style, ahk_id %currParent%
-		DEBUG.popup(debugWindow, currID, "Current ID", currStyle, "Current style", currExStyle, "Current extended style", currParentStyle, "Current parent style", currParent, "Current parent")
+		; DEBUG.popup(currID, "Current ID", currStyle, "Current style", currExStyle, "Current extended style", currParentStyle, "Current parent style", currParent, "Current parent")
 		
 		; Skip unimportant windows.
 		if((currStyle & WS_DISABLED) || !(currTitle))
@@ -285,7 +285,7 @@ getPreviousWindowID() {
 	
 	; WinActivate, ahk_id %currID%
 	; WinGetTitle, title, ahk_id %currID%
-	DEBUG.popup(debugWindow, title, "Title", currID, "Current ID", currStyle, "Current style", currExStyle, "Current extended style", currClass, "Current class")
+	; DEBUG.popup(title, "Title", currID, "Current ID", currStyle, "Current style", currExStyle, "Current extended style", currClass, "Current class")
 	
 	return, currID
 }

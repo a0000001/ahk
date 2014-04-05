@@ -33,7 +33,7 @@ POPUP(actionRow) {
 
 ; Debug.
 DEBUG_POPUP(actionRow) {
-	DEBUG.popup(true, actionRow, "Row")
+	DEBUG.popup(actionRow, "Row")
 }
 
 ; Run given file with a POPUP action. Yes, this is getting rather meta.
@@ -67,5 +67,5 @@ INI_WRITE(actionRow) {
 		}
 	}
 	
-	DEBUG.popup(debugSelectorActions, actionRow, "Row", file, "File", sect, "Section", key, "Key", val, "Value")
+	DEBUG.popup(actionRow, "Row", file, "File", sect, "Section", key, "Key", val, "Value")
 }

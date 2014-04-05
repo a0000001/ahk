@@ -20,7 +20,7 @@ RunCommand(commandToRun = "", stayOpen = false) {
 	
 	; Add the command to the run string.
 	runString .= cmdString
-	DEBUG.popup(debugRunCommands, cmdString, "Command string", runString, "Run string")
+	; DEBUG.popup(cmdString, "Command string", runString, "Run string")
 	
 	Run, % runString
 }

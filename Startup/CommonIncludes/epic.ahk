@@ -54,11 +54,11 @@ getEMC2ObjectLink() {
 			ini := inputSplit[1]
 	}
 	
-	DEBUG.popup(debugEpic, text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
+	; DEBUG.popup(text, "Raw input", cleanText, "Clean input", inputSplit, "Clean input split", ini, "INI", num, "Num")
 	
 	; Get the link.
 	link := generateEMC2ObjectLink(true, ini, num, "..\Selector\emc2link.ini")
-	DEBUG.popup(debugEpic, link, "Generated Link")
+	; DEBUG.popup(link, "Generated Link")
 	
 	return link
 }
@@ -71,7 +71,7 @@ getEMC2ObjectLink() {
 ;	Neither/num only:
 ;		General popup.
 generateEMC2ObjectLink(edit = true, ini = "", num = "", iniPath = "emc2link.ini") {
-	DEBUG.popup(debugEpic, edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
+	; DEBUG.popup(edit, "Edit", ini, "INI", num, "Num", iniPath, "INI Path")
 	
 	; result := Selector.select(iniPath, "POPUP", "", ini, num)
 	; return
@@ -110,11 +110,11 @@ getCurrentEMC2ObjectLink(edit = true) {
 	objectName := getEMC2ObjectFromTitle(true)
 		
 	objectSplit := specialSplit(objectName, A_Space)
-	DEBUG.popup(DEBUG.hyperspace, objectSplit, "EMC2 Object Name")
+	; DEBUG.popup(objectSplit, "EMC2 Object Name")
 	
 	; Get the link.
 	link := generateEMC2ObjectLink(edit, objectSplit[1], objectSplit[2], "..\Selector\emc2link.ini")
-	DEBUG.popup(DEBUG.hyperspace, link, "Generated Link")
+	; DEBUG.popup(link, "Generated Link")
 	
 	return link
 }
@@ -122,18 +122,18 @@ getCurrentEMC2ObjectLink(edit = true) {
 ; Gets the info for the object open in EMC2 from the title of the window.
 getEMC2ObjectFromTitle(includeINI = false) {
 	WinGetTitle, title
-	DEBUG.popup(DEBUG.hyperspace, title, "Title", includeINI, "Include INI")
+	; DEBUG.popup(title, "Title", includeINI, "Include INI")
 	
 	; If the title doesn't have a number, we shouldn't be returning anything.
 	if(title = "EMC2")
 		return ""
 	
 	titleSplit := specialSplit(title, " - ")
-	DEBUG.popup(DEBUG.hyperspace, titleSplit, "Title split")
+	; DEBUG.popup(titleSplit, "Title split")
 	if(includeINI)
 		return titleSplit[1]
 	
 	objectNameSplit := specialSplit(titleSplit[1], A_Space)
-	DEBUG.popup(DEBUG.hyperspace, objectNameSplit, "Object name split")
+	; DEBUG.popup(objectNameSplit, "Object name split")
 	return objectNameSplit[2]
 }
