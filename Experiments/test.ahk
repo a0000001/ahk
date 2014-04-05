@@ -4,13 +4,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 #SingleInstance force
 
-; #Include TrayIconToggler.ahk
-; #Include ..\Startup\CommonIncludes\tray.ahk
-; #Include ..\Startup\CommonIncludes\io.ahk
-; #Include test2\test2.ahk
-#Include ..\Startup\commonIncludesStandalone.ahk
-
-; #Include stdio.ahk
+; #Include ..\Startup\commonIncludesStandalone.ahk
+borgFolderINI := "..\Startup\"
+#Include %A_ScriptDir%\..\Startup\
+#Include commonIncludes.ahk
 
 suspended := 0
 v := Object()

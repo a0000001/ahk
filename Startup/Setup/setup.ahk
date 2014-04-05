@@ -17,7 +17,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 iniPath := "..\borg.ini"
 iniSetupPath := "..\..\Selector\setup.ini"
-commonPath := "..\commonIncludesStandalone.ahk"
 zipPath := "..\..\Selector\zipAll.bat"
 unZipPath := "..\..\Selector\unZipAll.bat"
 rootTag := "<ROOT>"
@@ -53,15 +52,6 @@ StringReplace, borgINI, borgINI, %vimKeyTag%, %vimKey%, A
 ; MsgBox, % borgINI
 FileDelete, %iniPath%
 FileAppend, %borgINI%, %iniPath%
-
-
-; Generate standalone standard includes, since it needs absolute paths.
-FileRead, commonIncludesStandlone, commonIncludesStandalone.ahk.master
-; MsgBox, % commonIncludesStandlone
-StringReplace, commonIncludesStandlone, commonIncludesStandlone, %rootTag%, %rootPath%, A
-; MsgBox, % commonIncludesStandlone
-FileDelete, %commonPath%
-FileAppend, %commonIncludesStandlone%, %commonPath%
 
 
 ; Generate zip/unzip batch files, since they need absolute paths.

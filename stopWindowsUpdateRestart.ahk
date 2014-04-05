@@ -6,7 +6,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #NoTrayIcon
 #SingleInstance force
 
-#Include Startup\commonIncludesStandalone.ahk
+borgFolderINI := "Startup\"
+#Include %A_ScriptDir%\Startup\..\
+#Include commonIncludes.ahk
 
 RunCommand("sc stop wuauserv", true)
 

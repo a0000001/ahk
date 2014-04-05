@@ -8,8 +8,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; For use of common inclues: Path to precede the borg.ini path.
 borgFolderINI := "..\"
-
-; #Include %A_ScriptDir%\..\commonIncludesStandalone.ahk
 #Include %A_ScriptDir%\..\
 #Include commonIncludes.ahk
 
