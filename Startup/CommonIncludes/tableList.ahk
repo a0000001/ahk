@@ -87,18 +87,18 @@ class TableList {
 				; DEBUG.popup(originalRow, "Row", firstChar, "First Char", row, "Trimmed")
 			}
 			
-			; Ignore it entirely if it's an empty line or beings with ; (a comment).
 			firstChar := SubStr(row, 1, 1)
 			
+			; Ignore it entirely if it's an empty line or beings with ; (a comment).
 			if(firstChar = this.commentChar || firstChar = "") {
 				; DEBUG.popup(firstChar, "Comment or blank line")
 			
-			; Special row for modifying the current mod.
+			; Special row for modifying the current modifications in play.
 			} else if(firstChar = "[") {
 				; DEBUG.popup(row, "Modifier Line", firstChar, "First Char")
 				this.updateMods(row)
 			
-			; Special row for label/title later on, leave it unmolested.
+			; Special row for label/title later on, leave it untouched.
 			} else if(firstChar = this.passChar) {
 				; DEBUG.popup(row, "Hash Line", firstChar, "First Char")
 				currItem := Object()
@@ -248,7 +248,6 @@ class TableList {
 	applyMods(row) {
 		; Split up the row by tabs.
 		rowBits := specialSplit(row, A_Tab, [this.escChar])
-		; rowBits := specialSplit(row, A_Tab, this.escChar)
 		
 		; DEBUG.popup(row, "Row", rowBits, "Row bits")
 		; origBits := rowBits

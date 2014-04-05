@@ -93,21 +93,22 @@ return
 return
 
 ; ^y::
-	; MsgBox, % debugBorgReadINI
+	; x := Object()
+	; x.Insert("5")
+	; x.Insert("6")
+	; x.Insert("7")
+	; x.Insert("8")
+	; DEBUG.popup(x, "X")
+	; ; MsgBox, % DEBUG.stringMultiHelper(x, "X")
 ; return
 
-; ^+!t::
-	; ; Get user input.
-	; FileSelectFile, fileName
+^h::
+	; Get user input.
+	FileSelectFile, fileName
 	
-	; ; Read in the list of names.
-	; referenceLines := fileLinesToArray(fileName)
-	; MsgBox, % arrayToDebugString(referenceLines)
-	
-	; ; Parse the list into nice, uniform reference lines.
-	; references := TableList.parse(referenceLines)
-	; MsgBox, % arrayToDebugString(references, 2)	
-; return
+	list := TableList.parseFile(fileName)
+	DEBUG.popup(list, "Parsed List")
+return
 
 ; ----------------------------------------------------------------------------------------------------------------------
 

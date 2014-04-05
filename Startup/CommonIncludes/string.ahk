@@ -39,6 +39,7 @@ specialSplit(string, delimeter, chars = "") {
 	
 	outArr := Object()
 	escapeNext := false
+	newString := true
 	currStr := ""
 	
 	; DEBUG.popup(string, "String to split")
@@ -50,7 +51,6 @@ specialSplit(string, delimeter, chars = "") {
 		
 		; If the last character was the escape character, replace this escaped sequence with the real thing.
 		if(escapeNext) {
-			; Reset this.
 			escapeNext := false
 			
 			; Special ignore: \x is treated as blank, a placeholder for the start of the string if needed.
@@ -62,16 +62,21 @@ specialSplit(string, delimeter, chars = "") {
 		; The next character is escaped, so we won't add this one in.
 		} else if(A_LoopField = escChar) {
 			escapeNext := true
+			newString := false
 			; DEBUG.popup(A_LoopField, "Escape char caught")
 		
 		; Stick this group into the array, move onto the next.
 		} else if(A_LoopField = delimeter) {
-			; DEBUG.popup(currStr, "Current string going in")
-			outArr.Insert(currStr)
-			currStr := ""
+			if(!newString) {
+				; DEBUG.popup(currStr, "Current string going in")
+				outArr.Insert(currStr)
+				currStr := ""
+				newString := true
+			}
 		
 		; Normal case.
 		} else {
+			newString := false
 			currStr .= A_LoopField
 		}
 	}

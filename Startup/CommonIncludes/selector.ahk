@@ -126,8 +126,7 @@ class Selector {
 			if(!userIn)
 				return ""
 			
-			if(debugSelector)
-				userInOrig := userIn
+			; userInOrig := userIn
 			
 			; Parse input to meaningful command.
 			rowToDo := this.parseChoice(userIn, actionType)

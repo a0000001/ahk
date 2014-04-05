@@ -98,7 +98,7 @@ class DEBUG {
 			} else {
 				; MsgBox, % numTabs
 				For i,v in var
-					outStr .= getTabs(numTabs) "[" i "] " this.string1(on, v, "", numTabs) "`n"
+					outStr .= getTabs(numTabs) "[" i "] " this.string1(v, "", numTabs) "`n"
 			}
 			
 			; MsgBox, % outStr
@@ -121,7 +121,7 @@ class DEBUG {
 		
 		i := 1
 		while(i <= paramsLen) {
-			outStr .= this.string1(true, params[i], params[i + 1], numTabs, false) "`n"
+			outStr .= this.string1(params[i], params[i + 1], numTabs, false) "`n"
 			i += 2
 		}
 		
@@ -130,7 +130,7 @@ class DEBUG {
 	
 	; popup(on, var, label = "") {
 		; if(on) {
-			; MsgBox, % this.string1(on, var, label, 0, false)
+			; MsgBox, % this.string1(var, label, 0, false)
 		; }
 	; }
 	
