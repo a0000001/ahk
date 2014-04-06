@@ -369,7 +369,7 @@ class Selector {
 		rowToDo := ""
 		rest := SubStr(userIn, 2)
 		
-		DEBUG.popup(userIn, "User in", actionType, "Action Type", histCharPos, "History char pos", arbCharPos, "Arbitrary char pos", rest, "Rest")
+		; DEBUG.popup(userIn, "User in", actionType, "Action Type", histCharPos, "History char pos", arbCharPos, "Arbitrary char pos", rest, "Rest")
 		
 		; Just historyChar gives us the last executed command. ArbitChar on its own does the same.
 		if(userIn = this.historyChar || userIn = this.arbitChar) {
@@ -430,7 +430,7 @@ class Selector {
 			}
 		}
 		
-		DEBUG.popup(rowToDo, "Row to do")
+		; DEBUG.popup(rowToDo, "Row to do")
 		
 		return rowToDo
 	}
