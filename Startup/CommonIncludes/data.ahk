@@ -15,11 +15,16 @@ insertFront(ByRef arr, new) {
 }
 
 ; Array contains function. Returns index if it exists, assumes a numerical index starting at 1.
-contains(haystack, needle) {
+contains(haystack, needle, partialMatch = false) {
+	; if(partialMatch)
+		; DEBUG.popup(haystack, "Hay", needle, "Needle")
+	
 	For i, el in haystack {
-		if(el = needle) {
+		; if(partialMatch)
+			; DEBUG.popup(i, "Index", el, "Element", needle, "Needle", partialMatch, "Partial", stringContains(el, needle), "Element contains needle")
+		
+		if( el = needle || (partialMatch && stringContains(needle, el)) )
 			return i
-		}
 	}
 }
 

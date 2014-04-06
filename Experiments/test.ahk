@@ -44,51 +44,8 @@ return
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ^b::
-	x := 5
-	y := 5
-	z := 6
-	
-	MsgBox, % matches(x, y) matches(y, z)
-	
-	; WinGetClass, test
-	; MsgBox, % test
-	
-	; RegWrite REG_SZ, HKCR, AutoHotkeyScript\Shell\Debug,, Debug Script
-	; RegWrite REG_SZ, HKCR, AutoHotkeyScript\Shell\Debug\Command,, "%A_AhkPath%" /Debug "`%l"
-	
-	; DetectHiddenWindows, On
-	; if(WinExist("ahk_class FreeCommanderXE.SingleInst.1")) {
-		; WinActivate
-	; }
-	
-	; SetTitleMatchMode, 2
-	
-	; test := WinExist("", ["XKESPFEN"])
-	
-	; SetTitleMatchMode, 1
-	
-	; MsgBox, % test
-	
-	; x := 5
-	; x += x
-	; MsgBox, % x
-	
-	; Send, ^+s
-	; WinWait, Save As
-	
-	; Send, ..{Enter}
-	; Sleep, 250
-	
-	; Send, {Tab}p
-	; Sleep, 100
-	
-	; Send, {Enter}
-	; Sleep, 100
-	
-	; Send, y
-	
-	
-	; Send, {Enter}
+	; MsgBox, % stringContains(["a", "asdf"], "a g")
+	MsgBox, % stringContains("a g", "a")
 	
 return
 

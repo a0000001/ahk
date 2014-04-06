@@ -7,6 +7,7 @@ class SelectorRow {
 	userInput := ""
 	dataNums := []
 	data := []
+	isDebug := false
 	
 	static debugNoRecurse := true
 	
@@ -122,6 +123,10 @@ class SelectorRow {
 		Loop, %numTabs%
 			outStr .= "`t"
 		outStr .= "User Input: " this.userInput "`n"
+		
+		Loop, %numTabs%
+			outStr .= "`t"
+		outStr .= "IsDebug: " this.isDebug "`n"
 		
 		Loop, %numTabs%
 			outStr .= "`t"

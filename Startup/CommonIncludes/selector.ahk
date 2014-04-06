@@ -52,7 +52,8 @@ class Selector {
 	static dataConstant := "DATA"
 	static userInputConstant := "USERIN"
 	
-	static editStrings := ["0", "e", "edit"]
+	static editStrings := ["e", "edit"]
+	static debugStrings := ["d", "debug"]
 	
 	static actionRowDef := ""
 	
@@ -209,13 +210,6 @@ class Selector {
 				; DEBUG.popup(this.startModelRowChar, "Start model row char", firstChar, "First char", currRow, "Row")
 				this.parseModelRow(currRow)
 			
-			; ; Special row that tells us how to string together the action if it's not directly in there - used for more complex substitutions.
-			; } else if(firstChar = this.startActionDefRowChar) {
-				; ; Strip off the bracket from the first element.
-				; currRow.rowArr[1] := SubStr(currRow.rowArr[1], 2)
-				
-				; this.actionRowDef := currRow
-			
 			; Otherwise, it's a visible, viable choice!
 			} else {
 				; Allow piped-together entries, but only show the first one.
@@ -330,11 +324,6 @@ class Selector {
 			currY += lineHeight
 		}
 		
-		; ; Actually prompt the user.
-		; height := this.startHeight + getTextHeight(displayText)
-		; title := this.title
-		; InputBox, userIn, %title%, %displayText%, , 400, %height%
-		
 		; Show the window in order to get its width.
 		Gui, Show, , % this.title
 		WinGetPos, X, Y, W, H, A
@@ -380,6 +369,8 @@ class Selector {
 		rowToDo := ""
 		rest := SubStr(userIn, 2)
 		
+		DEBUG.popup(userIn, "User in", actionType, "Action Type", histCharPos, "History char pos", arbCharPos, "Arbitrary char pos", rest, "Rest")
+		
 		; Just historyChar gives us the last executed command. ArbitChar on its own does the same.
 		if(userIn = this.historyChar || userIn = this.arbitChar) {
 			if(this.historyChoices.MaxIndex()) {
@@ -390,7 +381,7 @@ class Selector {
 		
 		; History choice - 1 is last entry, 2 is next to last entered, etc.
 		} else if(histCharPos = 1) {
-			; Special case: historyChar+0 is the edit action, which will open the current INI file for editing.
+			; Special case: historyChar+e is the edit action, which will open the current INI file for editing.
 			if(contains(this.editStrings, rest)) {
 				; DEBUG.popup(rest, "Edit action `nRest", this.editStrings, "Edit strings")
 				actionType := "DO"
@@ -398,9 +389,17 @@ class Selector {
 				rowToDo.setAbbrev(userIn)
 				rowToDo.setAction(this.filePath)
 			
+			; Special case: historyChar+d is debug action, which will copy/popup the result of the action.
+			} else if(contains(this.debugStrings, rest, 1)) {
+				; Peel off the d + space, and run it through this function again.
+				StringTrimLeft, userIn, rest, 2
+				rowToDo := this.parseChoice(userIn, actionType)
+				if(rowToDo)
+					rowToDo.isDebug := true
+			
 			; Otherwise, it has to be numeric.
 			} else If rest Is Not Number ; This if loop behaves oddly with curly braces.
-				MsgBox, History character must be used with numeric input or "edit"!
+				MsgBox, History character must be used with numeric input or special character!
 			
 			; Normal case, get the history entry specified.
 			else {
@@ -431,7 +430,7 @@ class Selector {
 			}
 		}
 		
-		; DEBUG.popup(rowToDo, "Row to do")
+		DEBUG.popup(rowToDo, "Row to do")
 		
 		return rowToDo
 	}
@@ -463,44 +462,12 @@ class Selector {
 		
 		return ""
 	}
-	
-	; ; Puts together the action for files in which it's not explicit, but pieced together.
-	; processAction(def, row) {
-		; action := ""
-		
-		; For i,d in def.rowArr {
-			; ; MsgBox, % "Def: " d
-			; if(d = "NAME")
-				; action .= row.name
-			; else if(d = "ABBREV")
-				; action .= row.abbrev
-			; else if(d = "ACTION")
-				; action .= row.action
-			; else if(SubStr(d, 1, StrLen(this.dataConstant)) = this.dataConstant) {
-				; ; This should be the number associated with the data bit.
-				; rest := SubStr(d, StrLen(this.dataConstant) + 1)
-				
-				; ; Get the data from that number and stick it on the end.
-				; action .= row.getData(rest)
-			; } else
-				; action .= d
-			
-			; DEBUG.popup(action, "Action so far")
-		; }
-		
-		; return action
-	; }
 
 	; Function to do what it is we want done, then exit.
 	doAction(rowToDo, actionType) {
 		; DEBUG.popup(actionType, "Action type", rowToDo, "Row to run")
 		
 		action := rowToDo.action
-		
-		; ; If this is a more complex case, process the action before trying to do it.
-		; if(this.actionRowDef && !action) {
-			; action := this.processAction(this.actionRowDef, rowToDo)
-		; }
 		
 		; Blank for functional use.
 		if(!actionType) {
@@ -514,83 +481,6 @@ class Selector {
 		} else {
 			MsgBox, Action "%actionType%" not defined!
 		}
-		
-		; ; For functional use: return what we've decided.
-		; if(actionType = "" || actionType = "RETURN") {
-			; return action
-			
-		; ; Run the action.
-		; } else if(actionType = "RUN") {
-			; Run, % action
-			
-		; ; Run the action, waiting for it to finish.
-		; } else if(actionType = "RUNWAIT") {
-			; RunWait, % action
-		
-		; ; Just send the text of the action.
-		; } else if(actionType = "PASTE") {
-			; SendRaw, %action%
-		
-		; ; Send the text of the action and press enter.
-		; } else if(actionType = "PASTE_SUBMIT") {
-			; SendRaw, %action%
-			; Send, {Enter}
-		
-		; ; Mainly for debug: pop up a message box with the action.
-		; } else if(actionType = "POPUP") {
-			; MsgBox, %action%
-			
-			
-			
-			
-		
-		; ; Run custom actions.
-		; } else {
-			
-		; }
-		
-		; ; Testing: parse and display the given file.
-		; } else if(actionType = "TEST") {
-			; ; Run given file with a POPUP action. Yes, this is getting rather meta.
-			; Run, select.ahk %action% POPUP
-		
-		; ; Edit the current ini file.
-		; } else if(actionType = "EDIT") {
-			; Run, %action%
-		
-		; ; Write to an ini file.
-		; } else if(actionType = "INIWRITE") {
-			
-			; ; MsgBox, % action
-		
-		; ; Call the action.
-		; } else if(actionType = "CALL") {
-			; URL := "http://guru/services/Webdialer.asmx/"
-			
-			; if(action = "-") {
-				; URL .= "HangUpCall?"
-				; MsgText = Hanging up current call. `n`nContinue?
-			; } else {
-				; phoneNum := parsePhone(action)
-				
-				; if(phoneNum = -1) {
-					; MsgBox, Invalid phone number!
-					; return
-				; }
-				
-				; URL .= "CallNumber?extension=" . phoneNum
-				; MsgText = Calling: `n`n%action% `n[%phoneNum%] `n`nContinue?
-			; }
-			
-			; MsgBox, 4,, %MsgText%
-			; IfMsgBox No
-				; ExitApp
-				
-			; HTTPRequest(URL, In := "", Out := "")
-			; ; MsgBox, Response: %html%
-		; } else {
-			; MsgBox, Action type not recognized, exiting.
-		; }
 	}
 	
 	; Function to output this object as a string for debug purposes.
