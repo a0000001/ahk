@@ -104,19 +104,19 @@
 #If
 
 ; Universal new email. (Yanked from BWNHotKeys.ahk on wiki)
-^!m::
-{
-	olMailItem := 0
-	MailItem := ComObjActive("Outlook.Application").CreateItem(olMailItem)
-	MailItem.Display
-	WinActivate Untitled - Message
+#If borgWhichMachine = EPIC_DESKTOP
+	^!m::
+		olMailItem := 0
+		MailItem := ComObjActive("Outlook.Application").CreateItem(olMailItem)
+		MailItem.Display
+		WinActivate Untitled - Message
 	return
-}
 
-; !+e::
-	; SetTitleMatchMode, 2
-	; WinActivate, Microsoft Outlook
-	; SetTitleMatchMode, 1
-	
-	; Send, ^+m
-; return
+	; !+e::
+		; SetTitleMatchMode, 2
+		; WinActivate, Microsoft Outlook
+		; SetTitleMatchMode, 1
+		
+		; Send, ^+m
+	; return
+#If
