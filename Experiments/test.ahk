@@ -45,8 +45,9 @@ return
 
 ^b::
 	; MsgBox, % stringContains(["a", "asdf"], "a g")
-	MsgBox, % stringContains("a g", "a")
+	; MsgBox, % stringContains("a g", "a")
 	
+	MouseClick, WheelDown
 return
 
 ; ^y::

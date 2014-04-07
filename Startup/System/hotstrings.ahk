@@ -167,6 +167,12 @@ return
 :*:Medi'c::Medicare
 :*:Medi'a::Medicaid
 
+; Billing-specific expansions.
+:*:col'n::collection
+:*:coll'n::collection
+:*:pmt'::payment
+:*:pospp'::POS Payment Posting
+
 ; date, time, both, and address
 ::idate::
 	FormatTime, date, , M/d/yy
