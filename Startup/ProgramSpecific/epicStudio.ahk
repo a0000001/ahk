@@ -1,19 +1,16 @@
 #IfWinActive, ahk_class WindowsForms10.Window.8.app.0.2bf8098_r13_ad1
 	; TLG Hotkey.
-	^t::
-		Send, %epicID%
-	return
+	^t::Send, %epicID%
 
-	; ; Better access to INTermediate code.
-	; ^+i::
-		; ControlSend, , ^+v
-	; return
+	; Better access to INTermediate code.
+	^+i::ControlSend, , ^+v
 
 	; Reopen recently closed file.
-	^+t::
-		Send, !ffr{Enter}
-	return
-
+	^+t::Send, !ffr{Enter}
+	
+	; Make copy line location !c.
+	!c::Send, ^+!c
+	
 	; Duplicate Line.
 	; ^d::
 		; Send, {End}{Shift Down}{Home}{Shift Up}
@@ -203,7 +200,7 @@
 	return
 	
 	; Get routine name from title to clipboard.
-	!c::
+	^+c::
 		WinGetTitle, title
 		; MsgBox, % title
 		

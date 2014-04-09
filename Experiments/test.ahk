@@ -22,32 +22,37 @@ setupTrayIcons(v, m)
 	Run, C:\Program Files (x86)\Notepad++\notepad++.exe A:\Experiments\test.ahk
 return
 
-; Hotkeys that pop up/copy some useful info about the active window.
-F1::
-	WinGetClass, currClass, A
-	WinGetTitle, currTitle, A
-	ControlGetFocus, currControl, A
-	DEBUG.popup(1, currClass, "Class", currTitle, "Title", currControl, "Control")
-return
-F2::
-	WinGetClass, currClass, A
-	clipboard := currClass
-return
-F3::
-	WinGetTitle, currTitle, A
-	clipboard := currTitle
-return
-F4::
-	clipboard := getFocusedControl()
-return
+{ ; Hotkeys that pop up/copy some useful info about the active window.
+	F1::
+		WinGetClass, currClass, A
+		WinGetTitle, currTitle, A
+		ControlGetFocus, currControl, A
+		DEBUG.popup(1, currClass, "Class", currTitle, "Title", currControl, "Control")
+	return
+	F2::
+		WinGetClass, currClass, A
+		clipboard := currClass
+	return
+	F3::
+		WinGetTitle, currTitle, A
+		clipboard := currTitle
+	return
+	F4::
+		clipboard := getFocusedControl()
+	return
+}
 
-; ----------------------------------------------------------------------------------------------------------------------
+; --------------------------------------------------------------------------
+
+
 
 ^b::
 	; MsgBox, % stringContains(["a", "asdf"], "a g")
 	; MsgBox, % stringContains("a g", "a")
 	
-	MouseClick, WheelDown
+	; MouseClick, WheelDown
+	
+	
 return
 
 ; ^y::
@@ -68,7 +73,9 @@ return
 	DEBUG.popup(list, "Parsed List")
 return
 
-; ----------------------------------------------------------------------------------------------------------------------
+
+
+; --------------------------------------------------------------------------
 
 ~#!x::
 	Suspend

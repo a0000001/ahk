@@ -14,8 +14,13 @@
 		SendRaw, % textIn
 	return
 	
-	; Paste clipboard, insering spaces to overwrite first.
+	; Normal paste, without all the inserting of spaces.
 	^v::
+		Send, +{Insert}
+	return
+	
+	; Paste clipboard, insering spaces to overwrite first.
+	$!v::
 		; Get the length of the string we're going to add.
 		inputLength := StrLen(clipboard)
 		
@@ -58,9 +63,25 @@
 		Send, {Enter}
 	return
 	
-	^+e::
-		SendRaw, d ^EAVIEWID
+	; ^+e::
+		; SendRaw, d ^EAVIEWID
+		; Send, {Enter}
+	; return
+	
+	; Pasting ZR/ZLs.
+	^!e::
+		SendRaw, d ^`%ZeEPIC
 		Send, {Enter}
+	return
+	:*:.zrv::
+		SendRaw, `;zcode
+		Send, {Enter}
+		Send, 0{Enter}
+	return
+	:*:.zrr::
+		SendRaw, `;zrun searchCode("","","",$c(16))
+		Send, {Enter}
+		Send, q{Enter}
 	return
 	
 	^a::
