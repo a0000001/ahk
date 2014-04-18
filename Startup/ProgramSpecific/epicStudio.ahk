@@ -3,7 +3,7 @@
 	^t::Send, %epicID%
 
 	; Better access to INTermediate code.
-	^+i::ControlSend, , ^+v
+	!i::ControlSend, , ^+v
 
 	; Reopen recently closed file.
 	^+t::Send, !ffr{Enter}
