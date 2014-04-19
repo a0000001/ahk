@@ -85,7 +85,7 @@ if(borgWhichMachine = THINKPAD) {
 
 
 ; ----- Program launcher key bindings. ----- ;
-if(borgWhichMachine = THINKPAD) {
+if(borgWhichMachine = THINKPAD || borgWhichMachine = BORG_ASUS) {
 	pLaunchClass_1 := pLaunchClass_Explorer
 	pLaunchPath_1 := pLaunchPath_Explorer
 	
