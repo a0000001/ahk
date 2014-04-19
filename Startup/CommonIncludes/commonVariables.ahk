@@ -54,6 +54,13 @@ if(borgWhichMachine = THINKPAD) {
 	pLaunchPath_ProcessExplorer := "C:\Program Files (x86)\Process Explorer\procexp.exe"
 }
 
+pLaunchClass_Executor := "{NAME} Executor"
+if(borgWhichMachine = BORG_ASUS) {
+	pLaunchPath_Executor := "C:\Program Files\Executor\Executor.exe"
+} else {	
+	pLaunchPath_Executor := "C:\Program Files (x86)\Executor\Executor.exe"
+}
+
 pLaunchClass_Explorer := "CabinetWClass"
 pLaunchPath_Explorer := "C:\Windows\explorer.exe"
 
@@ -79,7 +86,7 @@ if(borgWhichMachine = THINKPAD) {
 	pLaunchPath_Onenote := "C:\Program Files (x86)\Microsoft Office\Office14\ONENOTE.EXE"
 }
 
-; pLaunchClass_Pidgin := "_{NAME}_Buddy List"
+; pLaunchClass_Pidgin := "{NAME} Buddy List"
 ; pLaunchPath_Pidgin := "C:\Program Files (x86)\Pidgin\pidgin.exe"
 
 
