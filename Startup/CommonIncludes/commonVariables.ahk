@@ -48,8 +48,10 @@ pLaunchPath_Outlook := "C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK
 pLaunchClass_ProcessExplorer := "PROCEXPL"
 if(borgWhichMachine = THINKPAD) {
 	pLaunchPath_ProcessExplorer := "C:\Program Files\ProcessExplorer\procexp.exe"
-} else if (borgWhichMachine = EPIC_DESKTOP) {
+} else if(borgWhichMachine = EPIC_DESKTOP) {
 	pLaunchPath_ProcessExplorer := "C:\Program Files (x86)\ProcessExplorer\procexp.exe"
+} else if(borgWhichMachine = BORG_ASUS) {
+	pLaunchPath_ProcessExplorer := "C:\Program Files (x86)\Process Explorer\procexp.exe"
 }
 
 pLaunchClass_Explorer := "CabinetWClass"

@@ -1,6 +1,7 @@
 ; Constants for machines.
 global THINKPAD := "THINKPAD"
 global EPIC_DESKTOP := "EPIC_DESKTOP"
+global BORG_ASUS := "BORG_ASUS"
 
 ; Constants for which key closes tabs with vimBindings.
 global vimBindingsF9 := "F9"
