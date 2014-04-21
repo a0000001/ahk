@@ -510,10 +510,27 @@ findReferenceLine(lineToFind, numToMatch = 0, shouldSelect = false) {
 	}
 }
 
-convertStarToES(string) {
-	StringReplace, string, string, * , Epic Systems , All
-	; MsgBox, % string
-	return string
+convertSpecialStars(toConvert) {
+	if(SubStr(toConvert, 1, 1) != "*") {
+		return toConvert
+	} else {
+		outStr := "Epic Systems"
+		StringTrimLeft, toConvert, toConvert, 1
+		
+		firstChar := SubStr(toConvert, 1, 1)
+		rest := SubStr(toConvert, 2)
+		
+		if(firstChar = "h")
+			outStr .= " Hospital Billing"
+		else if(firstChar = "p")
+			outStr .= " Resolute"
+		else
+			outStr .= firstChar
+		
+		outStr .= rest
+		
+		return outStr
+	}
 }
 
 ; References/components windows.
@@ -526,7 +543,7 @@ convertStarToES(string) {
 		}
 		
 		; Expand it as needed.
-		userIn := convertStarToES(userIn)
+		userIn := convertSpecialStars(userIn)
 		if(!userIn)
 			return
 		

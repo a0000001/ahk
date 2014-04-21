@@ -44,9 +44,39 @@ return
 
 ; --------------------------------------------------------------------------
 
-
+convertSpecialStars(toConvert) {
+	if(SubStr(toConvert, 1, 1) != "*") {
+		return toConvert
+	} else {
+		outStr := "Epic Systems"
+		StringTrimLeft, toConvert, toConvert, 1
+		
+		firstChar := SubStr(toConvert, 1, 1)
+		rest := SubStr(toConvert, 2)
+		
+		if(firstChar = "h")
+			outStr .= " Hospital Billing"
+		else if(firstChar = "p")
+			outStr .= " Professional Billing"
+		else if(firstChar = "e")
+			outStr .= " Enterprise Billing"
+		else
+			outStr .= firstChar
+		
+		outStr .= rest
+		
+		return outStr
+	}
+}
 
 ^b::
+	MsgBox, % convertSpecialStars("*")
+	MsgBox, % convertSpecialStars("* Hospital Billing")
+	MsgBox, % convertSpecialStars("*h")
+	MsgBox, % convertSpecialStars("*h asdf")
+	MsgBox, % convertSpecialStars("*p")
+	MsgBox, % convertSpecialStars("*e")
+	
 	; MsgBox, % stringContains(["a", "asdf"], "a g")
 	; MsgBox, % stringContains("a g", "a")
 	
