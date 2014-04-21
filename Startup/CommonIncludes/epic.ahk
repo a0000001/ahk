@@ -2,16 +2,17 @@
 
 ; Returns true if the given number could be a DLG (pure number, or starting with I, M, or Y).
 isDLGNum(num) {
-	dlgLetters := ["i", "m", "y"]
+	dlgLetters := ["i", "m", "y", "cs"]
 	
 	if(isNum(num))
 		return true
 	
-	firstChar := SubStr(num, 1, 1)
-	rest := SubStr(num, 2)
-	; MsgBox, % firstChar "`n" rest "`n" contains(dlgLetters, firstChar) "`n" isNum(rest)
-	if(contains(dlgLetters, firstChar) && isNum(rest))
-		return true
+	whichLetter := containsAnyOf(num, dlgLetters, CONTAINS_BEG)
+	if(whichLetter) {
+		rest := SubStr(num, StrLen(dlgLetters[whichLetter]) + 1)
+		if(isNum(rest))
+			return true
+	}
 	
 	return false
 }
@@ -40,6 +41,7 @@ getEMC2ObjectLink() {
 	; Figure out what we've got.
 	; Two parts, likely everything we need.
 	if(inputSplit.MaxIndex() = 2) {
+		; DEBUG.popup(inputSplit, "Input", isDLGNum(inputSplit[1]), "Is 1 DLG Num", StrLen(inputSplit[1]), "Input 1 length", isDLGNum(inputSplit[2]), "Is 2 DLG Num")
 		; ini is 3 and not a number, num is a number.
 		if(!isDLGNum(inputSplit[1]) && StrLen(inputSplit[1]) = 3 && isDLGNum(inputSplit[2])) {
 			ini := inputSplit[1]

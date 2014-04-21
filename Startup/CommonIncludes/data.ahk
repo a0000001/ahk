@@ -28,6 +28,30 @@ contains(haystack, needle, partialMatch = false) {
 	}
 }
 
+; Reverse array contains function - checks if any of array strings are in given string.
+containsAnyOf(haystack, needles, match = 1) { ; match = CONTAINS_ANY
+	For i, el in needles {
+		
+		if(match = CONTAINS_ANY) {
+			if(stringContains(haystack, el))
+				return i
+		
+		} else if(match = CONTAINS_BEG) {
+			chunk := SubStr(haystack, 1, StrLen(el))
+			if(chunk = el)
+				return i
+		
+		} else if(match = CONTAINS_END) {
+			chunk := SubStr(haystack, (1 - StrLen(el)))
+			if(chunk = el)
+				return i
+			
+		} else {
+			DEBUG.popup(match, "Unsupported match method")
+		}
+	}
+}
+
 ; Table contains function.	
 tableContains(table, toFind) {
 	For i,row in table {

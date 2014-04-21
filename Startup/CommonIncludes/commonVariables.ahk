@@ -190,6 +190,9 @@ iSearchClass_vbToolbarPalette := "ToolsPalette1"
 global LIST_ITEM := 1
 global LIST_NUM := 2
 global VB_REF_SAME_THRESHOLD := 10
+global CONTAINS_ANY := 1
+global CONTAINS_BEG := 2
+global CONTAINS_END := 3
 
 
 ; ----- Internal Constants. ----- ;
