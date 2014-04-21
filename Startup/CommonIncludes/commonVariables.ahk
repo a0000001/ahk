@@ -48,8 +48,17 @@ pLaunchPath_Outlook := "C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK
 pLaunchClass_ProcessExplorer := "PROCEXPL"
 if(borgWhichMachine = THINKPAD) {
 	pLaunchPath_ProcessExplorer := "C:\Program Files\ProcessExplorer\procexp.exe"
-} else if (borgWhichMachine = EPIC_DESKTOP) {
+} else if(borgWhichMachine = EPIC_DESKTOP) {
 	pLaunchPath_ProcessExplorer := "C:\Program Files (x86)\ProcessExplorer\procexp.exe"
+} else if(borgWhichMachine = BORG_ASUS) {
+	pLaunchPath_ProcessExplorer := "C:\Program Files (x86)\Process Explorer\procexp.exe"
+}
+
+pLaunchClass_Executor := "{NAME} Executor"
+if(borgWhichMachine = BORG_ASUS) {
+	pLaunchPath_Executor := "C:\Program Files\Executor\Executor.exe"
+} else {	
+	pLaunchPath_Executor := "C:\Program Files (x86)\Executor\Executor.exe"
 }
 
 pLaunchClass_Explorer := "CabinetWClass"
@@ -77,13 +86,13 @@ if(borgWhichMachine = THINKPAD) {
 	pLaunchPath_Onenote := "C:\Program Files (x86)\Microsoft Office\Office14\ONENOTE.EXE"
 }
 
-; pLaunchClass_Pidgin := "_{NAME}_Buddy List"
+; pLaunchClass_Pidgin := "{NAME} Buddy List"
 ; pLaunchPath_Pidgin := "C:\Program Files (x86)\Pidgin\pidgin.exe"
 
 
 
 ; ----- Program launcher key bindings. ----- ;
-if(borgWhichMachine = THINKPAD) {
+if(borgWhichMachine = THINKPAD || borgWhichMachine = BORG_ASUS) {
 	pLaunchClass_1 := pLaunchClass_Explorer
 	pLaunchPath_1 := pLaunchPath_Explorer
 	

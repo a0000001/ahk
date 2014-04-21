@@ -66,8 +66,8 @@ selectAllSpecial() {
 
 ; Either focus or open a program.
 activateOpenMinimize(ahkClass, pathToExecutable) {
-	if(SubStr(ahkClass, 1, 8) = "_{NAME}_") {
-		ahkClassString := ahkClass
+	if(SubStr(ahkClass, 1, 7) = "{NAME} ") {
+		ahkClassString := SubStr(ahkClass, 8)
 	} else {
 		ahkClassString := "ahk_class "ahkClass
 	}
@@ -154,7 +154,7 @@ closeWindowSpecial(case = 0) {
 	}
 
 	else if WinActive("ahk_class CabinetWClass") ; Windows Explorer
-	or WinActive("ahk_class Notepad++") ; Notepad++
+	; or WinActive("ahk_class Notepad++") ; Notepad++
 	or WinActive("MightyText") ; MightyText Popup Window
 	; or WinActive("Source of: ") ; Firefox Source View
 	; or (WinActive("Library") && !WinActive("Media Library Search")) ; Firefox All Bookmarks View, but not Foobar's media library search!

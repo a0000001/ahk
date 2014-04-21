@@ -1,12 +1,12 @@
 ﻿; Executor startup hotkey.
-^+!x::Run, C:\Program Files (x86)\Executor\Executor.exe
+^+!x::activateOpenMinimize(pLaunchClass_Executor, pLaunchPath_Executor)
 
 ; Protect remote desktop executor from host AHK interference.
 #IfWinNotActive, ahk_class TscShellContainerClass
 	; use Caps Lock as the trigger key.
 	CapsLock::
 		SetCapsLockState, AlwaysOff
-		Send, #z
+		Send, #a
 	return
 #IfWinNotActive
 
