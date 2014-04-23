@@ -27,7 +27,7 @@ return
 		WinGetClass, currClass, A
 		WinGetTitle, currTitle, A
 		ControlGetFocus, currControl, A
-		DEBUG.popup(1, currClass, "Class", currTitle, "Title", currControl, "Control")
+		DEBUG.popup(currClass, "Class", currTitle, "Title", currControl, "Control")
 	return
 	F2::
 		WinGetClass, currClass, A
